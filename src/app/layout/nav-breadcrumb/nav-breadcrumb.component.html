@@ -1,0 +1,6 @@
+<nz-breadcrumb >
+  <nz-breadcrumb-item *ngFor="let item of menuList;trackBy:trackById;let i=index;">
+    <i class="anticon anticon-environment-o" *ngIf="i===0"></i>
+    <a [routerLink]="item.url" routerLinkActive="active">{{item.name}}</a>
+  </nz-breadcrumb-item>
+</nz-breadcrumb>

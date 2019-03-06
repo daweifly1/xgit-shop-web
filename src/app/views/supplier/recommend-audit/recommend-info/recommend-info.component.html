@@ -1,0 +1,28 @@
+<div class="info-wrap">
+  <div class="detail-header-info">
+    <nz-form-item style="width: 50%" *ngFor="let item of fieldList;trackBy:trackByItem">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{basicInfo[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{basicInfo[item.field] | map:item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item style="width: 100%">
+      <nz-form-label nzSpan="4">企业简介</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{basicInfo['profile']}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item style="width: 100%" *ngFor="let item of recommendFieldList;trackBy:trackByItem">
+      <nz-form-label nzSpan="4">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text *ngIf="!item.pipe">{{recommendInfo[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{recommendInfo[item.field] | map:item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="table-footer-bar">
+    <ng-container *ngTemplateOutlet="operationTpl"></ng-container>
+    <button nz-button nzType="primary" [nzGhost]="true" (click)="returnMainPage()">返回</button>
+  </div>
+</div>

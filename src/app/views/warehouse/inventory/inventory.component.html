@@ -1,0 +1,110 @@
+<app-tab-route tabTitle="盘点单">
+  <ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" [searchPlaceholder]="searchPlaceholder" (search)="getList()"
+      [(searchText)]="filters.checkOrderNo" [tableConfig]="tableConfig" (advancedSearch)="fullSearch()" (refresh)="getList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addInventory()" *appAuthBtu="ActionCode.inventoryAdd">新增</button>
+      <button nz-button nzType="info" (click)="deleteSelectInventory(selectedListIds)" *appAuthBtu="ActionCode.inventoryDel">删除</button>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">盘点单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.checkOrderNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">创建人</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.createName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select [(ngModel)]="filters.status" nzPlaceHolder="请选择" class="selectStyle" nzAllowClear>
+              <nz-option nzValue="" nzLabel="请选择"></nz-option>
+              <nz-option nzValue="0" nzLabel="未盘点"></nz-option>
+              <nz-option nzValue="1" nzLabel="盘点启动"></nz-option>
+              <nz-option nzValue="2" nzLabel="盘点结束"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">是否条码管理</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.barcodeFlag" nzAllowClear>
+              <nz-option *ngFor="let item of barcodeFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filters.startDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filters.endDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getList()">搜索</button>
+        <button nz-button nzType="info" (click)="fullSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearchClose()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="inventoryDataList" [getListHandle]="getList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+  </ng-container>
+  <ng-template #operation let-id="id" let-abnormalNo="abnormalNo" let-status="status" let-checkOrderNo="checkOrderNo">
+
+    <app-action-group>
+      <app-action [enabled]="buttonState[id].start" (clickAction)="startInventory(id)" *appAuthBtu="ActionCode.inventoryEnable">启动</app-action>
+      <app-action [enabled]="buttonState[id].close" (clickAction)="stopInventory(id)" *appAuthBtu="ActionCode.inventoryEnable">关闭</app-action>
+      <app-action [enabled]="buttonState[id].del" (clickAction)="deleteInventory(id)" *appAuthBtu="ActionCode.inventoryDel">删除</app-action>
+      <app-action [enabled]="buttonState[id].check" (clickAction)="check(id, checkOrderNo)" *appAuthBtu="ActionCode.inventoryCheck">盘点</app-action>
+      <app-action [enabled]="buttonState[id].print" (clickAction)="print(id)" *appAuthBtu="ActionCode.inventoryPrint">打印</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #checkOrderNo let-checkOrderNo="checkOrderNo" let-id="id">
+    <span class="operate-text" (click)="detailWarehouse(id, checkOrderNo)">{{checkOrderNo}}</span>
+  </ng-template>
+  <ng-container *ngIf="selectedPage === tabPageType.AddPage">
+    <app-addinventory (finish)="onChildFinish()"></app-addinventory>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.DetailPage">
+    <app-detailinventory (finish)="onChildFinish()" [selectRowId]="EveryLineId" [selectCheckOrderNo]="chooseCheckOrderNo"
+      [detailPage]="detailPage"></app-detailinventory>
+  </ng-container>
+
+  <ng-container *ngIf="selectedPage === tabPageType.CheckPage">
+    <app-detailinventory (finish)="onChildFinish()" [selectRowId]="EveryLineId" [selectCheckOrderNo]="chooseCheckOrderNo"
+      [detailPage]="detailPage"></app-detailinventory>
+  </ng-container>
+
+
+</app-tab-route>
+
+
+<ng-template #navBreakcrumb>
+  <app-nav-breadcrumb></app-nav-breadcrumb>
+</ng-template>

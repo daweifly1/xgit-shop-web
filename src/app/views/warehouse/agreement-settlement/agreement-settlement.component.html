@@ -1,0 +1,55 @@
+<app-tab-route tabTitle="单耗承包">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="单据编号" [(searchText)]="filters.code" (search)="getAgreementSettlementList()"
+      (advancedSearch)="onAdvancedSearch()" (refresh)="getAgreementSettlementList()" [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addAgreementSettlement()" *appAuthBtu="ActionCode.agreementSettlementAdd">新增</button>
+      <button nz-button nzType="info" (click)="submitPlan()" *appAuthBtu="ActionCode.agreementSettlementSubmitPlan">提交计划</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <div class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">单据编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.code">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.status" nzAllowClear>
+              <nz-option *ngFor="let item of ('agreementSettlementStatus' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+                [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getAgreementSettlementList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="agreementSettlementList"
+      [getListHandle]="getAgreementSettlementList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-id="id">
+      <app-action-group>
+          <app-action [enabled]="actionStatus[id].edit" (clickAction)="editAgreementSettlement(id)" *appAuthBtu="ActionCode.agreementSettlementEdit">编辑</app-action>
+        <app-action [enabled]="actionStatus[id].del" (clickAction)="delAgreementSettlement(id)" *appAuthBtu="ActionCode.agreementSettlementDel">删除</app-action>
+      </app-action-group>
+    </ng-template>
+  <ng-template #codeTpl let-id="id" let-code="code">
+    <span class="operate-text" (click)="detail(id)">{{code}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === tabPageType.AddPage">
+    <app-add-settlement [detailId]="detailId"  (finish)="onChildFinish()"></app-add-settlement>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <app-detail-settlement [detailId]="detailId" (finish)="onChildFinish()"></app-detail-settlement>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+      <app-add-settlement [detailId]="detailId"  (finish)="onChildFinish()"></app-add-settlement>
+    </ng-container>
+</app-tab-route>

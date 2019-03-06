@@ -1,0 +1,192 @@
+<ng-container *ngIf="!editId">
+  <form nz-form [formGroup]="formGroup" class="order-header-form">
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>调出仓库</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input (focus)="showWarehouseModal()" formControlName="outLocation" readonly />
+        <nz-form-explain *ngIf="formGroup.get('outLocation').dirty && formGroup.get('outLocation').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>调出库区</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input (focus)="showAreaModal()" formControlName="outArea" readonly />
+        <nz-form-explain *ngIf="formGroup.get('outArea').dirty && formGroup.get('outArea').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="9" nzRequired>是否条码管理</nz-form-label>
+      <nz-form-control nzSpan="15">
+        <nz-select style="width: 100%;" formControlName="barcodeFlag" (ngModelChange)="onBarcodeFlag($event)"
+          nzAllowClear>
+          <nz-option *ngFor="let item of barcodeFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>调入仓库</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input (focus)="showInWarehouseModal()" formControlName="inLocation" readonly />
+        <nz-form-explain *ngIf="formGroup.get('inLocation').dirty && formGroup.get('inLocation').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>调入库区</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input (focus)="showInAreaModal()" formControlName="inArea" readonly />
+        <nz-form-explain *ngIf="formGroup.get('inArea').dirty && formGroup.get('inArea').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">制单部门</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="deptName">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">制单人</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="applyName">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">制单日期</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-date-picker formControlName="applyDate" nzFormat="yyyy-MM-dd HH:mm"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">是否协议调拨</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-select style="width: 100%;" formControlName="agreementFlag">
+          <nz-option *ngFor="let item of agreementFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzSpan="8" *ngIf="!isAgreementCodeRequired">协议号</nz-form-label>
+        <nz-form-label nzSpan="8" nzRequired *ngIf="isAgreementCodeRequired">协议号</nz-form-label>
+      <!-- <nz-form-label nzSpan="8"><i *ngIf="isAgreementCodeRequired" style="color: red;">* </i>协议号</nz-form-label> -->
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="agreementCode" [maxlength]="InputMaxLen.Default" (ngModelChange)="agreementCodeChange()">
+      </nz-form-control>
+    </nz-form-item>
+
+
+  </form>
+</ng-container>
+<ng-container *ngIf="editId">
+  <div class="detail-header-info">
+    <nz-form-item *ngFor="let item of headerFieldList;">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{headerInfo[item.field]}}</nz-form-text>
+
+        <nz-form-text *ngIf="item.pipe">{{headerInfo[item.field] | map: item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</ng-container>
+
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+<div class="detail-table-header">
+  <button nz-button nzType="info" (click)="showMaterial()">选择物料</button>
+  <button nz-button nzType="info" (click)="showToLeadModal()">导入物料</button>
+  <button nz-button nzType="info" (click)="batchDelMaterial()">批量删除</button>
+</div>
+<app-ufast-table [tableConfig]="tableConfig" [dataList]="materialDataList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+<ng-template #tableOpTpl let-materialNo="materialNo">
+  <span class="operate-text" (click)="delMaterialOne(materialNo)">删除</span>
+</ng-template>
+<ng-template #numTpl let-ctx="_this">
+  <nz-input-number [nzPrecision]="materialNumDec" [(ngModel)]="ctx.amount" [nzMin]="materialNumMin" [nzMax]="ctx.maxAmount" [nzStep]="materialNumMin"></nz-input-number>
+</ng-template>
+
+<ng-template #noteTpl let-ctx="_this">
+  <input nz-input [(ngModel)]="ctx.remark" [maxlength]="InputMaxLen.Default">
+</ng-template>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="submit()">保存</button>
+  <button nz-button nzType="primary" (click)="submitAudit()">提交</button>
+  <button nz-button nzType="primary" nzGhost (click)="onCancel()">取消</button>
+</div>
+
+<app-right-side-table-box [(show)]="show" title="物料列表" searchPlaceholder="物料编码/物料描述" [tableConfig]="materialDataConfig"
+  [dataList]="materialData" [getListHandle]="getMaterialList" (selectedChange)="chooseMaterial($event)"
+  [selectedChangeEvent]="rightTableEmit" idFiled="materialsNo" (search)="getMaterialList()" [(searchContent)]="materialFilter.keyWords">
+</app-right-side-table-box>
+
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isOutWarehouseVisible" nzTitle="选择调出仓库" [nzFooter]="null" nzWidth="630px"
+  (nzOnCancel)="handleCancel()">
+  <app-ufast-table [tableConfig]="outWarehouseTableConfig" [dataList]="outWarehouseDataList" [getListHandle]="getWarehouseModalData"></app-ufast-table>
+  <ng-template #chooseWarehouse let-code="code" let-type="type">
+    <span class="operate-text" (click)="chooseWarehouseFun(code, type)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isOutAreaVisible" nzTitle="选择调出库区" [nzFooter]="null" nzWidth="630px" (nzOnCancel)="handleCancelArea()">
+  <app-ufast-table [tableConfig]="outAreaTableConfig" [dataList]="outAreaDataList" [getListHandle]="getAreaModalData"></app-ufast-table>
+  <ng-template #chooseArea let-code="code">
+    <span class="operate-text" (click)="chooseAreaFun(code)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isInWarehouseVisible" nzTitle="选择调入仓库" [nzFooter]="null" nzWidth="630px"
+  (nzOnCancel)="handleCancelInWarehouse()">
+  <app-ufast-table [tableConfig]="inWarehouseTableConfig" [dataList]="inWarehouseDataList" [getListHandle]="getInWarehouseModalData"></app-ufast-table>
+  <ng-template #chooseInWarehouse let-code="code">
+    <span class="operate-text" (click)="chooseInWarehouseFun(code)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isInAreaVisible" nzTitle="选择调入库区" [nzFooter]="null" nzWidth="630px" (nzOnCancel)="handleCancelInArea()">
+  <app-ufast-table [tableConfig]="inAreaTableConfig" [dataList]="inAreaDataList" [getListHandle]="getInAreaModalData"></app-ufast-table>
+  <ng-template #chooseInArea let-code="code">
+    <span class="operate-text" (click)="chooseInAreaFun(code)">选择</span>
+  </ng-template>
+</nz-modal>
+
+
+
+<nz-modal class="set-modal inLead" [(nzVisible)]="isToLeadVisible" nzTitle="导入物料" [nzFooter]="modalFooter" nzWidth="630px"
+  (nzOnCancel)="handleToLeadCancel()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4">下载模板{{isToLeadVisible}}</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <a nz-button nzType="primary" nzGhost [href]="href">下载</a>
+      <span class="font-red-color">注：模板格式不正确，则相应的物料数据不能导入</span>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4">选择文件</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzShowButton]="fileList.length < 1" [nzRemove]="removeFile">
+        <button nz-button>
+          <i class="anticon anticon-upload"></i>
+          <span>添加文件</span>
+        </button>
+      </nz-upload>
+    </nz-form-control>
+  </nz-form-item>
+  <div *ngIf="errorMessage.length !== 0">
+  <nz-form-item>
+    <nz-form-label nzSpan="4">错误信息</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <div *ngFor="let item of errorMessage" class="errorInformation">第{{item.errorRow}}行:{{item.remark}}</div>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)="handleOk()">导入</button>
+    <button nz-button nzType="primary" nzGhost (click)="handleToLeadCancel()">取消</button>
+  </ng-template>
+</nz-modal>

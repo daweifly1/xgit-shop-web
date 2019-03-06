@@ -1,0 +1,221 @@
+<div nz-col nzSpan="24">
+  <div class="head-bar"><span>物料信息</span></div>
+  <div class="detail-header-info">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料编码</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.code}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料类别</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.materialType | map: 'materialType2'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料分类</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.fullClassName}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料名称</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.name}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">规格型号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.specificationModel}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">计量单位</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.unit}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">零件号/图号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.drawingNumber}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">材质</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.material}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">品牌</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.brand}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">进口或国产</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.importOrDomestic}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">重要程度</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.importance}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物资分类</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.materialClassification}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzSpan="8">进项税</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <div>{{materialInfo.inputTaxRate}}</div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+          <nz-form-label nzSpan="8">销项税</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <div>{{materialInfo.outputTaxRate}}</div>
+          </nz-form-control>
+        </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">计划价(元)</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.planPrice}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">总成或部装</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.assemblyOrPart | map: 'assemblyOrPart'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">允许溢短装</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.shortDress | map: 'shortDress'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">分工管理</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.divideWork}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">所属供应范围</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.supplyRange}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <ng-container *ngIf="materialInfo.materialType === 2">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">设备名称</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <div>{{materialInfo.deviceName}}</div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">设备型号</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <div>{{materialInfo.deviceModel}}</div>
+        </nz-form-control>
+      </nz-form-item>
+    </ng-container>
+
+
+    <div class="head-bar" nz-col nzSpan="24"><span>厂矿信息</span></div>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6">采购组</nz-form-label>
+      <nz-form-control nzSpan="18">
+          <div>{{factoryInformation.purchasingGroupId}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">计划分解</nz-form-label>
+      <nz-form-control nzSpan="18">
+          <div *ngIf="factoryInformation.planDec === '1'">材料</div>
+          <div *ngIf="factoryInformation.planDec === '2'">备件</div>
+          <div *ngIf="factoryInformation.planDec === '3'">设备</div>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6">旧编码</nz-form-label>
+      <nz-form-control nzSpan="18">
+          <div>{{factoryInformation.oldCode}}</div>
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6">管理模式</nz-form-label>
+      <nz-form-control nzSpan="18">
+          <div>{{factoryInformation.managementMode | map: 'managementMode'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzSpan="6">分工管理</nz-form-label>
+        <nz-form-control nzSpan="18">
+            <div>{{factoryInformation.divisionName}}</div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+          <nz-form-label nzSpan="6">计划员</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <div>{{factoryInformation.planner}}</div>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="6">保管员</nz-form-label>
+            <nz-form-control nzSpan="18">
+              <span>{{factoryInformation.keeperName}}</span>
+            </nz-form-control>
+          </nz-form-item>
+  </div>
+</div>
+
+<div nz-col nzSpan="24">
+  <button nz-button class="editable-add-btn" nzType="info" (click)="addRow()">新增行</button>
+  <nz-table #locationTable nzBordered [nzData]="locationDataSet" nzSize="small">
+    <thead>
+      <tr>
+        <th nzWidth="50px" nzLeft="0px">默认</th>
+        <th>储位</th>
+        <th nzWidth="30%">保管员</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of locationTable.data;let i=index">
+        <td nzShowCheckbox="true" nzLeft="0px" [(nzChecked)]="data._checked" (nzCheckedChange)="refreshStatus($event, data.id)">
+        </td>
+        <td>
+          <app-location-selector [placeholder]="placeholder" [(ngModel)]="data.storageCode" (ok)="location($event)"
+            style="width: 300px;"></app-location-selector>
+        </td>
+        <td>
+          <span>{{data.keeperName}}</span>
+        </td>
+        <td>
+          <span class="operate-text" (click)="deleteRow(i)">删除</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary"  (click)="save()">保存
+  </button>
+  <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消
+  </button>
+</div>

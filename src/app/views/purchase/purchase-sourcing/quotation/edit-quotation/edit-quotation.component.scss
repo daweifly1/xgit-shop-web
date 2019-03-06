@@ -1,0 +1,53 @@
+.edit-quotation-form {
+  .full-form-item {
+    width: 100%;
+    margin-top: 5px;
+  }
+}
+.red-color {
+  color: red;
+}
+.quota-material-form {
+  td {
+    /deep/.ng-dirty.ng-invalid input {
+      border: 1px solid red;
+    }
+    /deep/input.ng-dirty.ng-invalid {
+      border: 1px solid red;
+    }
+    /deep/.ng-dirty.ng-invalid .ant-select-selection {
+      border: 1px solid red;
+    }
+  }
+
+}
+.detail-table-header.edit-material {
+  display: flex;
+  .batch-wrap{
+    display: flex;
+    margin-left: 20px;
+    label {
+      color: #333;
+      line-height: 30px;
+      padding-right: 5px;
+      width: 120px;
+    }
+    nz-date-picker, nz-input-number, nz-select{
+      width: 220px;
+      display: inline-block;
+    }
+  }
+}
+.upload-error-msg {
+  width: 100%;
+  color: red;
+  max-height: 150px;
+  overflow: auto;
+  & div:first-child {
+    margin-top: 10px;
+  }
+  div {
+    line-height: 20px;
+    word-break: break-all;
+  }
+}

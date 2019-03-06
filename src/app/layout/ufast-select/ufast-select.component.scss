@@ -1,0 +1,17 @@
+.wrap {
+  width: inherit;
+  height: inherit;
+  position: relative;
+
+  nz-input-group {
+    width:100%;
+    height: 100%;
+
+    input {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+}
+

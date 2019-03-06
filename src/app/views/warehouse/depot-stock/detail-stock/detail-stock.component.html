@@ -1,0 +1,44 @@
+<div nz-col nzSpan="4">
+  <form nz-form class="vendor-edit" [nzLayout]="'horizontal'">
+    <nz-form-item>
+      <nz-form-label nzSpan="10">物料编号</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <div>{{InmaterialNo}}</div>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+<div nz-col nzSpan="8">
+  <form nz-form class="vendor-edit" [nzLayout]="'horizontal'">
+    <nz-form-item>
+      <nz-form-label nzSpan="10">储位</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <div>{{InlocationCode}}</div>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+
+<div nz-col nzSpan="8">
+  <form nz-form class="vendor-edit" [nzLayout]="'horizontal'">
+    <nz-form-item>
+      <nz-form-label nzSpan="10">协议号</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <div>{{InagreementCode}}</div>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+
+<div nz-col nzSpan="24" class="marginTop marginBottom">
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="StockDetailDataList"
+                   [getListHandle]="getWareHouseInventoryDetail"></app-ufast-table>
+</div>
+
+<div>
+  <div nz-col nzSpan="10"></div>
+  <div nz-col nzSpan="12" class="marginTop">
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">返回
+    </button>
+  </div>
+</div>

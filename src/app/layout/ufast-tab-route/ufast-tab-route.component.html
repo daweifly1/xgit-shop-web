@@ -1,0 +1,21 @@
+
+<ng-template>
+  <ng-template #titleTemplate>
+    <div (contextmenu)="rightClick($event)" cdkOverlayOrigin >
+      {{ tabTitle }}
+      <span *ngIf="showClosable && tabsetService.tabNumber > 1">
+        <img src="assets/imgs/close.png" style="width:18px;height:18px;" (click)="clickCloseTab($event)" *ngIf="tabsetService.cacheRouterNumber !== 1" />
+      </span>
+    </div>
+  </ng-template>
+  <ng-content></ng-content>
+</ng-template>
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="menuOpen" [cdkConnectedOverlayOrigin]="cdkOverlayOrigin"
+             [cdkConnectedOverlayHasBackdrop]="true" (backdropClick)="onMenuClickBack()" [cdkConnectedOverlayWidth]="menuWidth"
+             [cdkConnectedOverlayOffsetX]='menuOffsetX' [cdkConnectedOverlayOffsetY]="menuOffsetY">
+  <ul class="menu-ul" (contextmenu)="preventMenuEvent($event)">
+    <li *ngFor="let item of menuList" (contextmenu)="item.onContextmenu($event)" (click)="item.onClick($event, item.disabled)" [ngClass]="{'disabled-li': item.disabled}">
+      {{item.label}}
+    </li>
+  </ul>
+</ng-template>

@@ -1,0 +1,66 @@
+<form nz-form [formGroup]="materialForm">
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>物料编码</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="materialCode" readonly (focus)="showMaterialModal()">
+      <nz-form-explain *ngIf="materialForm.get('materialCode').dirty && materialForm.get('materialCode').errors">必填项,请选择</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>物料描述</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="materialDesc">
+      <nz-form-explain *ngIf="materialForm.get('materialDesc').dirty && materialForm.get('materialDesc').errors">必填项,请选择物料编码</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>物料单位</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="unit">
+      <nz-form-explain *ngIf="materialForm.get('unit').dirty && materialForm.get('unit').errors">必填项,请选择物料编码</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>结算物料编码</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="settlementMaterialCode" readonly (focus)="showSettltmentMaterialModal()">
+      <nz-form-explain *ngIf="materialForm.get('settlementMaterialCode').dirty && materialForm.get('settlementMaterialCode').errors">必填项,请选择</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>结算物料描述</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="settlementMaterialDesc">
+      <nz-form-explain *ngIf="materialForm.get('settlementMaterialDesc').dirty && materialForm.get('settlementMaterialDesc').errors">必填项,请选择结算物料编码</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>结算物料单位</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="settlementUnit">
+      <nz-form-explain *ngIf="materialForm.get('settlementUnit').dirty && materialForm.get('settlementUnit').errors">必填项,请选择结算物料编码</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div class="footer-bar" nz-row>
+  <div nz-col nzOffset="6">
+    <button nz-button nzType="primary" class="submit-button" (click)="submitAgreementMaterialref()">保存</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+    </button>
+  </div>
+</div>
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisibleMaterial" nzTitle="选择物料" nzWidth="630px" [nzFooter]="null" (nzOnCancel)="handleCancel()">
+  <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="transportSearchButton">
+      <input type="text" nz-input placeholder="请输入物料编码" [(ngModel)]="materialFilter.code">
+      <input type="text" nz-input placeholder="请输入物料描述" [(ngModel)]="materialFilter.name">
+    </nz-input-group>
+    <ng-template #transportSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="getMaterialList()">搜索</button>
+    </ng-template>
+  </div>
+  <app-ufast-table [tableConfig]="materialTableConfig" [dataList]="materialList" [getListHandle]="getMaterialList"></app-ufast-table>
+  <ng-template #chooseMaterial let-code="materialCode" let-desc="materialDesc" let-unit="unit">
+    <span class="operate-text" (click)="chooseMaterialFun(code, desc, unit)">选择</span>
+  </ng-template>
+</nz-modal>

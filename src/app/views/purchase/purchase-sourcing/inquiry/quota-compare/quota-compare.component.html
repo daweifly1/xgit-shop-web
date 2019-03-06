@@ -1,0 +1,61 @@
+<app-ufast-form-detail [detailDataConfig]="inquiryDetailConfig" [detailData]="inquiryDetail"></app-ufast-form-detail>
+
+<div class="split-bar">
+  <span>报价汇总行</span>
+</div>
+<app-ufast-table [dataList]="compareList" [tableConfig]="compareTableConfig"></app-ufast-table>
+
+<div class="split-bar">
+  <span>报价明细行&emsp;&emsp;供应商:&nbsp;{{detailSum.supplierName}}</span>
+</div>
+<nz-table #rowTable [nzData]="compareDetailList" [nzBordered]="true" [nzSize]="'small'" [nzLoading]="compareDetailTableConfig.loading" [nzShowPagination]="false"
+          [nzFrontPagination]="false"  [nzPageSizeOptions]="compareDetailTableConfig.pageSizeOptions">
+  <thead>
+  <tr>
+    <th nzWidth="80">行号</th>
+    <th nzWidth="100">物料编码</th>
+    <th nzWidth="100">物料描述</th>
+    <th nzWidth="100">单位</th>
+    <th nzWidth="100">数量</th>
+    <ng-container *ngIf="compareDetailList.length > 0">
+      <ng-container *ngFor="let data of compareDetailList[0].supplierPriceListFormat; trackBy: trackByItem">
+        <th nzWidth="100">第{{data.count}}次报价</th>
+      </ng-container>
+    </ng-container>
+    <th nzWidth="100">差额</th>
+    <th nzWidth="100">涨跌幅(%)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let detail of compareDetailList; trackBy: trackByItem">
+    <td>{{detail.rowNumber}}</td>
+    <td>{{detail.materialNo}}</td>
+    <td>{{detail.materialDesc}}</td>
+    <td>{{detail.unit}}</td>
+    <td>{{detail.quantity}}</td>
+    <ng-container *ngFor="let data of detail.supplierPriceListFormat; trackBy: trackByItem">
+      <td>{{data.supplierPrice}}</td>
+    </ng-container>
+    <td>{{detail.difference}}</td>
+    <td>{{detail.priceRange}}</td>
+  </tr>
+  <tr *ngIf="compareDetailList.length > 0">
+    <td colspan="4">合计</td>
+    <td>{{detailSum.quantity}}</td>
+    <ng-container *ngFor="let data of detailSum.supplierPriceList; trackBy: trackByItem">
+      <td>{{data.supplierPrice}}</td>
+    </ng-container>
+    <td>{{detailSum.difference}}</td>
+    <td>{{detailSum.priceRange}}</td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="confirmPrice()" [disabled]="disabledComfirm">确认报价</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">返回</button>
+</div>
+
+<ng-template #operateTpl let-supplierId="supplierId" let-supplierName="supplierName">
+  <span class="operate-text" (click)="showDetail(supplierId, supplierName)">查看明细</span>
+</ng-template>

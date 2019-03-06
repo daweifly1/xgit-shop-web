@@ -1,0 +1,45 @@
+<form nz-form [formGroup]="userLeaveForm">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzRequired>代理人名称</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <input nz-input formControlName="agentName" readonly (focus)="showAgentModal()" />
+      <nz-form-explain *ngIf="userLeaveForm.get('agentName').dirty && userLeaveForm.get('agentName').errors">
+        必填项
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzRequired>开始时间</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+        <nz-date-picker [nzShowTime]="{nzFormat: 'yyyy-MM-dd HH:mm'}" formControlName="startTime" nzFormat="yyyy-MM-dd HH:mm" [nzDisabledDate]="disabledStart"></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzRequired>结束时间</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+        <nz-date-picker [nzShowTime]="{nzFormat: 'yyyy-MM-dd HH:mm'}" formControlName="endTime" nzFormat="yyyy-MM-dd HH:mm" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+      <nz-form-label nzSpan="4">状态</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-radio-group formControlName="state">
+          <label nz-radio [nzValue]="1">启用</label>
+          <label nz-radio [nzValue]="0">禁用</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+</form>
+<div class="footer-bar" nz-row>
+  <div nz-col nzOffset="6">
+    <button nz-button nzType="primary" class="submit-button" (click)="saveUserLeave()">保存</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+    </button>
+  </div>
+</div>
+<nz-modal [(nzVisible)]="agentVisible" nzTitle="选择代理人" [nzFooter]="null" (nzOnCancel)="agentVisible = false">
+  <app-ufast-table [tableConfig]="agentListTableConfig" [dataList]="agentList" [getListHandle]="getAgentList"></app-ufast-table>
+</nz-modal>
+<ng-template #chooseAgentTpl let-id="userId" let-name="name">
+  <span class="operate-text" (click)="selectAgentName(id, name)">选择</span>
+</ng-template>

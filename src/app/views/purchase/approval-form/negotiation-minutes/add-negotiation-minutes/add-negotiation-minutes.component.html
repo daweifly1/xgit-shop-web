@@ -1,0 +1,192 @@
+<div>
+  <form nz-form [formGroup]="negotiationMinutesForm">
+    <div class="order-header-form">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">纪要编号</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="id" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">审定表编号</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="confirmNo" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">商务科室</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="businessDepartment" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">谈判主题</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="negotiationTopic" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">谈判日期</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-date-picker formControlName="negotiationDate" class="selectStyle"></nz-date-picker>
+          <nz-form-explain *ngIf="negotiationMinutesForm.get('negotiationDate').dirty && negotiationMinutesForm.get('negotiationDate').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">谈判地点</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="negotiationAddress" [maxlength]="InputMaxLen.Default" />
+          <nz-form-explain *ngIf="negotiationMinutesForm.get('negotiationAddress').dirty && negotiationMinutesForm.get('negotiationAddress').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- <nz-form-item>
+      <nz-form-label nzSpan="8">谈判方式</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-select style="width:100%;" nzAllowClear formControlName="negotiationWay">
+          <nz-option *ngFor="let item of ('negotiationStyle'|mapList); trackBy: trackByItem" [nzValue]="item.label"
+            [nzLabel]="item.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="negotiationMinutesForm.get('negotiationWay').dirty && negotiationMinutesForm.get('negotiationWay').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item> -->
+      <nz-form-item>
+        <nz-form-label nzSpan="8">谈判形式</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-select style="width:100%;" nzAllowClear formControlName="negotiationForm">
+            <nz-option *ngFor="let item of ('negotiationForm'|mapList); trackBy: trackByItem" [nzValue]="item.label"
+              [nzLabel]="item.label"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="negotiationMinutesForm.get('negotiationForm').dirty && negotiationMinutesForm.get('negotiationForm').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzSpan="8">谈判组长</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-input-group class="search-group" nzSearch [nzSuffix]="clearLeaderButton">
+            <input nz-input formControlName="negotiationLeader" [maxlength]="InputMaxLen.NegotiationLeader" (focus)="showLeaderModel()"
+              readonly />
+          </nz-input-group>
+          <ng-template #clearLeaderButton>
+            <button nz-button nzType="default" nzSearch (click)="clearLeader()"><i class="anticon anticon-close"></i></button>
+          </ng-template>
+
+          <nz-form-explain *ngIf="negotiationMinutesForm.get('negotiationLeader').dirty && negotiationMinutesForm.get('negotiationLeader').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">谈判成员</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-input-group class="search-group" nzSearch [nzSuffix]="clearMemberButton">
+            <input nz-input formControlName="negotiationMember" [maxlength]="InputMaxLen.Default" (focus)="showMemberModal()"
+              readonly />
+          </nz-input-group>
+          <ng-template #clearMemberButton>
+            <button nz-button nzType="default" nzSearch (click)="clearMember()"><i class="anticon anticon-close"></i></button>
+          </ng-template>
+
+          <nz-form-explain *ngIf="negotiationMinutesForm.get('negotiationMember').dirty && negotiationMinutesForm.get('negotiationMember').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">上传附件</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <app-action-group>
+            <app-action (clickAction)="upLoad()">上传</app-action>
+            <app-action [enabled]="false">
+              <a *ngIf="attachment" [href]="downLoadUrl" download="">下载</a>
+              <ng-container *ngIf="!attachment">下载</ng-container>
+            </app-action>
+          </app-action-group>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="detail">
+      <nz-form-item>
+        <nz-form-label nzSpan="4">谈判内容纪要</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <textarea nz-input rows="2" formControlName="negotiationContent" [maxlength]="InputMaxLen.Long"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </form>
+  <!-- 供应商代表-->
+  <div class="split-bar"><span>供应商</span></div>
+  <app-ufast-table [tableConfig]="supplierTableConfig" [dataList]="supplierList"></app-ufast-table>
+  <ng-template #nameTpl let-ctx="_this">
+    <input nz-input [(ngModel)]="ctx.seller_representative" [maxlength]="InputMaxLen.Default">
+  </ng-template>
+
+  <!-- 供应商报价信息 -->
+  <div class="split-bar"><span>供应商报价信息</span></div>
+  <nz-tabset nzType="card" [(nzSelectedIndex)]="tabIndex" (nzSelectedIndexChange)="changeTab($event)" style="height:auto;">
+    <nz-tab nzTitle="首轮报价">
+    </nz-tab>
+    <nz-tab nzTitle="最终报价&成交价格">
+    </nz-tab>
+  </nz-tabset>
+
+  <nz-table #rowTable [nzData]="tableDataList" [nzBordered]="true" [nzSize]="'small'" [nzLoading]="tableConfig.loading"
+    [nzPageIndex]="tableConfig.pageNum" [nzPageSize]="tableConfig.pageSize" [nzFrontPagination]="true"
+    [nzPageSizeOptions]="tableConfig.pageSizeOptions" [nzScroll]="{x: tableConfig.xScroll}" [nzShowPagination]="true"
+    [nzShowQuickJumper]="true" [nzShowSizeChanger]="true">
+    <thead>
+      <tr>
+        <th rowspan="2" *ngFor="let item of tableConfig.headers;trackBy: trackByItem" [nzWidth]="item.width + 'px'">{{item.title}}</th>
+        <ng-container *ngIf="tableDataList.length > 0">
+          <th colspan="2" *ngFor="let supplier of tableDataList[0].summaryOfferBodyDOS;trackBy:trackByItem;">{{supplier.supplierName}}</th>
+        </ng-container>
+      </tr>
+      <tr>
+        <ng-container *ngIf="tableDataList.length > 0">
+          <ng-container *ngFor="let supplier of tableDataList[0].summaryOfferBodyDOS;trackBy:trackByItem;">
+            <th style="width: 80px">报价数量</th>
+            <th style="width: 80px">单价(元)</th>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of rowTable.data;trackBy:trackByItem;let i = 'index'">
+        <ng-container *ngFor="let header of tableConfig.headers;trackBy: trackByItem;">
+          <td *ngIf="header.pipe">{{row[header.field] | map:header.pipe}}</td>
+          <td *ngIf="!header.pipe">{{row[header.field]}}</td>
+        </ng-container>
+        <ng-container *ngFor="let supplierNum of row.summaryOfferBodyDOS;trackBy: trackByItem;">
+          <td>{{supplierNum.supplierCount}}</td>
+          <td>{{supplierNum.supplierPrice}}</td>
+        </ng-container>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="saveNegotiationMinutes()">保存</button>
+  <button nz-button nzType="primary" (click)="submitNegotiationMinutes()">提交</button>
+  <button nz-button nzType="primary" nzGhost (click)="onCancel()">取消</button>
+</div>
+
+<nz-modal class="set-modal" [(nzVisible)]="isVisibleLeader" [nzFooter]="null" nzTitle="选择谈判组长" nzWidth="630px"
+  (nzOnCancel)="handleCancelLeader()">
+  <app-ufast-table [tableConfig]="leaderTableConfig" [dataList]="deptMemList" [getListHandle]="getUsers"></app-ufast-table>
+  <ng-template #chooseLeader let-name="name">
+    <span class="operate-text" (click)="chooseLeaderFun(name)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisibleMember" nzTitle="选择谈判成员" nzWidth="630px" (nzOnCancel)="handleCancelMember()" (nzOnOk)="handleOkMember()">
+  <app-ufast-table [tableConfig]="memberTableConfig" [dataList]="deptMemList" [getListHandle]="getUsers"
+    (selectedChange)="changeSelect($event)"></app-ufast-table>
+</nz-modal>

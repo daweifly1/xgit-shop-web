@@ -1,0 +1,82 @@
+<app-tab-route tabTitle="物料提报">
+  <ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="物料名称" [(searchText)]="filters.name"
+      (advancedSearch)="fullSearch()" (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="tableConfig">
+    </app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.materialReportAdd">新增</button>
+      <button nz-button nzType="info" (click)="allot()" *appAuthBtu="ActionCode.materialReportAllot">档案分配</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料分类</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+              [(ngModel)]="materialClass" [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择">
+            </nz-cascader>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">提交时间开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.startCreateDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">提交时间结束</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.endCreateDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">提报单位</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.reportDept">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="filters.status" nzAllowClear>
+              <nz-option nzValue="0" nzLabel="待审核"></nz-option>
+              <nz-option nzValue="1" nzLabel="审核通过"></nz-option>
+              <nz-option nzValue="2" nzLabel="审核拒绝"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="advanceSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearchClose()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="materialList" [getListHandle]="getDataList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+  </ng-container>
+  <ng-template #operation let-id="id" let-status="status">
+    <span [appEnable]="buttonState[id].Edit" (click)="update(id)" *appAuthBtu="ActionCode.materialReportEdit">编辑</span>
+  </ng-template>
+
+
+  <ng-container *ngIf="selectedPage === tabPageType.MaterialSelectPage">
+    <app-factory-material-select (finish)="onChildPageFinish()"></app-factory-material-select>
+  </ng-container>
+
+  <ng-container *ngIf="selectedPage === tabPageType.EditPage">
+    <app-material-edit (finish)="onChildPageFinish()" [editId]="editId"></app-material-edit>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.NameMatchPage">
+    <app-name-match (finish)="onChildPageFinish()" [materialName]="materialName"></app-name-match>
+  </ng-container>
+
+
+
+</app-tab-route>

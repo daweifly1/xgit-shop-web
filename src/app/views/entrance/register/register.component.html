@@ -1,0 +1,75 @@
+<div class="register-wrap">
+  <header>企业注册</header>
+  <form nz-form [formGroup]="infoForm" class="info-form">
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">公司名称</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="companyName" [maxlength]="MaxInputLenEnum.CompanyName" />
+        <nz-form-explain *ngIf="infoForm.get('companyName').dirty && infoForm.get('companyName').errors">必填</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">统一社会信用代码</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="socialCreditCode" [maxlength]="MaxInputLenEnum.CreditCode" />
+        <nz-form-explain *ngIf="infoForm.get('socialCreditCode').dirty && infoForm.get('socialCreditCode').errors">必填</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">登录账号</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="loginName" [maxlength]="MaxInputLenEnum.Account" />
+        <nz-form-explain *ngIf="infoForm.get('loginName').dirty && infoForm.get('loginName').errors">必填，长度小于或等于20</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">登录密码</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="password" type="password" />
+        <nz-form-explain *ngIf="infoForm.get('password').dirty && infoForm.get('password').errors">
+          必填，由6到20位大小写字母、数字或其他字符组成
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">确认密码</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="confirmPw" type="password" />
+        <nz-form-explain *ngIf="infoForm.get('confirmPw').dirty && infoForm.get('confirmPw').errors">
+          两次输入密码不一致
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">姓名</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="userName" [maxlength]="MaxInputLenEnum.Name" />
+        <nz-form-explain *ngIf="infoForm.get('userName').dirty && infoForm.get('userName').errors">
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="10">手机号</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="phone" />
+        <nz-form-explain *ngIf="infoForm.get('phone').dirty && infoForm.get('phone').errors">
+          请输入正确的手机号码
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">验证码</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input formControlName="verifyCode" nzSize="default" spellcheck="false" />
+      </nz-form-control>
+      <nz-form-extra nzSpan="6" (click)="refreshVerify()">
+        <img [src]="verifyImgUrl" alt="加载失败"/>
+      </nz-form-extra>
+    </nz-form-item>
+    <div nz-row>
+      <div nz-col nzOffset="10" nzSpan="14">
+        <button nz-button nzType="primary" [disabled]="infoForm.invalid" (click)="register()">注册</button>
+      </div>
+    </div>
+  </form>
+</div>

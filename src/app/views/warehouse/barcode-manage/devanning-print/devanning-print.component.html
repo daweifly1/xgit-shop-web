@@ -1,0 +1,139 @@
+<app-tab-route tabTitle="拆箱打印">
+  <ng-container>
+    <div class="left">
+      <app-ufast-table-nav [searchPlaceholder]="searchPlaceholder" (search)="getDevanningPrintList()" [(searchText)]="filters.materialsNo"
+        [tableConfig]="tableConfig" (searchTextChange)="searchTextChange($event)" (advancedSearch)="advancedSearch()"
+        (refresh)="getDevanningPrintList()"></app-ufast-table-nav>
+      <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label nzSpan="8">物料编码</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <input nz-input [(ngModel)]="filters.materialsNo">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label nzSpan="8">单据号</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <input nz-input [(ngModel)]="filters.billNo">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label nzSpan="8">创建开始时间</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <nz-date-picker [(ngModel)]="filters.beginDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label nzSpan="8">创建结束时间</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <nz-date-picker [(ngModel)]="filters.endDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="24" class="btn-bar">
+          <button nz-button nzType="primary" (click)="getDevanningPrintList()">搜索</button>
+          <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+          <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+        </div>
+      </div>
+
+      <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="devanningPrintDataList" [getListHandle]="getDevanningPrintList"
+        (selectedChange)="changeSelect($event)"></app-ufast-table>
+    </div>
+    <div class="right">
+      <div class="box-head">
+        <span class="print-param">打印参数</span>
+        <span class="operate-text print-configuration" (click)="onClick($event)" *appAuthBtu="ActionCode.devanningPrint">打印配置</span>
+      </div>
+      <div class="print-content">
+        <form nz-form class="vendor-edit p-t-md clear-fix" [formGroup]="printConfigurationForm">
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzSpan="10">零件号/图号</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input formControlName="orawyd">
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="10">规格描述</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input formControlName="barcodeDesc">
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="10" nzRequired>包装数量</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <nz-input-number style='width:100%;' [ngModelOptions]="{standalone: true}" readonly [(ngModel)]="currentQty"
+                  (ngModelChange)="currentQtyChange($event)" [nzMin]="2" [nzMax]="maxSplitNum" [nzPrecision]="0"></nz-input-number>
+              </nz-form-control>
+            </nz-form-item>
+
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzSpan="10">条码描述</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input formControlName="model">
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="10" nzRequired>总数量</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input formControlName="totalQty" readonly>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </form>
+      </div>
+      <div class="split-template">
+        <div class="form" *ngIf="currentQty>0">
+          <div class="form-group form-group-sm" *ngFor="let i of dynamicData">
+            <div nz-col nzSpan="24">
+              <nz-form-item>
+                <nz-form-label nzSpan="5">每包数量</nz-form-label>
+                <nz-form-control nzSpan="6">
+                  <nz-input-number style="width: 100%;" [ngModelOptions]="{standalone: true}" 
+                    [(ngModel)]="i.currentQty" [nzPrecision]="materialNumDec" [nzMin]="materialNumMin" [nzStep]="materialNumMin"></nz-input-number>
+                </nz-form-control>
+                <nz-form-label nzSpan="6">vinid</nz-form-label>
+                <nz-form-control nzSpan="6">
+                  <input nz-input [(ngModel)]="i.vinid">
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-btu-wrap">
+        <button nz-button nzType="primary" class="submit-button" [disabled]="!totalQty" (click)="print('preview')" *appAuthBtu="ActionCode.devanningPrint">预览</button>
+        <button nz-button nzType="primary" class="submit-button" [disabled]="!totalQty" (click)="print('print')" *appAuthBtu="ActionCode.devanningPrint">打印</button>
+      </div>
+    </div>
+
+  </ng-container>
+  <app-right-side-box [(show)]="show" [title]="printModelTitle">
+    <div nz-col nzSpan="24" style="margin-top:20px;">
+      <nz-form-item>
+        <nz-form-label nzSpan="7">打印模板</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <span>模板1</span>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="7">内容显示</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <label nz-checkbox [(ngModel)]="configurationList.edition">条码值</label>
+          <label nz-checkbox [(ngModel)]="configurationList.vin">VIN</label>
+          <label nz-checkbox [(ngModel)]="configurationList.hasPackNumber">包装数量</label>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </app-right-side-box>
+</app-tab-route>

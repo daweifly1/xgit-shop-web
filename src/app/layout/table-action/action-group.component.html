@@ -1,0 +1,14 @@
+<ng-template>
+  <ng-content></ng-content>
+</ng-template>
+<ng-container *ngFor="let action of showActionList; trackBy: trackById;">
+  <ng-container *ngTemplateOutlet="action.actionTpl;context:action"></ng-container>
+</ng-container>
+<nz-popover nzPlacement="right" *ngIf="hideActionList.length > 0" [(nzVisible)]="_isShowActionPopover" (nzVisibleChange)="onVisibleChange($event)">
+  <span class="operate-text" nz-popover>.&nbsp;.&nbsp;.</span>
+  <ng-template #nzTemplate>
+    <ng-container *ngFor="let action of hideActionList; trackBy: trackById;">
+      <ng-container *ngTemplateOutlet="action.actionTpl;context:action"></ng-container>
+    </ng-container>
+  </ng-template>
+</nz-popover>

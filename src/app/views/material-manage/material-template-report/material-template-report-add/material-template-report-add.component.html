@@ -1,0 +1,126 @@
+<form nz-form [formGroup]="form" class="form">
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzRequired>物料类别</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <!-- <nz-select nzPlaceHolder="请选择" class="selectStyle" (ngModelChange)="changeMaterialType($event)" formControlName="materialType">
+          <nz-option nzValue="" nzLabel="请选择"></nz-option>
+          <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+          <nz-option [nzValue]="2" nzLabel="备件"></nz-option>
+          <nz-option [nzValue]="3" nzLabel="设备"></nz-option>
+        </nz-select> -->
+        <nz-select class="selectStyle" formControlName="materialType" (ngModelChange)="changeMaterialType($event)" nzAllowClear>
+            <nz-option *ngFor="let item of ('materialTemplateType' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+  
+        <nz-form-explain *ngIf="form.get('materialType').dirty && form.get('materialType').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzRequired>物料分类</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)"
+                     (nzSelect)="selectMaterialClassItem($event)"
+                     formControlName="materialClassId"
+                     [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择三级分类"
+                     (ngModelChange)="onChanges($event)">
+        </nz-cascader>
+        <nz-form-explain *ngIf="form.get('materialClassId').dirty && form.get('materialClassId').errors&&!getFormControl('materialClassId').hasError('isSelectedThird')">必填项，请输入
+        </nz-form-explain>
+        <nz-form-explain *ngIf="getFormControl('materialClassId').hasError('isSelectedThird')">请选择含有第三级的物料分类
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item *ngIf="form.controls['materialType'].value===2">
+      <nz-form-label nzSpan="6" nzRequired>选择设备</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="deviceTemplateId">
+          <nz-option *ngFor="let item of choosedEquipmentList;trackBy:trackByNewsId;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="form.get('deviceTemplateId').dirty && form.get('deviceTemplateId').errors">必填项，请输入
+          </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  
+  
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzRequired>物料名称</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="materialName" [maxlength]="maxLenInputEnum.Default" nzSize="default"/>
+        <nz-form-explain *ngIf="form.get('materialName').dirty && form.get('materialName').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+      <button nz-button nzType="primary" class="seeAbout" (click)="showMaterialName($event)">查询</button>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzRequired>计量单位</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="unit" nzAllowClear>
+          <nz-option *ngFor="let item of unitList;trackBy:trackByNewsId;" [nzValue]="item.code" [nzLabel]="item.code"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="form.get('unit').dirty && form.get('unit').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label nzSpan="6">型号规格</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <textarea  nz-input rows="2" formControlName="modelSpecification" [maxlength]="maxLenInputEnum.Default"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  
+    <nz-form-item>
+      <nz-form-label nzSpan="6">备注</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <textarea nz-input rows="2" formControlName="remark" [maxlength]="maxLenInputEnum.Default"></textarea>
+        <nz-form-explain *ngIf="form.get('remark').dirty && form.get('remark').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  
+  <div class="head-bar"><span>曾用名</span></div>
+  
+  <button nz-button nzType="info" class="editable-add-btn" (click)="addRow()">新增行</button>
+  <nz-table #beforeUseTable nzBordered [nzData]="beforeNameDataSet" nzSize="small">
+    <thead>
+    <tr>
+      <th>序号</th>
+      <th nzWidth="30%">曾用名</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of beforeUseTable.data;let i=index">
+      <td>{{i+1}}</td>
+      <td>
+        <div class="editable-cell">
+          <div class="editable-cell-text-wrapper">
+            <input type="text" nz-input [(ngModel)]="data.materialTemplateUsedName" [maxlength]="maxLenInputEnum.UserdName">
+          </div>
+        </div>
+      </td>
+      <td>
+        <nz-popconfirm [nzTitle]="'确定删除吗?'" (nzOnConfirm)="deleteRow(i)">
+          <a nz-popconfirm>删除</a>
+        </nz-popconfirm>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+  <nz-form-item>
+    <nz-form-control nzOffset="2" nzSpan="18">
+      <button nz-button nzType="primary" (click)="save()">保存</button>
+      <button nz-button nzGhost nzType="primary" (click)="back()">返回</button>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <app-right-side-table-box [(show)]="isVisibleMaterialName" title="物料列表" searchPlaceholder="物料名称"
+[tableConfig]="materialNameTableConfig" [dataList]="materialNameDataList"
+[getListHandle]="getMaterialNameList" 
+[selectedChangeEvent]="rightTableEmit" idFiled="materialName" (search)="getMaterialNameList()" [(searchContent)]="materialNameFilter.materialName">
+</app-right-side-table-box>

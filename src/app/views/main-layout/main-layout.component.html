@@ -1,0 +1,37 @@
+
+<ul nz-menu nzMode="horizontal" class="top-menu-bar">
+  <li nz-menu-item class="logo-wrap" (click)="logoClick()"><img src="../../../assets/logo.png"></li>
+  <li nz-menu-item *ngFor="let topItem of mainMenu;let i=index" (click)="topNavigate(topItem.url, selectedItem === topItem.url)"
+      [nzSelected]="selectedItem === topItem.url"  [nzDisabled]="tabsetService.disabledMenu">{{topItem.name}}</li>
+  <div class="right-action-wrap">
+    <div>
+      <nz-dropdown>
+        <a nz-dropdown>
+          {{username}}
+          <i class="anticon anticon-down"></i>
+        </a>
+        <ul nz-menu>
+          <li nz-menu-item (click)="navigateUserInfo()">个人信息</li>
+          <li nz-menu-item (click)="navigatePassword()">修改密码</li>
+        </ul>
+      </nz-dropdown>
+    </div>
+    <div class="exit-wrap" (click)="logOut()">
+      <i class="anticon anticon-logout"></i>
+      <span>退出</span>
+    </div>
+  </div>
+</ul>
+<div class="main-container">
+
+  <app-side-menu [(loading)]="sideLoading" [sideMenu]="sideMenu" [(isCollapsed)]="hideSideMenu" width="200px" ></app-side-menu>
+
+  <div class="content-container" [ngStyle]="{'marginLeft':sideMenu.children.length===0?'0px': hideSideMenu?'20px':'200px'}">
+    <div class="tabset-wrap">
+      <nz-tabset nzType="card" [(nzSelectedIndex)]="tabsetService.selectedIndex" (nzSelectedIndexChange)="onSelectedIndex($event)">
+        <router-outlet></router-outlet>
+      </nz-tabset>
+    </div>
+  </div>
+</div>
+

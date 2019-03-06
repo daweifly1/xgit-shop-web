@@ -1,0 +1,25 @@
+/deep/ nz-table {
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+    padding: 8px;
+  }
+}
+.deal-number-wrap {
+  header {
+    margin: 10px 0;
+    span {
+      margin-left: 10px;
+    }
+  }
+}
+/deep/ .ant-modal-body {
+  padding: 10px;
+}
+.tab-header {
+  height: 32px;
+}
+.td-bg-mark {
+  background: #ff6666;
+}
+.tr-bg-mark:hover {
+  background: #ff6666;
+}

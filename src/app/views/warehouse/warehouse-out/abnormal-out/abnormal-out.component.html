@@ -1,0 +1,159 @@
+<app-tab-route tabTitle="其它出库">
+  <ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" [searchPlaceholder]="searchPlaceholder" (search)="getAbnormalOutList()"
+      [(searchText)]="filters.abnormalNo" [tableConfig]="tableConfig"
+      (advancedSearch)="advancedSearchBtn($event)" (refresh)="getAbnormalOutList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addWarehouse()" *appAuthBtu="ActionCode.unusualOutAdd">申请出库</button>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">申请单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.abnormalNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">调出仓库</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.outLocation">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">客户</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.agentName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">出库状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select [(ngModel)]="filters.status" nzPlaceHolder="请选择" class="selectStyle" nzAllowClear>
+              <nz-option nzValue="0" nzLabel="待出库"></nz-option>
+              <nz-option nzValue="1" nzLabel="部分出库"></nz-option>
+              <nz-option nzValue="2" nzLabel="全部出库"></nz-option>
+              <nz-option nzValue="3" nzLabel="强制结单"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">产生原因</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <!-- <input nz-input [(ngModel)]="filters.reasonName"> -->
+            <nz-select nzPlaceHolder="请选择" [(ngModel)]="filters.reasonName" nzAllowClear name="filters.reasonName" style="width: 100%">
+              <nz-option *ngFor="let item of reasonNameData" nzValue="{{item.id}}" nzLabel="{{item.name}}"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">CRM单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.crmOrder">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单人</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.createName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">是否条码管理</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.barcodeFlag" nzAllowClear>
+              <nz-option *ngFor="let item of barcodeFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.createDateStart" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.createDateEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getAbnormalOutList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="abnormalOutDataList" [getListHandle]="getAbnormalOutList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+  </ng-container>
+  <ng-template #operation let-id="id" let-abnormalNo="abnormalNo" let-status="status">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="editWarehouse(id)" *appAuthBtu="ActionCode.unusualOutEdit">编辑</app-action>
+      <app-action [enabled]="actionStatus[id].stockOut" (clickAction)="detailWarehouse(id, true)" *appAuthBtu="ActionCode.unusualOutDelivery">出库</app-action>
+      <app-action [enabled]="actionStatus[id].finish" (clickAction)="statementFinish(abnormalNo, id, null)" *appAuthBtu="ActionCode.unusualOutFinish">结单</app-action>
+      <app-action [enabled]="actionStatus[id].del" (clickAction)="singleDelete(id)" *appAuthBtu="ActionCode.unusualOutDel">删除</app-action>
+      <app-action [enabled]="actionStatus[id].erpSync" (clickAction)="doErpSync(id)" *appAuthBtu="ActionCode.unusualOutErpSync">ERP同步</app-action>
+      <app-action [enabled]="actionStatus[id].print" (clickAction)="showPrintModal(id)" *appAuthBtu="ActionCode.unusualOutPrint">打印</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #abnormalNo let-abnormalNo="abnormalNo" let-id="id">
+    <span class="operate-text" (click)="detailWarehouse(id, false)">{{abnormalNo}}</span>
+  </ng-template>
+  <ng-container *ngIf="selectedPage === tabPageType.AddPage">
+    <app-add-abnormal-out (finish)="onChildFinish()"></app-add-abnormal-out>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.DetailPage">
+    <app-abnormal-detail (finish)="onChildFinish()" [selectRowId]="EveryLineId" [stockOut]="stockOut"></app-abnormal-detail>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.EditPage">
+    <app-edit-abnormal-out (finish)="onChildFinish()" [selectRowId]="EveryLineId"></app-edit-abnormal-out>
+  </ng-container>
+
+  <ng-container *ngIf="printShow">
+  </ng-container>
+
+  <nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="打印" nzWidth="630px" (nzOnCancel)="handleCancel()"
+    [nzContent]="modalContent" [nzFooter]="modalFooter" nzMaskClosable="false">
+    <ng-template #modalContent>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="6" nzRequired>选择打印模板</nz-form-label>
+        <nz-form-control nzSpan="12">
+          <nz-select nzPlaceHolder="请选择打印模板" [(ngModel)]="templateName" style="width: 100%">
+            <nz-option *ngFor="let item of printTpl" nzValue="{{item.templateName}}" nzLabel="{{item.templateName}}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button nz-button nzType="primary" (click)="preview('print')">开始打印</button>
+      <button nz-button nzType="default" (click)="preview('preview')">打印预览</button>
+    </ng-template>
+  </nz-modal>
+
+</app-tab-route>
+
+
+<ng-template #navBreakcrumb>
+  <app-nav-breadcrumb></app-nav-breadcrumb>
+</ng-template>

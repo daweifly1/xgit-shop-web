@@ -1,0 +1,40 @@
+<div class="wrap">
+  <app-ufast-table [tableConfig]="dataTableConfig" [dataList]="dataList"></app-ufast-table>
+</div>
+<ng-template #oldValueTpl let-type="type" let-value="originalValue" let-oldValue="originalValueObj" let-newValue="newValueObj">
+  <span *ngIf="type === 1">{{value}}</span>
+  <span *ngIf="type !== 1" class="operate-text" (click)="viewDetail(type, oldValue, newValue)">查看</span>
+</ng-template>
+<ng-template #newValueTpl let-type="type" let-value="value" let-oldValue="originalValueObj" let-newValue="newValueObj">
+  <span *ngIf="type === 1">{{value}}</span>
+  <span *ngIf="type !== 1" class="operate-text" (click)="viewDetail(type, oldValue, newValue)">查看</span>
+</ng-template>
+<nz-modal [(nzVisible)]="infoModalShow" [nzFooter]="null" (nzOnCancel)="closeModal()" nzWidth="60%">
+  <div class="modal-wrap">
+    <div>
+      <div class="left side-item">
+        <header>更改后信息</header>
+        <div nz-row *ngFor="let item of fieldList;trackBy:trackByItem" class="row-item">
+          <div nz-col nzSpan="6">{{item.label}}:</div>
+          <div nz-col nzSpan="18">
+            <div *ngIf="!item.pipe">{{newData[item.field]}}</div>
+            <div *ngIf="item.pipe">{{newData[item.field] | map:item.pipe}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="right side-item">
+        <header>原信息</header>
+        <div nz-row *ngFor="let item of fieldList;trackBy:trackByItem" class="row-item">
+          <div nz-col nzSpan="6">{{item.label}}:</div>
+          <div nz-col nzSpan="18">
+            <div *ngIf="!item.pipe">{{oldData[item.field]}}</div>
+            <div *ngIf="item.pipe">{{oldData[item.field] | map:item.pipe}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <button nz-button nzType="primary" [nzGhost]="true" (click)="closeModal()">关闭</button>
+    </div>
+  </div>
+</nz-modal>

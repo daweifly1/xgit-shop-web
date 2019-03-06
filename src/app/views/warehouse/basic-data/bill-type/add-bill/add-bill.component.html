@@ -1,0 +1,78 @@
+<form nz-form [formGroup]="FormGroup" class="edit-add-form">
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>单据类型</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="type" spellcheck="false" maxlength="20" />
+      <nz-form-explain *ngIf="FormGroup.get('type').dirty && FormGroup.get('type').errors && !getFormControl('type').hasError('message')">必填项，请输入</nz-form-explain>
+      <nz-form-explain *ngIf="getFormControl('type').hasError('message')">
+        输入空格无效</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" class="positionChange" nzRequired>是否传ERP</nz-form-label>
+    <nz-radio-group [(ngModel)]="isSync" [ngModelOptions]="{standalone: true}" (ngModelChange)="isSynsChange($event)">
+      <label nz-radio [nzValue]="1">是</label>
+      <label nz-radio [nzValue]="0">否</label>
+    </nz-radio-group>
+  </nz-form-item>
+  <ng-container *ngIf="isSync">
+    <nz-form-item>
+      <nz-form-label nzSpan="6" nzRequired>ERP单据类型名称</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <input nz-input formControlName="erpBillTypeName" spellcheck="false" maxlength="20" />
+        <nz-form-explain *ngIf="FormGroup.get('erpBillTypeName').dirty && FormGroup.get('erpBillTypeName').errors && !getFormControl('erpBillTypeName').hasError('message')">必填项，请输入</nz-form-explain>
+        <nz-form-explain *ngIf="getFormControl('erpBillTypeName').hasError('message')">
+          输入空格无效</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">ERP单据类型编码</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <input nz-input formControlName="erpBillTypeCode" spellcheck="false" maxlength="20" />
+        <nz-form-explain *ngIf="getFormControl('erpBillTypeCode').hasError('message')">
+          输入空格无效</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+</form>
+
+<ng-container *ngIf="isSync">
+  <form [formGroup]="DeptForm" nz-form class="edit-add-form">
+    <div nz-row>
+      <nz-form-label nzSpan="6" nzRequired>部门</nz-form-label>
+      <div nz-col nzSpan="18" formArrayName="deptArr">
+        <nz-form-item *ngFor="let item of DeptForm.controls['deptArr'].controls;let i=index;" [formGroupName]='i'>
+          <nz-form-control nzSpan="10">
+            <input nz-input style="width: 100%; margin-right:8px;" placeholder="部门编码" formControlName="innerOrder"
+              [maxLength]="maxLenInputEnum.InnerOrder" />
+              <nz-form-explain *ngIf="item.get('innerOrder').dirty && item.get('innerOrder').errors">必填项，请不要输入中文</nz-form-explain>
+          </nz-form-control>
+          <nz-form-control nzSpan="12">
+            <input nz-input style="width: 93%; margin-left:8px;" placeholder="部门名称" formControlName="innerOrderNote"
+              [maxLength]="maxLenInputEnum.InnerOrderNote" />
+              <nz-form-explain *ngIf="item.get('innerOrderNote').dirty && item.get('innerOrderNote').errors">必填项，请输入</nz-form-explain>
+          </nz-form-control>
+          <div nz-col nzSpan="2" class="del-btu-wrap" *ngIf="DeptForm.controls['deptArr'].controls.length > 1">
+            <i class="anticon anticon-minus-circle-o dynamic-delete-button" (click)="delDept(i)"></i>
+          </div>
+        </nz-form-item>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzOffset="6">
+        <button nz-button nzType="dashed" style="width:60%" (click)="addDept()">
+          <i class="anticon anticon-plus"></i>添加
+        </button>
+      </div>
+    </div>
+
+  </form>
+</ng-container>
+
+<div class="footer-bar" nz-row>
+  <div nz-col nzOffset="6">
+    <button nz-button nzType="primary" class="submit-button" (click)="submitBillType()">保存</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+    </button>
+  </div>
+</div>

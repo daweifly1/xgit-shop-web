@@ -1,0 +1,58 @@
+<app-tab-route tabTitle="合同条款模板">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="模板名称" [showAdvancedSearch]="false" [(searchText)]="filters.templateName"
+      (search)="getClauseTemplateDataList()" (refresh)="getClauseTemplateDataList()" [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="clauseTemplateDataList" [getListHandle]="getClauseTemplateDataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.contractClauseTemplateAdd">新增</button>
+  </ng-template>
+  <ng-template #listOperationTpl let-id="id">
+    <app-action-group>
+      <app-action (clickAction)="edit(id)" *appAuthBtu="ActionCode.contractClauseTemplateEdit">编辑</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #nameTpl let-templateName="templateName" let-id="id">
+    <span class="operate-text" (click)="detail(id)">{{templateName}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === tabPageType.AddPage">
+    <app-add-clause-template (finish)="childPageFinish()" [detailId]="detailId"></app-add-clause-template>
+  </ng-container>
+
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <app-add-clause-template (finish)="childPageFinish()" [detailId]="detailId"></app-add-clause-template>
+  </ng-container>
+
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <div class="detail-header-info">
+      <nz-form-item *ngFor="let item of headerFieldList">
+        <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text *ngIf="!item.pipe">{{headerInfo[item.field]}}</nz-form-text>
+          <nz-form-text *ngIf="item.pipe">{{headerInfo[item.field] | map:item.pipe}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="split-bar"><span>条款内容</span></div>
+    <div class="tableStyle">
+      <app-ufast-table class="left-table" [tableConfig]="clauseLeftTableConfig" [dataList]="clauseLeftDataList"></app-ufast-table>
+      <app-ufast-table class="right-table" [tableConfig]="clauseRightTableConfig" [dataList]="clauseRightDataList"></app-ufast-table>
+    </div>
+
+    <div class="table-footer-bar">
+      <button nz-button nzType="primary" class="submit-button" style="margin-top: 30px;" nzGhost (click)="childPageFinish()">返回
+      </button>
+    </div>
+  </ng-container>
+  <!-- <ng-template #operationTpl let-id="id" let-highLight="highLight">
+      <span class="view" (click)="view(id)" style="color: #009FE0;" *ngIf="highLight">查看款内容</span>
+      <span class="view" (click)="view(id)" *ngIf="!highLight">查看款内容</span>
+    </ng-template> -->
+    <ng-template #contentTpl let-content="content" let-id="id" let-highLight="highLight">
+      <app-clip-text [content]="content" class="clip-text highLight" *ngIf="highLight"></app-clip-text>
+      <app-clip-text [content]="content" class="clip-text view" *ngIf="!highLight" (click)="view(id)"></app-clip-text>
+    </ng-template>
+    <ng-template #rightContentTpl let-content="content">
+      <app-clip-text [content]="content" class="clip-text"></app-clip-text>
+    </ng-template>
+</app-tab-route>

@@ -1,0 +1,50 @@
+<form nz-form [formGroup]="form" class="form" (ngSubmit)="submitForm()">
+  <nz-form-item *ngIf=" pId !== '0'">
+    <nz-form-label nzSpan="6">上级分类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <span>{{categoryParent}}</span>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料类别</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <!-- <nz-select class="selectStyle" formControlName="materialType"
+        nzAllowClear>
+        <nz-option *ngFor="let item of ('materialTemplateType' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+          [nzValue]="item.value">
+        </nz-option>
+      </nz-select> -->
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="materialType">
+        <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+        <nz-option [nzValue]="3" nzLabel="设备"></nz-option>
+        <nz-option [nzValue]="4" nzLabel="通用备件"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="getFormControl('materialType').dirty && getFormControl('materialType').hasError('required')">
+        必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>分类名称</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input type="text" formControlName="materialCalssName" [maxlength]="maxLenInputEnum.Default" />
+      <nz-form-explain *ngIf="form.get('materialCalssName').dirty && form.get('materialCalssName').errors && !getFormControl('materialCalssName').hasError('isIncludesSpecialSymbol')">必填项，请输入</nz-form-explain>
+      <nz-form-explain *ngIf="getFormControl('materialCalssName').hasError('isIncludesSpecialSymbol')">分类名称不能输入符号 “/”</nz-form-explain>
+    </nz-form-control>
+
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6">分类描述</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <textarea nz-input rows="2" formControlName="materialClassDesc" [maxlength]="maxLenInputEnum.Default"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control nzOffset="6" nzSpan="18">
+      <button nz-button type="submit" nzType="primary">保存</button>
+      <button nz-button nzGhost nzType="primary" (click)="back()">返回</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

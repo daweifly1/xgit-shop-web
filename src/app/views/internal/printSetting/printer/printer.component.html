@@ -1,0 +1,30 @@
+<app-tab-route tabTitle="打印机配置">
+  <div class="wrap">
+    <div class="receipt-print print-item">
+      <div class="head-bar"><span>单据打印</span></div>
+      <div class="select-wrap" nz-row>
+        <div nz-col nzSpan="6">选择打印机：</div>
+        <div nz-col nzSpan="18">
+          <nz-select [(ngModel)]="printSetting.invoice.selected">
+            <nz-option *ngFor="let item of printDevList;trackBy:trackByDev;" [nzLabel]="item" [nzValue]="item"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="barcode-print print-item">
+      <div class="head-bar"><span>条码打印</span></div>
+      <div class="select-wrap" nz-row>
+        <div nz-col nzSpan="6">选择打印机：</div>
+        <div nz-col nzSpan="18">
+          <nz-select [(ngModel)]="printSetting.barcode.selected">
+            <nz-option *ngFor="let item of printDevList;trackBy:trackByDev;" [nzLabel]="item" [nzValue]="item"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div nz-row class="select-wrap">
+      <div nz-col nzSpan="6"></div>
+      <div nz-col nzSpan="18"><button nz-button class="submit-button" nzType="primary" (click)="saveDev()">保存</button></div>
+    </div>
+  </div>
+</app-tab-route>

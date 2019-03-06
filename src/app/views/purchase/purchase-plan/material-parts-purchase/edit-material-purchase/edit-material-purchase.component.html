@@ -1,0 +1,167 @@
+<form nz-form [formGroup]="purchasePlanEditForm" class="order-header-form edit-material-form">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="orgName">业务实体</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="orgName">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="purchasePlanId">采购计划编号</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="purchasePlanId">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="businessType" nzRequired>业务类型</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-select style="width: 100%;" formControlName="businessType" nzAllowClear nzPlaceHolder="业务类型">
+        <nz-option *ngFor="let data of businessTypeList" [nzValue]="data.name" [nzLabel]="data.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('businessType').dirty && purchasePlanEditForm.get('businessType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="purchasePlanType" nzRequired>采购计划类型</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-select style="width: 100%;" formControlName="purchasePlanType" nzAllowClear nzPlaceHolder="采购计划类型">
+        <nz-option *ngFor="let data of purchasePlanTypeList" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('purchasePlanType').dirty && purchasePlanEditForm.get('purchasePlanType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="purchaseType" nzRequired>采购类型</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-select style="width: 100%;" formControlName="purchaseType" nzAllowClear nzPlaceHolder="采购类型">
+        <nz-option *ngFor="let data of ('purchaseType'|mapList)" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('purchaseType').dirty && purchasePlanEditForm.get('purchaseType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="materialType" nzRequired>物料类型</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-select style="width: 100%;" formControlName="materialType" nzAllowClear nzPlaceHolder="物料类型" (ngModelChange)="handleMaterialTypeChange($event)">
+        <nz-option *ngFor="let data of materialTypeList" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('materialType').dirty && purchasePlanEditForm.get('materialType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="monthPlanIn" nzRequired>计划月份</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-month-picker nzPlaceHolder="计划月份" formControlName="monthPlanIn" [nzDisabledDate]="disabledDate"></nz-month-picker>
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('monthPlanIn').dirty && purchasePlanEditForm.get('monthPlanIn').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="allocatePlanner" nzRequired>计划员</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="allocatePlanner" readonly (click)="showPlannerModal()">
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('allocatePlanner').dirty && purchasePlanEditForm.get('allocatePlanner').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="departmentName" nzRequired>所属部门</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="departmentName" readonly (click)="showDepartmentModal()">
+      <nz-form-explain *ngIf="purchasePlanEditForm.get('departmentName').dirty && purchasePlanEditForm.get('departmentName').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="full-form-item">
+    <nz-form-label [nzSpan]="3" nzFor="remark">备注</nz-form-label>
+    <nz-form-control [nzSpan]="21">
+      <textarea nz-input formControlName="remark" row="2" [maxlength]="lengthLimit.maxLength"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="purchasePlanId">
+    <nz-form-label [nzSpan]="9" nzFor="remark">状态</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-form-text>{{purchasePlanItem.status | map: 'purchasePlanStatus'}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="isPlanRefused" class="full-form-item">
+    <nz-form-label [nzSpan]="3" nzFor="remark">拒绝原因</nz-form-label>
+    <nz-form-control [nzSpan]="21">
+      <nz-form-text>{{purchasePlanItem.auditRemark}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="split-bar">
+  <span>材料备件计划物料行</span>
+</div>
+<div class="detail-table-header edit-material">
+  <div>
+    <button nz-button nzType="info" (click)="showMaterialTable()">选择物料</button>
+    <button nz-button nzType="info" (click)="batchDeleteMaterial()">删除物料</button>
+  </div>
+  <div class="batch-wrap">
+    <label>批量修改数量</label>
+    <nz-input-number [(ngModel)]="batchData.amount" [nzMin]="0" [nzPrecision]="lengthLimit.precision" [nzMax]="lengthLimit.max" [nzStep]="lengthLimit.min"
+                     (ngModelChange)="handleBatchModifyAmount()"></nz-input-number>
+  </div>
+  <div class="batch-wrap">
+    <label>批量修改需求日期</label>
+    <nz-date-picker [(ngModel)]="batchData.demandDate" (ngModelChange)="handleBatchModifyDate()" appFixDatepickerBug></nz-date-picker>
+  </div>
+</div>
+<app-ufast-table [tableConfig]="purchasePlanItemTableConfig" [dataList]="purchaseItemMaterialList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+
+<ng-template #operationTpl let-materialCode="materialCode">
+  <app-action-group>
+    <app-action (clickAction)="deleteMaterial(materialCode)">删除</app-action>
+  </app-action-group>
+</ng-template>
+<ng-template #purchaseAmountTpl let-material="_this">
+  <nz-input-number [(ngModel)]="material.purchaseAmount"  [nzPrecision]="lengthLimit.precision" [nzMax]="lengthLimit.max" [nzMin]="0" [nzStep]="lengthLimit.min"></nz-input-number>
+</ng-template>
+<ng-template #remarkTpl let-material="_this">
+  <input nz-input [(ngModel)]="material.remark" [maxlength]="lengthLimit.default" />
+</ng-template>
+<ng-template #receiverTpl  let-material="_this">
+  <input nz-input [(ngModel)]="material.receiver" [maxlength]="lengthLimit.default" />
+</ng-template>
+<ng-template #demandDateTpl  let-material="_this">
+  <nz-date-picker [(ngModel)]="material.demandDate" appFixDatepickerBug></nz-date-picker>
+</ng-template>
+<ng-template #upDownloadTpl  let-material="_this">
+  <app-action-group>
+    <app-action (clickAction)="showUploadModal(material)">上传</app-action>
+    <app-action [enabled]="false">
+      <a *ngIf="material.attachment" [href]="downloadUrl + material.attachment" [download]="material.annexName">下载</a>
+      <ng-container *ngIf="!material.attachment">下载</ng-container>
+    </app-action>
+  </app-action-group>
+</ng-template>
+
+<app-right-side-table-box [(show)]="isShowMaterialTable" title="物料列表" searchPlaceholder="物料编码/物料描述" [tableConfig]="materialTableConfig"
+                          [dataList]="materialDataList" [getListHandle]="getMaterialList" (selectedChange)="chooseMaterial($event)"
+                          [selectedChangeEvent]="materialTableEmit" idFiled="materialCode" (search)="getMaterialList()" [(searchContent)]="materialTableFilter.keyWords">
+</app-right-side-table-box>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="savePurchasePlan()" *ngIf="!isPlanRefused">保存</button>
+  <button nz-button nzType="primary" (click)="submitPurchasePlan()">提交</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">取消</button>
+</div>
+
+<nz-modal [(nzVisible)]="isShowPlannerListModal" nzTitle="选择计划员" [nzFooter]="plannerModalFooter" (nzOnCancel)="isShowPlannerListModal = false">
+  <app-ufast-table [tableConfig]="plannerListTableConfig" [dataList]="plannerList" [getListHandle]="getPlannerList"></app-ufast-table>
+  <ng-template #plannerModalFooter>
+    <button nz-button nzType="default" (click)="isShowPlannerListModal = false">取消</button>
+  </ng-template>
+</nz-modal>
+<ng-template #plannerSelectedTpl let-id="userId" let-name="name">
+  <span class="operate-text" (click)="selectPlanner(id, name)">选择</span>
+</ng-template>
+<nz-modal [(nzVisible)]="isShowDepartmentListModal" nzTitle="选择科室" [nzFooter]="departmentModalFooter" (nzOnCancel)="isShowDepartmentListModal = false">
+  <app-ufast-table [tableConfig]="departmentListTableConfig" [dataList]="departmentList" [getListHandle]="getDepartmentList"></app-ufast-table>
+  <ng-template #departmentModalFooter>
+    <button nz-button nzType="default" (click)="isShowDepartmentListModal = false">取消</button>
+  </ng-template>
+</nz-modal>
+<ng-template #departmentSelectedTpl let-id="id" let-name="name">
+  <span class="operate-text" (click)="selectDepartment(id, name)">选择</span>
+</ng-template>
+

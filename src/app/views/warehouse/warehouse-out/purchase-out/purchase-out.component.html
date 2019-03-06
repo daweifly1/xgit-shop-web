@@ -1,0 +1,92 @@
+<app-tab-route tabTitle="采购退货">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="退货单号" (refresh)="getPurchaseOutDataList()"
+      (search)="getPurchaseOutDataList()" (advancedSearch)="onAdvancedSearch()" [(searchText)]="filters.refundCode"
+      [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <div class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">退货单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.refundCode" name="refundCode">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">合同号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.contractNo" name="contractNo">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">退货单状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.status" name="status" nzAllowClear>
+              <nz-option *ngFor="let item of returnState;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">是否条码管理</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.barcodeFlag" name="barcodeFlag" nzAllowClear>
+              <nz-option *ngFor="let item of barcodeFlagList;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker name="startCreateDate"  [(ngModel)]="filters.startCreateDate"
+              [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker name="endCreateDate"  [(ngModel)]="filters.endCreateDate"
+              [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getPurchaseOutDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="purchaseOutDataList" [getListHandle]="getPurchaseOutDataList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+  </ng-container>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.purchaseOutAdd">新增</button>
+  </ng-template>
+  <ng-template #operationTpl let-id="id" let-refundCode="refundCode">
+    <app-action-group>
+      <app-action [enabled]="buttonState[id].edit" (clickAction)="edit(id)" *appAuthBtu="ActionCode.purchaseOutEdit">编辑</app-action>
+      <app-action [enabled]="buttonState[id].finish" (clickAction)="finish(id, refundCode, null)" *appAuthBtu="ActionCode.purchaseOutFinish">结单</app-action>
+      <app-action [enabled]="buttonState[id].del" (clickAction)="del(id)" *appAuthBtu="ActionCode.purchaseOutDel">删除</app-action>
+      <app-action [enabled]="buttonState[id].stockOut" (clickAction)="stockOut(id)" *appAuthBtu="ActionCode.purchaseOutDelivery">出库</app-action>
+      <app-action [enabled]="buttonState[id].print" (clickAction) ="print(id,refundCode)" *appAuthBtu="ActionCode.purchaseOutPrint">打印</app-action>
+      <app-action [enabled]="buttonState[id].erp" (clickAction)="doErpSync(id)" *appAuthBtu="ActionCode.purchaseOutErpSync">ERP同步</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #orderTpl let-refundCode="refundCode" let-id="id">
+    <span class="operate-text" (click)="detail(id)">{{refundCode}}</span>
+  </ng-template>
+
+  <ng-container *ngIf="currentPage === tabPageType.SelectPage">
+    <app-stock-record-select (finish)="childPageFinish()"></app-stock-record-select>
+  </ng-container>
+
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <app-add-purchase-out (finish)="childPageFinish()" (stockRecordData)="stockRecordDataList" [editId]="detailId"></app-add-purchase-out>
+  </ng-container>
+
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <app-detail-purchase-out (finish)="childPageFinish()" [detailId]="detailId" [isStockOut]="isStockOut"></app-detail-purchase-out>
+  </ng-container>
+
+  <ng-container *ngIf="currentPage === tabPageType.StockOutPage">
+    <app-detail-purchase-out (finish)="childPageFinish()" [detailId]="detailId" [isStockOut]="isStockOut"></app-detail-purchase-out>
+  </ng-container>
+</app-tab-route>

@@ -1,0 +1,6 @@
+.audit-status {
+  width: 180px;
+  /deep/.ant-select-selection {
+    height: 30px!important;
+  }
+}

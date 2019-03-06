@@ -1,0 +1,74 @@
+<ng-container>
+  <form nz-form [formGroup]="newWarehouseAreaForm">
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4">仓库编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <span>{{warehouseCode}}</span>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>库区编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="code" [maxlength]="maxLenInputEnum.Code">
+          <nz-form-explain *ngIf="newWarehouseAreaForm.get('code').dirty && newWarehouseAreaForm.get('code').errors && !getFormControl('code').hasError('engAndNum')">必填项，请输入
+          </nz-form-explain>
+          <nz-form-explain *ngIf="getFormControl('code').hasError('engAndNum')">请输入数字和字母</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>库区描述</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="remark" [maxlength]="maxLenInputEnum.Remark">
+          <nz-form-explain *ngIf="newWarehouseAreaForm.get('remark').dirty && newWarehouseAreaForm.get('remark').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>保管员</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input nzSize="default" formControlName="keeperName" onkeypress="return false" onpaste="return false"
+            readonly (focus)="showVisiblekeeperNameModal()" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>ERP编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="erpCode" [maxlength]="maxLenInputEnum.Code">
+          <nz-form-explain *ngIf="newWarehouseAreaForm.get('erpCode').dirty && newWarehouseAreaForm.get('erpCode').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+    <div nz-col nzSpan="20" nzOffset="4" class="m-t-sm p-b-md">
+      <button nz-button nzType="primary" class="submit-button" type="submit" (click)="submitWarehouseArea()">保存</button>
+      <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+    </div>
+  </form>
+  <nz-modal class="choose-model-box" [(nzVisible)]="isVisiblekeeperName" nzTitle="选择保管员" nzWidth="630px" (nzOnCancel)="handleCancelKeeperName()">
+    <div class="transportSearch clear-fix">
+      <nz-input-group class="search-group" nzSearch [nzSuffix]="transportSearchButton">
+        <input type="text" nz-input placeholder="请输入保管员名称" [(ngModel)]="keeperNameFilter.name">
+      </nz-input-group>
+      <ng-template #transportSearchButton>
+        <button nz-button nzType="primary" nzSearch (click)="searchKeeperName()">搜索</button>
+      </ng-template>
+    </div>
+    <app-ufast-table [tableConfig]="keeperNameTableConfig" [dataList]="keeperNameDataList" [getListHandle]="getKeeperNameModalData"></app-ufast-table>
+    <ng-template #chooseKeeperName let-name="name" let-userId="userId">
+      <span class="operate-text" (click)="chooseKeeperNameFun(name,userId)">选择</span>
+    </ng-template>
+  </nz-modal>
+</ng-container>

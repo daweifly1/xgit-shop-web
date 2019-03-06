@@ -1,0 +1,91 @@
+$menu-item-fontSize: 14px;
+$menu-item-color: #fff;
+$menu-list-fontSize: 12px;
+
+$switch-bar-width: 20px;
+$side-menu-title-height: 40px;
+.side-menu-wrap {
+  float: left;
+  height: 100%;
+  background: #2B303C;
+  position: relative;
+  overflow: hidden;
+  transition: width .2s linear;
+  -webkit-transition: width .2s linear;
+  -moz-transition: width .2s linear;
+  -o-transition: width .2s linear;
+
+  .loading-mask{
+    position:absolute;
+    height:100%;
+    width:100%;
+    background:rgba(24,144,255,0.1);
+    z-index:99;
+
+    &>div{
+      position:absolute;
+      top:50%;
+      left:50%;
+      margin:-16px 0 0 -16px;
+    }
+  }
+
+  .side-menu-title {
+    color: #ccc;
+    font-size: $menu-item-fontSize;
+    padding-left: 24px;
+    height: $side-menu-title-height;
+    line-height: $side-menu-title-height;
+    border-bottom: 1px solid #888;
+    & span:last-child {
+      margin-left: 5px;
+    }
+  }
+
+  .side-menu {
+    height: calc(100% - #{$side-menu-title-height});
+    width: calc(100% - #{$switch-bar-width});
+    overflow-y: auto;
+  }
+  .side-menu-list {
+    background: inherit;
+    li {
+      color: $menu-item-color;
+      margin: 0;
+      span[title] {
+        color: $menu-item-color;
+      }
+    }
+    .one-level-title {
+      font-size: $menu-item-fontSize;
+    }
+    .two-level-title, .three-level-title {
+      font-size: $menu-list-fontSize;
+    }
+  }
+
+  .switch-bar-btu {
+    height: 100%;
+    width: $switch-bar-width;
+    position: absolute;
+    z-index: 10;
+    right: 0;
+    top: 0;
+    background: #4b4f59;
+    border: 0;
+
+    i {
+      color: #fff;
+      font-size: 16px;
+    }
+  }
+
+}
+
+.hide-side-menu {
+  width: $switch-bar-width;
+}
+
+.ng-star-inserted {
+  background: #2B303C;
+}

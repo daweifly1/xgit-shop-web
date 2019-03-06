@@ -1,0 +1,94 @@
+<app-tab-route tabTitle="期初条码">
+  <ng-container>
+    <app-ufast-table-nav [leftTemplate]="leftTpl" [searchPlaceholder]="searchPlaceholder" (search)="getBasisCodePrintList()"
+      [(searchText)]="filters.materialsNos"  (advancedSearch)="advancedSearch()"
+      (refresh)="getBasisCodePrintList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="batchPreview('preview')" *appAuthBtu="ActionCode.beginningBarcodePrint">预览打印</button>
+      <button nz-button nzType="info" (click)="batchPreview('print')" *appAuthBtu="ActionCode.beginningBarcodePrint">打印</button>
+      <button nz-button nzType="info" (click)="printConfiguration($event)" *appAuthBtu="ActionCode.beginningBarcodePrint">打印配置</button>
+    </ng-template>
+    <ng-template #operationTpl let-id="id">
+      <span class="operate-text" (click)="preview(id, 'preview')" *appAuthBtu="ActionCode.beginningBarcodePrint">预览打印</span>
+      <span class="operate-text" (click)="preview(id, 'print')" *appAuthBtu="ActionCode.beginningBarcodePrint">打印</span>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-row nzType="flex" nzJustify="start">
+        <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">物料编码</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <input nz-input [(ngModel)]="filters.materialsNos">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">入库单号</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <input nz-input [(ngModel)]="filters.billNo">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">导入人</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <input nz-input [(ngModel)]="filters.createName">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+
+      <div nz-row nzType="flex" nzJustify="start">
+        <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">导入时间-开始</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filters.dateBegin" [nzDisabledDate]="disabledStart"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">导入时间-截止</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filters.dateEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getBasisCodePrintList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="basisCodePrintDataList" (selectedChange)="changeSelect($event)"
+      [getListHandle]="getBasisCodePrintList"></app-ufast-table>
+
+    <app-right-side-box [(show)]="show" [title]="printModelTitle">
+      <div nz-col nzSpan="24" style="margin-top:20px;">
+        <nz-form-item>
+          <nz-form-label nzSpan="7">打印模板</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <span>模板1</span>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="7">内容显示</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <label nz-checkbox [(ngModel)]="configurationList.totalQty">打印总条码</label>
+            <label nz-checkbox [(ngModel)]="configurationList.edition">条码值</label>
+            <label nz-checkbox [(ngModel)]="configurationList.vin">VIN</label>
+            <label nz-checkbox [(ngModel)]="configurationList.hasPackNumber">包装数量</label>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </app-right-side-box>
+
+  </ng-container>
+
+</app-tab-route>

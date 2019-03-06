@@ -1,0 +1,32 @@
+<app-tab-route tabTitle="首页图片配置">
+  <ng-container>
+    <div class="clearfix" class="indexPicture">
+      <nz-tag [nzColor]="'magenta'" class="warning">请上传400*270尺寸的图片</nz-tag>
+      <nz-upload
+        [nzAction]="uploadUrl"
+        nzListType="picture-card"
+        [(nzFileList)]="fileList"
+        [nzShowButton]="fileList.length < 1"
+        [nzPreview]="handlePreview">
+        <i class="anticon anticon-plus"></i>
+        <div class="ant-upload-text">上传</div>
+      </nz-upload>
+      <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent"
+                [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+        <ng-template #modalContent>
+          <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+        </ng-template>
+      </nz-modal>
+      <div nz-row>
+        <div nz-col nzSpan="2"></div>
+        <div nz-col nzSpan="22">
+          <button nz-button nzType="primary" class="submit-button" (click)="editSubmit()">保存</button>
+          <button nz-button nzType="primary" class="submit-button" nzGhost>取消
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</app-tab-route>
+
+

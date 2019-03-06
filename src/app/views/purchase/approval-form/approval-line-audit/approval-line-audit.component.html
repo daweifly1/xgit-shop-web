@@ -1,0 +1,76 @@
+<app-tab-route tabTitle="转换采购方式">
+  <ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+    <app-ufast-table-nav [tableConfig]="tableConfig" searchPlaceholder="审批表编号" [(searchText)]="filterData.approveNo" (refresh)="getDataList()" (search)="getDataList()" (advancedSearch)="onAdvancedSearch()"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix advanceSearch-form" *ngIf="showAdvancedSearch">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">审批表编号</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filterData.approveNo">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">状态</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filterData.changeMethodStatus">
+              <nz-option [nzValue]="1" nzLabel="待审核"></nz-option>
+              <nz-option [nzValue]="2" nzLabel="已通过"></nz-option>
+              <nz-option [nzValue]="3" nzLabel="已拒绝"></nz-option>
+            <!-- <nz-option *ngFor="let item of ('approvalRowStatus'|mapList)" [nzLabel]="item.label" [nzValue]="item.value"></nz-option> -->
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">采购方式</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filterData.purchaseMethod">
+            <nz-option *ngFor="let item of purchaseWayList" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <!--<nz-form-item>-->
+        <!--<nz-form-label nzSpan="10">物料类型</nz-form-label>-->
+        <!--<nz-form-control nzSpan="14">-->
+          <!--<nz-select style="width:100%;" nzAllowClear [(ngModel)]="filterData.materialType">-->
+            <!--<nz-option *ngFor="let item of ('materialType2'|mapList)" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>-->
+          <!--</nz-select>-->
+        <!--</nz-form-control>-->
+      <!--</nz-form-item>-->
+      <nz-form-item>
+        <nz-form-label nzSpan="10">创建日期-开始</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-date-picker [(ngModel)]="filterData.startDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">创建日期-结束</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-date-picker [(ngModel)]="filterData.endDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="resetSearch()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [getListHandle]="getDataList" [dataList]="dataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-id="id" let-approveId="approveId">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].approval" (clickAction)="onAudit(id)" *appAuthBtu="ActionCode.approvalLineAudit">审核</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #approvalNoTpl let-approveNo="approveNo" let-approveId="approveId" let-id="id">
+    <span class="operate-text" (click)="viewApprovalFormDetail(id)">{{approveNo}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === PageTypeEnum.DetailPage">
+    <app-line-audit-detail [formId]="selectedId" (finish)="exitChildPage()" ></app-line-audit-detail>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.AuditPage">
+    <app-line-audit-detail [formId]="selectedId" (finish)="exitChildPage()" [operationTpl]="auditTpl" ></app-line-audit-detail>
+  </ng-container>
+  <ng-template #auditTpl>
+    <button nz-button nzType="primary" (click)="approvalPass()">审核通过</button>
+    <button nz-button nzType="primary" (click)="approvalReject()">审核拒绝</button>
+  </ng-template>
+</app-tab-route>

@@ -1,0 +1,17 @@
+<app-tab-route tabTitle="打印模板配置">
+  <ng-container *ngIf="curPageType === pageTypeObj.Main">
+    <ul class="wrap">
+      <li *ngFor="let item of printTempalte;trackBy:trackByIndex;">
+        <div class="head-bar"><span>{{item.title}}</span></div>
+        <div class="template-list" nz-row>
+          <div *ngFor="let tpl of item.list;trackBy:trackByIndex;" (click)="onTemplate(tpl)" class="template-item" [ngStyle]="{'border-color':tpl.isEnable?item.color:'#ccc',color:tpl.isEnable?item.color:'#ccc'}">
+            <span>{{tpl.Name}}</span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-container *ngIf="curPageType === pageTypeObj.TemplateList">
+    <app-template-list (finish)="returnMain()" [invoiceData]="invoiceData"></app-template-list>
+  </ng-container>
+</app-tab-route>

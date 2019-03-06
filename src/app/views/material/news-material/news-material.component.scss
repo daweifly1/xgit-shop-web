@@ -1,0 +1,55 @@
+
+.user-table{
+  th,td{
+    font-size:12px;
+  }
+  width:500px;
+}
+.selectStyle {
+  width: 140px;
+}
+.imgStyle {
+  width: 240px;
+}
+
+/deep/ .ant-select-selection--single {
+  height: 30px;
+  top: 1px;
+}
+.edit-add-page{
+  height:100%;
+  width:100%;
+
+  .edit-add-form{
+    width:550px;
+    padding:20px 0 0 30px;
+
+    nz-form-item{
+      //margin-bottom:10px;
+    }
+    .edit-ngx-width {
+      width: 200%;
+    }
+  }
+  .view-form{
+    width:100%;
+    .content-wrap {
+      nz-form-text{
+        width:100%;
+        word-break: break-all;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    }
+
+  }
+}
+
+/deep/ .accessory {
+  .view-upload {
+    .anticon-delete {
+      display: none;
+    }
+  }
+}
+

@@ -1,0 +1,306 @@
+<ng-container *ngIf="selectedPage === tabPageType.mainPage">
+  <app-purchase-steps [mainStep]="purchaseSteps.mainStep" [subStep]="purchaseSteps.subStep"></app-purchase-steps>
+  <form nz-form [formGroup]="editContractForm" class="order-header-form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="contractCode">合同编号</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="contractCode">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="contractName">合同名称</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="contractName">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="contractModel" nzRequired>合同模板</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-input-group [nzAddOnAfter]="contractTemplateAfterTpl">
+          <input type="text" nz-input formControlName="contractModel" readonly (click)="showTemplateModal()">
+        </nz-input-group>
+        <ng-template #contractTemplateAfterTpl>
+          <span class="operate-text" (click)="showContractModal()">维护条款</span>
+        </ng-template>
+        <nz-form-explain *ngIf="editContractForm.get('contractModel').dirty&&editContractForm.get('contractModel').errors">
+          <ng-container *ngIf="editContractForm.get('contractModel').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="businessBody">业务实体</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="businessBody">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="supplierName">供应商</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="supplierName">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="contractUp">合同抬头</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="contractUp">
+      </nz-form-control>
+    </nz-form-item>
+    <ng-container *ngIf="isPurchaseContract">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="receiver">收货方</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="receiver">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="carryOver" nzRequired>结转方式</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-select style="width: 100%;" formControlName="carryOver" (ngModelChange)="handleCarryOverChange($event)">
+            <nz-option *ngFor="let item of ('contractCarryOverType' | mapList)" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="editContractForm.get('carryOver').dirty&&editContractForm.get('carryOver').errors">
+            <ng-container *ngIf="editContractForm.get('carryOver').hasError('required')">
+              必填项，请输入
+            </ng-container>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="invoiceEntity">开票单位</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="invoiceEntity">
+        </nz-form-control>
+      </nz-form-item>
+    </ng-container>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="businessType">业务类型</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="businessType">
+          <nz-option *ngFor="let item of ('purchaseContractBusiness' | mapList)" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="contractType">合同类型</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="contractType">
+          <nz-option *ngFor="let item of ('purchaseContractType' | mapList)" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="purchaseWay">采购方式</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="purchaseWay">
+          <nz-option *ngFor="let item of ('purchaseWay' | mapList)" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="freightType" nzRequired>运杂费类型</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="freightType">
+          <nz-option *ngFor="let item of freightTypeList" [nzValue]="item.label" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="editContractForm.get('freightType').dirty&&editContractForm.get('freightType').errors">
+          <ng-container *ngIf="editContractForm.get('freightType').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="inputTax">进项税码</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="inputTax">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="currency">币种</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="currency">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="totalAmount">合同总金额</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="totalAmount">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="materialType">物料类型</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="materialType">
+          <nz-option *ngFor="let item of ('materialType2' | mapList)" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="signDate" nzRequired>签约时间</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-date-picker formControlName="signDate"></nz-date-picker>
+        <nz-form-explain *ngIf="editContractForm.get('signDate').dirty&&editContractForm.get('signDate').errors">
+          <ng-container *ngIf="editContractForm.get('signDate').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="signLocation" nzRequired>签约地址</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input formControlName="signLocation" [maxlength]="MaxInputLenEnum.SignLocation">
+        <nz-form-explain *ngIf="editContractForm.get('signLocation').dirty&&editContractForm.get('signLocation').errors">
+          <ng-container *ngIf="editContractForm.get('signLocation').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="validDate" nzRequired>合同有效期</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-date-picker formControlName="validDate"></nz-date-picker>
+        <nz-form-explain *ngIf="editContractForm.get('validDate').dirty&&editContractForm.get('validDate').errors">
+          <ng-container *ngIf="editContractForm.get('validDate').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="salesmanName">业务员</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="salesmanName">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="signature" nzRequired>签章人</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="signature" [maxlength]="lenghtLimit.default">
+        <nz-form-explain *ngIf="editContractForm.get('signature').dirty&&editContractForm.get('signature').errors">
+          <ng-container *ngIf="editContractForm.get('signature').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <!-- <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="attachment">附件</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <span class="operate-text" (click)="showUploadModal()">上传</span>
+        <a *ngIf="editContractForm.get('attachmentUrl').value" [href]="downloadUrl + editContractForm.get('attachmentUrl').value" [download]="editContractForm.get('attachment').value">下载</a>
+        <ng-container *ngIf="!editContractForm.get('attachmentUrl').value">下载</ng-container>
+      </nz-form-control>
+    </nz-form-item> -->
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="creator">创建人</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="creator">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="createDate">创建日期</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-date-picker formControlName="createDate"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item></nz-form-item>
+    <nz-form-item></nz-form-item>
+    <nz-form-item class="full-form-item">
+      <nz-form-label [nzSpan]="4" nzFor="receiveAddress" nzRequired>收货地址</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <nz-input-group [nzAddOnAfter]="addressAfterTpl">
+          <input nz-input formControlName="receiveAddress" [maxlength]="MaxInputLenEnum.ReceiveAddress">
+        </nz-input-group>
+        <ng-template #addressAfterTpl>
+          <span class="operate-text" (click)="showAddressModal()">选择地址</span>
+        </ng-template>
+        <nz-form-explain *ngIf="editContractForm.get('receiveAddress').dirty&&editContractForm.get('receiveAddress').errors">
+          <ng-container *ngIf="editContractForm.get('receiveAddress').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item class="full-form-item">
+      <nz-form-label [nzSpan]="4" nzFor="abstract" nzRequired>摘要</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <textarea row="1" nz-input formControlName="abstract" [maxlength]="MaxInputLenEnum.Abstract"></textarea>
+        <nz-form-explain *ngIf="editContractForm.get('abstract').dirty&&editContractForm.get('abstract').errors">
+          <ng-container *ngIf="editContractForm.get('abstract').hasError('required')">
+            必填项，请输入
+          </ng-container>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item class="full-form-item">
+      <nz-form-label [nzSpan]="4" nzFor="remark">备注</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <textarea row="1" nz-input formControlName="remark" [maxlength]="MaxInputLenEnum.Remark"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+  <ng-container *ngIf="isDeviceType">
+    <div class="split-bar">
+      <span>合同物料行</span>
+    </div>
+    <app-ufast-table [tableConfig]="deviceTableConfig" [dataList]="deviceList"></app-ufast-table>
+  </ng-container>
+  <ng-container *ngIf="!isDeviceType">
+    <div class="split-bar">
+      <span>合同物料行</span>
+    </div>
+    <div class="detail-table-header">
+      <button nz-button nzType="info" (click)="openBatchModal()">批量修改溢短装</button>
+    </div>
+    <app-ufast-table [tableConfig]="materialPartsTableConfig" [dataList]="materialPartsList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+  </ng-container>
+
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" (click)="submitContract()">保存</button>
+    <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">取消</button>
+  </div>
+</ng-container>
+<ng-container *ngIf="selectedPage === tabPageType.clausePage">
+  <app-edit-contract-clause [templateId]="editContractForm.controls['contractModelId'].value" [originClauseList]="contractModelDetailTemp"
+                            (backToMainPage)="onChildEmit($event)"></app-edit-contract-clause>
+</ng-container>
+
+<ng-template #remarkMaterialTpl let-remark="remark" let-index="index">
+  <input nz-input type="text" [(ngModel)]="materialPartsList[index].remark" [maxlength]="lenghtLimit.default">
+</ng-template>
+<ng-template #remarkDeviceTpl let-remark="remark" let-index="index">
+  <input nz-input type="text" [(ngModel)]="deviceList[index].remark" [maxlength]="lenghtLimit.default">
+</ng-template>
+<ng-template #qtyRcvToleranceTpl let-qtyRcvTolerance="qtyRcvTolerance" let-index="index">
+  <nz-input-number [nzMin]="0" [nzMax]="100" [(ngModel)]="materialPartsList[index].qtyRcvTolerance"></nz-input-number>
+</ng-template>
+
+<nz-modal [(nzVisible)]="isShowBatchModal" nzTitle="批量修改溢短装" (nzOnCancel)="isShowBatchModal = false" (nzOnOk)="batchSetQtyRcvTolerance()">
+  <p>请填写：</p>
+  <nz-input-number style="width: 200px;" [nzMin]="0" [nzMax]="100" [(ngModel)]="qtyRcvTolerance"></nz-input-number>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isShowAddressModal" nzTitle="选择收货地址" [nzFooter]="modalFooter" (nzOnCancel)="isShowAddressModal = false">
+  <app-ufast-table [tableConfig]="addressTableConfig" [dataList]="addressList" [getListHandle]="getAddressInfoList"></app-ufast-table>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="isShowAddressModal = false">关闭</button>
+  </ng-template>
+</nz-modal>
+<ng-template #selectAddressTpl let-receiveAddress="receiveAddress">
+  <span class="operate-text" (click)="selectAddress(receiveAddress)">选择</span>
+</ng-template>
+<nz-modal [(nzVisible)]="isShowTemplateModal" nzTitle="选择合同模板" [nzFooter]="tplModalFooter" (nzOnCancel)="isShowTemplateModal = false">
+  <app-ufast-table [tableConfig]="templateTableConfig" [dataList]="templateList" [getListHandle]="getTemplateList"></app-ufast-table>
+  <ng-template #tplModalFooter>
+    <button nz-button nzType="default" (click)="isShowTemplateModal = false">关闭</button>
+  </ng-template>
+</nz-modal>
+<ng-template #selectTemplateTpl let-id="id" let-name="name">
+  <span class="operate-text" (click)="selectTemplate(id, name)">选择</span>
+</ng-template>
+

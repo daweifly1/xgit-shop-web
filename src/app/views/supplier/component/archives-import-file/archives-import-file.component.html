@@ -1,0 +1,52 @@
+<div class="info-form-wrap">
+  <form nz-form [formGroup]="infoForm">
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="8">{{fileLabelObj[ImportType].label}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-upload (nzChange)="onFileUploadChange($event)" [nzAction]="fileLabelObj[ImportType].actionUrl" [(nzFileList)]="fileList"
+                   [nzShowButton]="fileList.length < 1" [nzFileType]="fileMineType" [nzRemove]="onFileRemoveFile">
+          <button nz-button>
+            <i class="anticon anticon-upload"></i><span>选择文件</span>
+          </button>
+        </nz-upload>
+        <nz-form-explain *ngIf="infoForm.get('fileUrl').dirty && infoForm.get('fileUrl').errors">
+          <div style="color:red;margin-top:5px;">请上传文件</div>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <div nz-row >
+      <div nz-col [nzOffset]="8">
+        <a [href]="fileLabelObj[ImportType].affixDownLoad">下载模板</a>
+      </div>
+    </div>
+    <div class="message-wrap" nz-row >
+      <div nz-col [nzOffset]="8">
+        注:{{fileLabelObj[ImportType].label}}只支持excel类型文件
+      </div>
+    </div>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">附件</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-upload (nzChange)="onAffixUploadChange($event)" [nzAction]="affixUploadUrl" [(nzFileList)]="affixList"
+                   [nzShowButton]="affixList.length < 1" [nzRemove]="onFileRemoveAffix">
+          <button nz-button>
+            <i class="anticon anticon-upload"></i><span>选择文件</span>
+          </button>
+        </nz-upload>
+        <nz-form-explain *ngIf="infoForm.get('attachment').dirty && infoForm.get('attachment').errors">
+          <div style="color:red;margin-top:5px;">请上传文件</div>
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">备注</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <textarea nz-input formControlName="remark" [maxlength]="50"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" class="submit-button"  (click)="submitInfo()">确定</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">返回</button>
+  </div>
+</div>

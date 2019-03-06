@@ -1,0 +1,17 @@
+<div class="detail-header-info">
+  <nz-form-item *ngFor="let item of headerFieldList">
+    <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text *ngIf="!item.pipe">{{headerInfo[item.field]}}</nz-form-text>
+      <nz-form-text *ngIf="item.pipe">{{headerInfo[item.field] | map:item.pipe}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+<app-ufast-table [tableConfig]="materialTableConfig" [dataList]="materialList"></app-ufast-table>
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" class="submit-button" style="margin-top: 30px;" nzGhost (click)="emitFinish()">关闭
+  </button>
+</div>

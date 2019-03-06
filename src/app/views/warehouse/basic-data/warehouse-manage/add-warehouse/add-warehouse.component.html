@@ -1,0 +1,74 @@
+<ng-container>
+  <form nz-form [formGroup]="newWarehouseForm">
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>仓库编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="code" [maxlength]="maxLenInputEnum.Code">
+          <nz-form-explain *ngIf="newWarehouseForm.get('code').dirty && newWarehouseForm.get('code').errors && !getFormControl('code').hasError('engAndNum')">必填项，请输入
+          </nz-form-explain>
+          <nz-form-explain *ngIf="getFormControl('code').hasError('engAndNum')">请输入数字和字母</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>仓库类型</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <nz-select nzPlaceHolder="请选择仓库类型" [(ngModel)]="typeId" [ngModelOptions]="{standalone: true}" *ngIf="flag === false">
+            <nz-option *ngFor="let type of warehouseType; trackBy:trackByNewsId;" [nzValue]="type.id" [nzLabel]="type.typeName"></nz-option>
+          </nz-select>
+          <nz-select nzPlaceHolder="请选择仓库类型" [(ngModel)]="typeId" [ngModelOptions]="{standalone: true}" *ngIf="flag === true"
+            nzDisabled>
+            <nz-option *ngFor="let type of warehouseType; trackBy:trackByNewsId;" [nzValue]="type.id" [nzLabel]="type.typeName"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>仓库描述</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="remark" [maxlength]="maxLenInputEnum.Remark">
+          <nz-form-explain *ngIf="newWarehouseForm.get('remark').dirty && newWarehouseForm.get('remark').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>保管员</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="keeperName" readonly (focus)="showVisiblekeeperNameModal()" />
+          <nz-form-explain *ngIf="newWarehouseForm.get('keeperName').dirty && newWarehouseForm.get('keeperName').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+    <div nz-col nzSpan="20" nzOffset="4" class="m-t-sm p-b-md">
+      <button nz-button nzType="primary" class="submit-button" type="submit" (click)="addWarehouse()">保存</button>
+      <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+    </div>
+  </form>
+
+
+  <nz-modal class="choose-model-box" [(nzVisible)]="isVisiblekeeperName" nzTitle="选择保管员" nzWidth="630px" (nzOnCancel)="handleCancelKeeperName()">
+    <div class="transportSearch clear-fix">
+      <nz-input-group class="search-group" nzSearch [nzSuffix]="transportSearchButton">
+        <input type="text" nz-input placeholder="请输入保管员名称" [(ngModel)]="keeperNameFilter.name">
+      </nz-input-group>
+      <ng-template #transportSearchButton>
+        <button nz-button nzType="primary" nzSearch (click)="searchKeeperName()">搜索</button>
+      </ng-template>
+    </div>
+    <app-ufast-table [tableConfig]="keeperNameTableConfig" [dataList]="keeperNameDataList" [getListHandle]="getKeeperNameModalData"></app-ufast-table>
+    <ng-template #chooseKeeperName let-name="name" let-userId="userId">
+      <span class="operate-text" (click)="chooseKeeperNameFun(name,userId)">选择</span>
+    </ng-template>
+  </nz-modal>
+</ng-container>

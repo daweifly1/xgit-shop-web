@@ -1,0 +1,7 @@
+.export-btns {
+  margin-bottom: 10px;
+}
+/deep/ .table-required-mark:before {
+  color: red;
+  content: '*';
+}

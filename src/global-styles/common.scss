@@ -1,0 +1,233 @@
+@import "./variable";
+
+.m-t-sm {
+  margin-top: $length-10;
+}
+
+.p-sm {
+  padding: $length-10
+}
+
+.p-t-sm {
+  padding-top: $length-10;
+}
+
+.p-t-md {
+  padding-top: $length-20;
+}
+
+.p-b-sm {
+  padding-bottom: $length-10;
+}
+
+.p-b-md {
+  padding-bottom: $length-20;
+}
+
+.p-l-xs {
+  padding-left: $length-5;
+}
+
+.clear-fix:before,
+.clear-fix:after {
+  clear: both;
+  display: table;
+  content: " ";
+}
+
+.table-wrap {
+  width: 100%;
+}
+
+.operate-text {
+  cursor: pointer;
+  color: #009FE0;
+  margin-right: 5px;
+}
+.operate-text-disabled {
+  color: #aaa;
+  cursor: not-allowed;
+  margin-right: 5px;
+}
+.font-red-color {
+  color: #ff0000;
+}
+
+.fixed-footer-button-wrap {
+
+  position: fixed;
+  bottom: $tab-page-padding-bottom;
+  border-top: 1px solid #ccc;
+  width: 100%;
+  height: $fix-footer-height;
+  line-height: $fix-footer-height;
+  text-align: center;
+
+  button {
+    height: 36px;
+    width: 70px;
+  }
+  button + button {
+    margin-left: 30px;
+  }
+}
+
+.submit-button {
+  height: 36px;
+  width: 70px;
+  font-size: 14px;
+}
+
+.submit-button + .submit-button {
+  margin-left: 20px;
+}
+
+.scrollbar-style {
+  overflow: auto;
+}
+
+.scrollbar-style::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+.scrollbar-style::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border-radius: 4px;
+}
+
+.bannedClick {
+  color: #ccc;
+  cursor: not-allowed;
+  margin-right: 4px;
+}
+
+// 高级搜索
+.advanced-search {
+  border: solid 1px #ccc;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+  .btn-bar {
+    border-top: solid 1px #ccc;
+    text-align: center;
+    padding-top: 5px;
+    margin-top: 3px;
+    .ant-btn {
+      height: 28px;
+      line-height: 28px;
+      margin: 0 5px;
+    }
+  }
+}
+/* 新建和编辑单据表单 */
+.order-header-form {
+  width:100%;
+  margin-bottom: 10px;
+  nz-form-item {
+    display:inline-block;
+    width:33%;
+    height: 30px;
+    margin-bottom:20px;
+    font-size: 14px;
+    word-break: break-all;
+    color: $basic-font-color;
+    nz-form-explain {
+      font-size:12px;
+    }
+    nz-form-text {
+      line-height:30px;
+    }
+    nz-upload {
+      .ant-upload-list-picture-card .ant-upload-list-item, .ant-upload.ant-upload-select-picture-card {
+        width: 90px;
+        height:80px;
+      }
+    }
+  }
+}
+/* 详情页头部信息 */
+.detail-header-info {
+  width:100%;
+
+  nz-form-item {
+    display:inline-block;
+    width:33%;
+    margin-bottom:0px;
+    font-size: 14px;
+    word-break: break-all;
+    color: $basic-font-color;
+    nz-form-text {
+      line-height:30px;
+    }
+    .ant-form-item-label, .ant-form-item-control {
+      line-height:30px;
+    }
+  }
+  .full-form-item {
+    width: 100%;
+  }
+}
+.advanceSearch-form {
+  width:100%;
+  font-size:0px;
+  nz-form-item {
+    display:inline-block;
+    width:25%;
+    font-size: 14px;
+    word-break: break-all;
+    nz-form-text {
+      line-height:30px;
+    }
+  }
+}
+
+.split-bar{
+  color:#333;
+  font-size:14px;
+  padding: 5px 0px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+
+  & > span:first-child{
+    border-left: 5px solid #f60;
+    padding-left:5px;
+  }
+}
+.detail-table-header {
+  margin-bottom: 10px;
+}
+.table-footer-bar {
+  text-align: center;
+  margin: 20px 0;
+  button {
+    margin: 0 10px;
+  }
+}
+.selectStyle {
+  width: 100%;
+}
+.errorInformation {
+  color: red;
+}
+/**用于包裹带app-ufast-table-nav的表格组件*/
+.main-table {
+  height: calc(100% - 40px);
+}
+.choose-model-box {
+  .ant-modal-body {
+    padding: 15px;
+  }
+}
+.clip-text {
+  max-height: 25px;
+  line-height: 25px;
+  width: 100%;
+}
+/**表格th必填项*标*/
+.th-required:before {
+  content: '*';
+  color: red;
+}

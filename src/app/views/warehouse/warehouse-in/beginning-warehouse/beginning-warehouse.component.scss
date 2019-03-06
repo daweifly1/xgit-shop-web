@@ -1,0 +1,11 @@
+.selectStyle {
+    width: 100%;
+  }
+  /deep/ .choose-model-box .ant-table-body.ng-star-inserted{
+    max-height: 240px !important;
+  }
+  
+  /deep/ .choose-model-box .ant-modal-body {
+    padding-bottom: 0 !important;
+  }
+  

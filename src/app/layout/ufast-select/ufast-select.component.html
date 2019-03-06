@@ -1,0 +1,20 @@
+<div class="wrap" (click)="onWrapClick($event)">
+  <nz-input-group [nzSuffix]="iconTpl">
+    <input cdkOverlayOrigin readonly nz-input (mouseenter)="onMouseenter()" [disabled]="disabled" (mouseleave)="onMouseleave()" [placeholder]="placeholder" [(ngModel)]="_value"
+           (click)="onFocus()" />
+  </nz-input-group>
+  <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="expand" [cdkConnectedOverlayOrigin]="cdkOverlayOrigin"
+               [cdkConnectedOverlayHasBackdrop]="true" (backdropClick)="onClickBack()" [cdkConnectedOverlayWidth]="downBoxWidth">
+    <div>
+      <ng-content></ng-content>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #iconTpl>
+  <span (mouseenter)="onMouseenter()" (mouseleave)="onMouseleave()">
+    <i class="anticon anticon-down" *ngIf="!expand && !hover"></i>
+    <i class="anticon anticon-up" *ngIf="expand && !hover"></i>
+    <i class="anticon anticon-close" *ngIf="hover" style="cursor:pointer;" (click)="onClear()"></i>
+  </span>
+</ng-template>

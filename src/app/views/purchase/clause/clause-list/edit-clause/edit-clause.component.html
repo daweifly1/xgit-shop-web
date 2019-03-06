@@ -1,0 +1,102 @@
+<div nz-form [formGroup]="editClauseForm">
+  <div class="order-header-form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>类型</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="useType" (ngModelChange)="handleTypeChange($event)"
+          nzAllowClear>
+          <nz-option *ngFor="let item of ('clauseType' | mapList); trackBy: trackByItem" [nzValue]="item.value"
+            [nzLabel]="item.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="editClauseForm.get('useType').dirty&&editClauseForm.get('useType').errors">
+          必填项
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>编码</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input formControlName="clauseNo" [maxlength]="InputMaxLength.ClauseNo" />
+        <nz-form-explain *ngIf="editClauseForm.get('clauseNo').dirty && editClauseForm.get('clauseNo').errors">
+          必填项，只能输入数字
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired>序号</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input formControlName="seq" [maxlength]="InputMaxLength.Seq" />
+        <nz-form-explain *ngIf="editClauseForm.get('seq').dirty && editClauseForm.get('seq').errors">
+          必填项，只能输入数字
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isContractType">
+      <nz-form-label [nzSpan]="8" nzRequired>采购方式</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <nz-select style="width: 100%;" formControlName="purchaseMethod" nzAllowClear>
+          <nz-option *ngFor="let item of ('purchaseWay' | mapList); trackBy: trackByItem" [nzValue]="item.value"
+            [nzLabel]="item.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="editClauseForm.get('purchaseMethod').dirty&&editClauseForm.get('purchaseMethod').errors">
+          必填项
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="4" nzRequired>条内容</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <textarea rows="1" nz-input formControlName="content" [maxlength]="InputMaxLength.Default"></textarea>
+        <nz-form-explain *ngIf="editClauseForm.get('content').dirty&&editClauseForm.get('content').errors">
+          必填项
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="detail-table-header">
+    <button nz-button nzType="info" (click)="addClause()">添加款</button>
+  </div>
+  <nz-table #clauseTable [nzData]="editClauseForm.get('clauseArr')['controls']" [nzSize]="'small'" [nzBordered]="true"
+    [nzFrontPagination]="true" [(nzPageIndex)]="tableConfig.pageNum" [(nzPageSize)]="tableConfig.pageSize"
+    [nzShowPagination]="true" [nzPageSizeOptions]="tableConfig.pageSizeOptions" [nzShowQuickJumper]="true"
+    [nzShowSizeChanger]="true" nzScroll="{x: 800px}">
+    <thead>
+      <tr>
+        <th width="100px" nzLeft="0">操作</th>
+        <th width="100px"><i style="color: red;">* </i>序号(只限数字)</th>
+        <th width="150px"><i style="color: red;">* </i>款内容</th>
+        <th width="100px">备注</th>
+      </tr>
+    </thead>
+    <tbody formArrayName="clauseArr">
+      <tr *ngFor="let item of clauseTable.data; let i = index;" [formGroupName]="tableConfig.pageSize * (tableConfig.pageNum - 1) + i">
+        <td nzLeft="0">
+          <span class="operate-text" (click)="delClause(i)">删除</span>
+        </td>
+        <td>
+          <nz-form-control>
+            <input nz-input formControlName="seq" [maxlength]="InputMaxLength.Seq"  />
+          </nz-form-control>
+        </td>
+        <td>
+          <nz-form-control>
+            <textarea nz-input formControlName="content" rows="1" [maxlength]="InputMaxLength.Default"></textarea>
+          </nz-form-control>
+        </td>
+        <td>
+          <nz-form-control>
+            <input nz-input formControlName="remarks" [maxlength]="InputMaxLength.Default" />
+          </nz-form-control>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+
+</div>
+
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="saveClause()">保存</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage()">返回</button>
+</div>

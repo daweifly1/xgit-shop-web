@@ -1,0 +1,35 @@
+
+<div class="wrap">
+  <h2>登录页</h2>
+  <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="loginSubmit()">
+    <nz-form-item class="form-item">
+      <nz-form-label nzSpan="4">用户名</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <input nz-input formControlName="userName" nzSize="default" [(ngModel)]="loginReqData.loginName" spellcheck="false" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="4">密&emsp;码</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <input nz-input formControlName="password" nzSize="default" [(ngModel)]="loginReqData.password" type="password" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="4">验证码</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="verifyCode" nzSize="default" [(ngModel)]="loginReqData.code" spellcheck="false" />
+      </nz-form-control>
+      <nz-form-extra nzSpan="6" (click)="refreshVerify()">
+        <img [src]="verifyImgUrl" alt="加载失败"/>
+      </nz-form-extra>
+    </nz-form-item>
+    <div nz-row class="remark-row">
+      <div nz-col nzSpan="4">&nbsp;</div>
+      <div nz-col nzSpan>{{remark}}</div>
+    </div>
+    <div class="form-footer">
+      <button nz-button nzType="primary" nzSize="large" type="submit" [nzLoading]="loading">登录</button>
+    </div>
+  </form>
+</div>
+

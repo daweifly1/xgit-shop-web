@@ -1,0 +1,25 @@
+.page-wrap {
+  .table-header-wrap {
+    padding: 10px;
+  }
+  .table-footer-wrap {
+    margin: 20px;
+    text-align: center;
+  }
+}
+.choose-material-top-wrap{
+  padding: 10px 10px 0 10px;
+  box-sizing: border-box;
+  .material-input {
+    width: 79%;
+    margin-bottom: 10px;
+  }
+  .search-button {
+    width: 18%;
+    margin-bottom: 10px;
+    margin-left: 1%;
+  }
+}
+.search-group {
+  margin-bottom: 10px;
+}

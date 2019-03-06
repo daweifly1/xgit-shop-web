@@ -1,0 +1,18 @@
+<div *ngIf="_show" class="mask" (click)="onMask()">
+  <div class="right-box-wrap" (click)="onContent($event)" [ngStyle]="{width: width+'px'}">
+    <div class="head-bar">
+      <span class="title-text">{{title}}</span>
+      <span class="close-icon" (click)="onClose()"><i class="anticon anticon-close-circle-o"></i></span>
+    </div>
+    <div class="main">
+      <ng-container *ngIf="!topTpl;else top">
+        <input class="header-input" nz-input [placeholder]="searchPlaceholder" [ngModel]="searchContent" (ngModelChange)="onInputChange($event)">
+        <button class="search-button"  nzType="primary" nz-button (click)="searchList()">搜索</button>
+      </ng-container>
+      <ng-template #top *ngTemplateOutlet="topTpl"></ng-template>
+      <div>
+        <app-ufast-table [dataList]="_dataList" [tableConfig]="tableConfig" [getListHandle]="getListHandle" (selectedChange)="onSelectedChange($event)"></app-ufast-table>
+      </div>
+    </div>
+  </div>
+</div>

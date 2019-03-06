@@ -1,0 +1,63 @@
+<app-tab-route tabTitle="计划退回">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav searchPlaceholder="采购计划编号" [(searchText)]="filters.purchasePlanNo" (search)="getPlanReturnList()"
+      (advancedSearch)="onAdvancedSearch()" (refresh)="getPlanReturnList()" [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">计划月份</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-month-picker nzPlaceHolder="计划月份" [(ngModel)]="filters.planMonth "></nz-month-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">物料编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.materialNo" placeholder="物料编号">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">采购计划编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.purchasePlanNo" placeholder="采购计划编号">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">物料类型</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select class="selectStyle" [(ngModel)]="filters.materialType" nzAllowClear nzPlaceHolder="物料类型">
+              <nz-option *ngFor="let item of ('materialType2' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+                [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getPlanReturnList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [dataList]="planReturnList" [tableConfig]="tableConfig" [getListHandle]="getPlanReturnList"></app-ufast-table>
+
+  </ng-container>
+  <ng-template #showDetailTpl let-purchasePlanNo="purchasePlanNo" let-materialType="materialType">
+    <span class="operate-text" (click)="showDetail(purchasePlanNo, materialType)">{{purchasePlanNo}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === tabPageType.DeviceDetailPage">
+    <app-detail-device-purchase [operation]="operation" [searchBy]="detailSearchBy" [devicePlanId]="purchasePlanNo"
+      (backToMainPage)="onChildEmit($event)"></app-detail-device-purchase>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.MaterialDetailPage">
+    <app-detail-material-purchase [searchBy]="detailSearchBy" [operation]="operation" [purchasePlanId]="purchasePlanNo"
+      (backToMainPage)="onChildEmit($event)"></app-detail-material-purchase>
+  </ng-container>
+
+</app-tab-route>

@@ -1,0 +1,48 @@
+<div class="table-wrap" [ngClass]="{'table-wrap-split-page ': _tableConfig.splitPage}">
+  <div class="content-wrap" #contentWrapEle>
+      <nz-table nzSize="small" #tableData [nzData]="_dataList" [nzBordered]="true" [nzFrontPagination]="_tableConfig.frontPagination" [nzTotal]="_tableConfig.total"
+                           [(nzPageIndex)]="_tableConfig.pageNum" (nzPageIndexChange)="onIndexChange($event)" [nzShowQuickJumper]="_tableConfig.showPagination && !_tableConfig.splitPage"
+                           [nzLoading]="_tableConfig.loading" [nzPageSizeOptions]="_tableConfig.pageSizeOptions" [nzShowPagination]="_tableConfig.showPagination && !_tableConfig.splitPage"
+                           [nzShowSizeChanger]="_tableConfig.showPagination && !_tableConfig.splitPage"
+                           [(nzPageSize)]="_tableConfig.pageSize" (nzPageSizeChange)="onSizeChange()" [nzScroll]="{x: nzScroll.x, y: _tableConfig.splitPage ? contentWrapEle.clientHeight - theadEle.clientHeight + 'px':nzScroll.y}">
+      <thead>
+      <tr #theadEle>
+        <th class="checkbox-wrap" *ngIf="_tableConfig.showCheckbox" nzLeft="0px" nzWidth="30px" nzShowCheckbox [(nzChecked)]="_tableConfig.checkAll" [nzDisabled]="_tableConfig.disabledCheckAll" (nzCheckedChange)="checkRowAll($event)"></th>
+        <ng-container *ngFor="let head of _tableConfig.headers;trackBy:trackByTableHead;let headIndex=index">
+          <th *ngIf="head.show !== false" [nzWidth]="head.width + 'px'"
+              [nzLeft]="auxHeader[headIndex].nzLeft" [nzRight]="auxHeader[headIndex].nzRight" [ngClass]="head.thClassList">
+            <span *ngIf="head.title">{{head.title}}</span>
+            <ng-container *ngIf="head.thTemplate">
+              <ng-template *ngTemplateOutlet="head.thTemplate;context:head"></ng-template>
+            </ng-container>
+          </th>
+        </ng-container>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let row of tableData.data;trackBy:trackByTableBody;let rowIndex=index;" [ngClass]="row[_tableConfig.trClassListField] || []">
+        <td class="checkbox-wrap" *ngIf="_tableConfig.showCheckbox" nzLeft="0px" nzShowCheckbox [(nzChecked)]="row[_tableConfig.checkRowField]" [nzDisabled]="_tableConfig.checkRowDisabledField ? row[_tableConfig.checkRowDisabledField] : false" (nzCheckedChange)="checkRowSingle($event,rowIndex)"></td>
+        <ng-container *ngFor="let head of _tableConfig.headers;trackBy:trackByTableHead;let headIndex=index;">
+          <td *ngIf="head.show !== false" [nzLeft]="auxHeader[headIndex].nzLeft" [nzRight]="auxHeader[headIndex].nzRight" [ngClass]="head.tdClassList">
+            <ng-container *ngIf="head.tdTemplate;else rowTpl" >
+              <ng-container *ngTemplateOutlet="head.tdTemplate;context:row"></ng-container>
+            </ng-container>
+            <ng-template #rowTpl>
+              <ng-container *ngIf="head.pipe">{{row[head.field] | map:head.pipe}}</ng-container>
+              <ng-container *ngIf="!head.pipe">{{row[head.field]}}</ng-container>
+            </ng-template>
+          </td>
+        </ng-container>
+
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="pagination-wrap" *ngIf="_tableConfig.splitPage">
+    <nz-pagination [(nzPageSize)]="_tableConfig.pageSize" [nzShowSizeChanger]="_tableConfig.pageSizeOptions" [(nzPageIndex)]="_tableConfig.pageNum"
+                   [nzPageSizeOptions]="_tableConfig.pageSizeOptions" [nzTotal]="tableData.nzTotal" [nzShowQuickJumper]="_tableConfig.showPagination"
+                   (nzPageIndexChange)="onIndexChange($event)" (nzPageSizeChange)="onSizeChange()">
+
+    </nz-pagination>
+  </div>
+</div>

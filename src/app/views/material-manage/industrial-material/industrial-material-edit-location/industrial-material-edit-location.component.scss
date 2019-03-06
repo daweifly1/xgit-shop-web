@@ -1,0 +1,44 @@
+.head-bar{
+  color:#333;
+  font-size:14px;
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
+
+  & > span:first-child{
+    border-left: 5px solid #f60;
+    padding-left:5px;
+  }
+}
+
+.selectStyle {
+  width: 100%;
+}
+.form {
+  width:100%;
+
+  nz-form-item {
+    display:inline-block;
+    width:45%;
+    font-size: 14px;
+    word-break: break-all;
+
+    nz-form-text {
+      line-height:30px;
+    }
+  }
+}
+.editable-add-btn {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+/deep/ .choose-model-box .ant-table-body.ng-star-inserted{
+  max-height: 240px !important;
+}
+
+/deep/ .choose-model-box .ant-modal-body {
+  padding-bottom: 0 !important;
+}
+/deep/ .choose-model-box .ant-input-affix-wrapper {
+  margin-bottom: 30px;
+}

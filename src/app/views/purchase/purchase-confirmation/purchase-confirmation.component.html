@@ -1,0 +1,103 @@
+<app-tab-route tabTitle="审定表">
+  <ng-container *ngIf="selectedPage === tabPageType.mainPage">
+    <app-ufast-table-nav searchPlaceholder="审定表编号" (search)="getConfirmationList()"
+                         [(searchText)]="filters.confirmationNo" [tableConfig]="confirmationTableConfig"
+                         (refresh)="getConfirmationList()" (advancedSearch)="onAdvancedSearch()"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="isShowAdvancedSearch">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">审定表编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.confirmationNo" placeholder="审定表编号">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">状态</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.status" nzAllowClear nzPlaceHolder="状态">
+              <nz-option *ngFor="let data of ('purchaseConfirmationStatus' | mapList); trackBy: trackByItem" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">审批表编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.purchaseApproveNo" placeholder="审批表编号">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">创建时间-起始</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.startCreateDate" [nzDisabledDate]="disabledStartDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">创建时间-截止</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.endCreateDate" [nzDisabledDate]="disabledEndDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">创建人</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.createName" placeholder="创建人">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getConfirmationList()">搜索</button>
+        <button nz-button nzType="info" (click)="resetSearch()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [dataList]="confirmationList" [tableConfig]="confirmationTableConfig"
+                     [getListHandle]="getConfirmationList"></app-ufast-table>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.detailPage">
+    <app-detail-confirmation [auditFlowData]="auditFlowData" [confirmationId]="currConfirmationId" [operation]="auditOpType" (backToMainPage)="onChildEmit($event)"></app-detail-confirmation>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.editPage">
+    <app-edit-confirmation [isNewOrder]="isNewOrder" [isReturnPass]="isReturnPass" [confirmationId]="currConfirmationId" (backToMainPage)="onChildEmit($event)"></app-edit-confirmation>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.auditPage">
+    <app-detail-confirmation [confirmationId]="currConfirmationId" [operation]="auditOpType" (backToMainPage)="onChildEmit($event)"></app-detail-confirmation>
+  </ng-container>
+  <ng-template #operationTpl let-id="id" let-confirmationCode="confirmationNo" let-returnStatus="returnStatus">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="editConfirmation(id, returnStatus)" *appAuthBtu="ActionCode.confirmationEdit">编辑</app-action>
+      <!-- <app-action [enabled]="actionStatus[id].delete" (clickAction)="deleteConfirmation(id)" *appAuthBtu="ActionCode.confirmationDelete">作废</app-action> -->
+      <app-action [enabled]="actionStatus[id].applyBack" (clickAction)="onApplyBack(id)" *appAuthBtu="ActionCode.confirmationBack">申请退回</app-action>
+      <app-action [enabled]="actionStatus[id].auditBack" (clickAction)="onAuditBack(id)" *appAuthBtu="ActionCode.confirmationBack">退回审核</app-action>
+      <app-action [enabled]="actionStatus[id].createSummary" (clickAction)="addNegotiationMinutes(confirmationCode, id)" *appAuthBtu="ActionCode.negotiationMinutesAdd">建谈判纪要</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #showDetailTpl let-id="id" let-confirmationCode="confirmationNo">
+    <span class="operate-text" (click)="showConfirmationDetail(id)">{{confirmationCode}}</span>
+  </ng-template>
+  <ng-template #downloadTpl let-attachment="annexName" let-attachmentUrl="annexUrl">
+    <a *ngIf="attachmentUrl" [href]="downloadUrl + attachmentUrl" download>下载</a>
+    <ng-container *ngIf="!attachmentUrl">下载</ng-container>
+  </ng-template>
+  <ng-template #summaryTpl let-purchaseSummary="summary">
+    <app-clip-text [content]="purchaseSummary" class="summary-clip"></app-clip-text>
+  </ng-template>
+  <nz-modal nzTitle="退回原因" nzWidth="500px" [(nzVisible)]="returnModalShow" (nzOnCancel)="cancelReturnModal()" (nzOnOk)="confirmReturnModal()">
+      <nz-form-item>
+        <nz-form-label nzSpan="4"  nzRequired>退回原因</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <textarea nz-input placeholder="请输入退回原因" [(ngModel)]="returnData.returnReason"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-modal>
+  
+</app-tab-route>

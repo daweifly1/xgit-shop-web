@@ -1,0 +1,87 @@
+<div class="problem-record-wrap">
+<ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+  <header>
+    <button nz-button nzType="info" (click)="addRecord()" *appAuthBtu="ActionCode.qualityProblemHandlingRecordAdd">新增</button>
+  </header>
+  <div class="table-wrap"><app-ufast-table [dataList]="dataList" [tableConfig]="dataTableConfig" [getListHandle]="getList"></app-ufast-table></div>
+</ng-container>
+<ng-template #operationTpl let-id="id">
+  <span class="operate-text" (click)="editRecord(id)" *appAuthBtu="ActionCode.qualityProblemHandlingRecordEdit">编辑</span>
+  <span class="operate-text" (click)="deleteRecord(id)" *appAuthBtu="ActionCode.qualityProblemHandlingRecordDel">删除</span>
+</ng-template>
+  <ng-template #affixTpl let-attachment="attachment">
+    <a *ngIf="attachment" [href]="downloadUrl + attachment" download>下载</a>
+    <span *ngIf="!attachment">下载</span>
+  </ng-template>
+<ng-container *ngIf="currentPage === PageTypeEnum.AddPage || currentPage === PageTypeEnum.EditPage">
+  <div class="edit-add-wrap">
+    <form nz-form [formGroup]="recordForm">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">操作人</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{operatorName}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>标题</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="title" [maxlength]="MaxInputLenEnum.Default" />
+          <nz-form-explain *ngIf="recordForm.get('title').dirty && recordForm.get('title').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>内容</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="content" [maxlength]="MaxInputLenEnum.Default" />
+          <nz-form-explain *ngIf="recordForm.get('content').dirty && recordForm.get('content').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>处理结果</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="handleResult" />
+          <nz-form-explain *ngIf="recordForm.get('handleResult').dirty && recordForm.get('handleResult').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>记录时间</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-date-picker formControlName="recordTime"></nz-date-picker>
+          <nz-form-explain *ngIf="recordForm.get('recordTime').dirty && recordForm.get('recordTime').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">备注</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <textarea nz-input formControlName="remark" [maxlength]="MaxInputLenEnum.Default"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" >附件</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-upload (nzChange)="onFileUploadChange($event)" [nzAction]="uploadUrl" [(nzFileList)]="fileList"
+                     [nzShowButton]="fileList.length < 1" [nzRemove]="onFileRemove">
+            <button nz-button>
+              <i class="anticon anticon-upload"></i><span>选择文件</span>
+            </button>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-row>
+        <div nz-col [nzOffset]="8" class="footer-bar">
+          <button nz-button nzType="info" (click)="saveRecord()">保存</button>
+          <button nz-button nzType="info" (click)="cancelAddEdit()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>
+</div>

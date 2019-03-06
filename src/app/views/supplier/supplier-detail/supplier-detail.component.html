@@ -1,0 +1,44 @@
+<div class="supplier-detail-wrap">
+  <header>
+    <button nz-button nzType="info" (click)="quitDetailPage()">退出</button>
+    <ng-container [ngTemplateOutlet]="headerTpl"></ng-container>
+  </header>
+  <div class="content-wrap">
+    <div class="left">
+      <nz-radio-group [(ngModel)]="currentPage" (ngModelChange)="changeTab($event)">
+        <div *ngFor="let tag of leftMenuList;" class="tag-item-wrap">
+          <label nz-radio-button [nzValue]="tag.id">{{tag.name}}</label>
+        </div>
+      </nz-radio-group>
+    </div>
+    <div class="right scrollbar-style">
+      <div>
+        <ng-container *ngIf="currentPage === PageTypeEnum.BasicInfoPage">
+          <app-supplier-basic-info-detail [basicInfo]="basicInfo"></app-supplier-basic-info-detail>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.ContactPage">
+          <app-supplier-contact-detail [contactDataList]="concactList"></app-supplier-contact-detail>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.QualFilePage">
+          <app-supplier-qualfile-detail [qualFileList]="quanFileList"></app-supplier-qualfile-detail>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.GradeInfoPage">
+          <app-supplier-grade-info [supplierId]="supplierId || basicInfo.id"></app-supplier-grade-info>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.ContractRecordPage">
+          <app-contract-record [supplierId]="supplierId || basicInfo.id" [problemType]="ProblemRecordType.ContractProblem"></app-contract-record>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.QualityRecordPage">
+          <app-contract-record [supplierId]="supplierId || basicInfo.id" [problemType]="ProblemRecordType.QualityProblem"></app-contract-record>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.InfoChangePage">
+          <app-supplier-info-record [supplierId]="supplierId || basicInfo.id"></app-supplier-info-record>
+        </ng-container>
+        <ng-container *ngIf="currentPage === PageTypeEnum.HistoryFilePage">
+          <app-supplier-history-file [supplierId]="supplierId || basicInfo.id"></app-supplier-history-file>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</div>

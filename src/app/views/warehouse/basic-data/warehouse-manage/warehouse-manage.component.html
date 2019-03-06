@@ -1,0 +1,75 @@
+<app-tab-route tabTitle="仓库管理">
+  <ng-container *ngIf="selectedPage === PageType.MainPage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="仓库编码" (search)="getWarehouseList()" [searchText]="filters.code"
+      [tableConfig]="tableConfig" (searchTextChange)="searchTextChange($event)" (advancedSearch)="advancedSearch()"
+      (refresh)="getWarehouseList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+        <button nz-button nzType="info" (click)="addWarehouse()" *appAuthBtu="ActionCode.warehouseAdd">新增仓库</button>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">仓库编码</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.code">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">仓库描述</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.remark">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getWarehouseList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="warehouseDataList" [getListHandle]="getWarehouseList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operation let-code="code" let-id="id" let-remark="remark" let-type="type" let-keeperName="keeperName"
+    let-keeperId="keeperId">
+    <app-action-group>
+      <app-action (clickAction)="addWarehouseArea(code,id,keeperId,keeperName)" *appAuthBtu="ActionCode.warehouseAreaAdd">添加库区</app-action>
+      <app-action (clickAction)="editWarehouse(code,id,remark,type,keeperName, keeperId)" *appAuthBtu="ActionCode.warehouseEdit">编辑</app-action>
+      <app-action (clickAction)="deleteWarehouse(id)" *appAuthBtu="ActionCode.warehouseDel">删除</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #serialNumber let-code="code" let-id="id" let-keeperName="keeperName" let-keeperId="keeperId">
+    <span class="operate-text" (click)="warehouseAreaManage(id,code,keeperId,keeperName)">{{code}}</span>
+  </ng-template>
+  <ng-container *ngIf="selectedPage === PageType.AddWarehousePage">
+    <app-add-warehouse (finish)="onChildFinish()"></app-add-warehouse>
+  </ng-container>
+
+  <ng-container *ngIf="selectedPage === PageType.EditWarehousePage">
+    <app-add-warehouse (finish)="onChildFinish()" [editData]="editData"></app-add-warehouse>
+  </ng-container>
+
+
+  <ng-container *ngIf="selectedPage === PageType.AddWarehouseAreaPage">
+    <app-add-warehouse-area (finish)="onChildFinish()" [warehouseCode]="warehouseCode" [warehouseId]="warehouseId"
+      [addData]="addData"></app-add-warehouse-area>
+  </ng-container>
+
+
+  <ng-container *ngIf="selectedPage === PageType.WarehouseAreaManagePage">
+    <app-warehouse-area-manage (finish)="onChildFinish()" [warehouseId]="selectedId" [warehouseCode]="warehouseCode"
+      [addData]="addData"></app-warehouse-area-manage>
+  </ng-container>
+
+</app-tab-route>
+
+
+
+
+
+<ng-template #navBreakcrumb>
+  <app-nav-breadcrumb></app-nav-breadcrumb>
+</ng-template>

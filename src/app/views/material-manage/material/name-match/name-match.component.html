@@ -1,0 +1,97 @@
+<app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="物料名称" [(searchText)]="filters.name" (advancedSearch)="fullSearch()"
+  (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="tableConfig">
+</app-ufast-table-nav>
+<ng-template #leftTpl>
+  <button nz-button nzType="info" (click)="distributionBatch()">分配</button>
+  <button nz-button nzType="info" (click)="goback()">返回上级</button>
+</ng-template>
+
+<div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+  <div class="advanceSearch-form">
+    <nz-form-item>
+      <nz-form-label nzSpan="10">物料名称</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input [(ngModel)]="filters.name" >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzSpan="10">物料编码</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filters.code" >
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">物料类型</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <!-- <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="filters.materialType" name="materialType" nzAllowClear>
+          <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+          <nz-option [nzValue]="2" nzLabel="备件"></nz-option>
+          <nz-option [nzValue]="3" nzLabel="设备"></nz-option>
+        </nz-select> -->
+        <nz-select class="selectStyle" [(ngModel)]="filters.materialType"  nzAllowClear>
+            <nz-option *ngFor="let item of ('materialType2' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+              [nzValue]="item.value">
+            </nz-option>
+          </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">物料描述</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input [(ngModel)]="filters.materialDesc" >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">物料分类</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+          [(ngModel)]="materialClass"  [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择三级分类">
+        </nz-cascader>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">零件号/图号</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input [(ngModel)]="filters.drawingNumber" >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">主机名称</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input [(ngModel)]="filters.deviceName" >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">主机型号</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input [(ngModel)]="filters.deviceModel" >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10">型号规格</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input [(ngModel)]="filters.specificationModel" >
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="10">状态</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="filters.isDelete"  nzAllowClear>
+          <nz-option [nzValue]="0" nzLabel="未冻结"></nz-option>
+          <nz-option [nzValue]="1" nzLabel="已冻结"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-col nzSpan="24" class="btn-bar">
+    <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+    <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+    <button nz-button nzType="default" (click)="fullSearchClose()">收起</button>
+  </div>
+</div>
+<app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="materialList" [getListHandle]="getDataList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+<ng-template #operation let-id="id" let-isDelete="isDelete" let-assigned="assigned">
+  <span class="operate-text" *ngIf="!assigned" (click)="distribution(id, isDelete)">分配</span>
+  <span class="bannedClick" *ngIf="assigned">分配</span>
+</ng-template>

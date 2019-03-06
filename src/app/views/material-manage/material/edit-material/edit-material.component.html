@@ -1,0 +1,135 @@
+<form nz-form [formGroup]="form" class="form">
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料名称</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="name" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料类别</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <!-- <nz-select class="selectStyle" formControlName="materialType" (ngModelChange)="changeMaterialType($event)"
+        nzAllowClear>
+        <nz-option nzValue="" nzLabel="请选择"></nz-option>
+        <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+        <nz-option [nzValue]="2" nzLabel="备件"></nz-option>
+        <nz-option [nzValue]="3" nzLabel="设备"></nz-option>
+
+      </nz-select> -->
+      <nz-select class="selectStyle" formControlName="materialType" (ngModelChange)="changeMaterialType($event)" nzAllowClear>
+          <nz-option *ngFor="let item of ('materialType2' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+            [nzValue]="item.value">
+          </nz-option>
+        </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料分类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+        formControlName="materialClassId" [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择三级分类" (ngModelChange)="onChanges($event)">
+      </nz-cascader>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">型号规格规范</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input formControlName="specificationModel" nz-input />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="isSparePart">
+    <nz-form-label nzSpan="6" nzRequired>设备名称</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input formControlName="deviceName" nz-input />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="isSparePart">
+    <nz-form-label nzSpan="6" nzRequired>设备型号</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input (focus)="showDeviceModelModal()" formControlName="deviceModel" readonly />
+      <nz-form-explain *ngIf="form.get('deviceModel').dirty && form.get('deviceModel').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>计量单位</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="unit" nzAllowClear>
+        <nz-option *ngFor="let item of unitList;trackBy:trackByNewsId;" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('unit').dirty && form.get('unit').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">零件号/图号</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="drawingNumber" nzSize="default" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">材质</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="material" nzSize="default" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">品牌</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="brand" nzSize="default" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">进口或国产</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="importOrDomestic" nzAllowClear>
+        <nz-option nzValue="进口" nzLabel="进口"></nz-option>
+        <nz-option nzValue="进口国产化" nzLabel="进口国产化"></nz-option>
+        <nz-option nzValue="国产" nzLabel="国产"></nz-option>
+        <nz-option nzValue="转口" nzLabel="转口"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>重要程度</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="importance" nzAllowClear>
+        <nz-option [nzValue]="1" [nzLabel]="1"></nz-option>
+        <nz-option [nzValue]="2" [nzLabel]="2"></nz-option>
+        <nz-option [nzValue]="3" [nzLabel]="3"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">物资分类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="materialClassification" nzAllowClear>
+        <nz-option nzValue="保险件" nzLabel="保险件"></nz-option>
+        <nz-option nzValue="一般件" nzLabel="一般件"></nz-option>
+        <nz-option nzValue="常耗件" nzLabel="常耗件"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="status === 2">
+    <nz-form-label nzSpan="6">拒绝原因</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="auditRemark" nzSize="default" />
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="btn">
+  <div nz-col nzSpan="10"></div>
+  <div nz-col nzSpan="12" style="margin-top: 30px;">
+    <button nz-button nzType="primary" class="submit-button"  (click)="save()">提报
+    </button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+    </button>
+  </div>
+</div>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="选择设备型号" [nzFooter]="null" nzWidth="630px"
+  (nzOnCancel)="isVisible = false">
+  <app-ufast-table [tableConfig]="deviceModelTableConfig" [dataList]="deviceModelDataList" [getListHandle]="getDeviceModelData"></app-ufast-table>
+  <ng-template #chooseDeviceModel let-modelName="modelName">
+    <span class="operate-text" (click)="chooseDeviceModelFun(modelName)">选择</span>
+  </ng-template>
+</nz-modal>

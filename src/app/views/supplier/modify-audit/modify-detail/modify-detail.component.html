@@ -1,0 +1,100 @@
+<div class="supplier-detail-wrap">
+  <header>
+    <button nz-button nzType="info" (click)="quitDetailPage()">退出</button>
+    <button nz-button nzType="info" (click)="modifyAuditPass()" *appAuthBtu="ActionCode.modifyAudit">通过</button>
+    <button nz-button nzType="info" (click)="modifyAuditReject()" *appAuthBtu="ActionCode.modifyAudit">拒绝</button>
+    <ng-container [ngTemplateOutlet]="headerTpl"></ng-container>
+  </header>
+  <div class="content-wrap">
+    <div class="left">
+      <nz-radio-group [(ngModel)]="currentPage">
+        <div *ngFor="let tag of leftMenuList;" class="tag-item-wrap">
+          <label nz-radio-button [nzValue]="tag.id">{{tag.name}}</label>
+        </div>
+      </nz-radio-group>
+    </div>
+    <div class="right scrollbar-style">
+      <ng-container *ngIf="currentPage === PageTypeEnum.BasicInfoPage">
+        <div class="basic-info-wrap">
+          <div class="basic-left">
+            <div class="header">修改后信息</div>
+            <app-supplier-basic-info-detail [basicInfo]="newBasicInfo" [colNum]="1" [lightFieldList]="changedBasicField" [hideFieldList]="hideBasicField"></app-supplier-basic-info-detail>
+          </div>
+          <div class="basic-right">
+            <div class="header">
+              <span>原信息</span>
+              <span class="basic-switch">
+                隐藏相同项
+                <nz-switch ngModel (ngModelChange)="onBasicShowChange($event)"></nz-switch>
+              </span>
+            </div>
+            <app-supplier-basic-info-detail [basicInfo]="oldBasicInfo" [hideFieldList]="hideBasicField" [colNum]="1"></app-supplier-basic-info-detail>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currentPage === PageTypeEnum.ContactPage">
+        <div class="contact-detail-wrap">
+          <div>
+            <div>修改后联系人列表</div>
+            <nz-table [nzData]="newContactList" [nzShowPagination]="false" [nzBordered]="true" nzSize="small">
+              <thead><tr>
+                <th *ngFor="let header of contactTableConfig.headers;trackBy:trackByItem" [nzWidth]="header.width + 'px'">{{header.title}}</th>
+              </tr></thead>
+              <tbody><tr *ngFor="let item of newContactList; trackBy:trackByItem;let i=index">
+                <td *ngFor="let header of contactTableConfig.headers;trackBy:trackByItem"
+                    [ngClass]="{'change-field': contactChangeMap[item.id][header.field]}">
+                  <ng-container *ngIf="header.pipe">{{item[header.field]|map:header.pipe}}</ng-container>
+                  <ng-container *ngIf="!header.pipe">{{item[header.field]}}</ng-container>
+                </td>
+              </tr></tbody>
+            </nz-table>
+          </div>
+          <div>
+            <div>原联系人列表</div>
+            <app-ufast-table [tableConfig]="contactTableConfig" [dataList]="oldContactList"></app-ufast-table>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currentPage === PageTypeEnum.QualFilePage">
+        <div class="contact-detail-wrap">
+          <div>
+            <div>修改后资质文件列表</div>
+            <nz-table [nzData]="newFileList" [nzShowPagination]="false" [nzBordered]="true" nzSize="small">
+              <thead><tr>
+                <th *ngFor="let header of fileTableConfig.headers;trackBy:trackByItem" [nzWidth]="header.width + 'px'">{{header.title}}</th>
+              </tr></thead>
+              <tbody><tr *ngFor="let item of newFileList; trackBy:trackByItem;let i=index">
+                <td *ngFor="let header of fileTableConfig.headers;trackBy:trackByItem"
+                    [ngClass]="{'change-field': fileChangeMap[item.id][header.field]}">
+                  <ng-container *ngIf="!header.tdTemplate">
+                    <ng-container *ngIf="header.pipe">{{item[header.field]|map:header.pipe}}</ng-container>
+                    <ng-container *ngIf="!header.pipe">{{item[header.field]}}</ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="header.tdTemplate">
+                    <ng-container *ngTemplateOutlet="header.tdTemplate;context:item"></ng-container>
+                  </ng-container>
+
+                </td>
+              </tr></tbody>
+            </nz-table>
+          </div>
+          <div>
+            <div>原联资质文件列表</div>
+            <app-ufast-table [tableConfig]="fileTableConfig" [dataList]="oldFileList"></app-ufast-table>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-template #fileAffixTpl let-fileUrl="fileUrl" let-id="id" let-isNew="isNew">
+  <span class="operate-text" (click)="viewQualFile(fileUrl)" [ngStyle]="{color: fileChangeMap[id]['fileUrl'] && isNew ? 'red': ''}">预览</span>
+  <span class="operate-text"> <a [href]="downloadUrl + fileUrl" download [ngStyle]="{color: fileChangeMap[id]['fileUrl'] && isNew? 'red': ''}">下载</a></span>
+</ng-template>
+<nz-modal [(nzVisible)]="viewQualFielModalShow" (nzOnCancel)="cancelViewFile()" [nzWidth]="'66%'" [nzFooter]="null">
+  <div class="view-file-wrap">
+    <pdf-viewer [src]="viewQualFileUrl" [show-all]="true"></pdf-viewer>
+    <div class="footer">
+    </div>
+  </div>
+</nz-modal>

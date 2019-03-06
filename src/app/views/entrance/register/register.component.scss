@@ -1,0 +1,18 @@
+.register-wrap {
+  padding: 20px;
+
+  header {
+    font-size: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+  .info-form {
+    margin-top: 20px;
+    width: 500px;
+
+    .send-code-btu {
+      float: right;
+      margin-top: 4px;
+      padding: 0 8px;
+    }
+  }
+}

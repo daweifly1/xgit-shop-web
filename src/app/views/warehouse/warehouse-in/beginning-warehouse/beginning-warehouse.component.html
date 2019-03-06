@@ -1,0 +1,169 @@
+<app-tab-route tabTitle="期初入库">
+  <ng-container *ngIf="selectedPage === PageType.MainPage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="入库单号" (search)="getBeginningWarehouseList()"
+      [(searchText)]="filters.billNo" (advancedSearch)="advancedSearch($event)" (refresh)="getBeginningWarehouseList()"
+      [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="leadIn()" *appAuthBtu="ActionCode.beginningInImport">导入</button>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">入库单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.billNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">仓库编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.inLocation">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">入库状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.state" name="state" nzAllowClear>
+              <nz-option *ngFor="let item of inventoryStatusList;trackBy: trackByItem;" [nzValue]="item.value"
+                [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">是否条码管理</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.barcodeFlag" [nzAllowClear]="true">
+              <nz-option *ngFor="let item of barcodeFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">开始制单时间</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.createDateStart" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">结束制单时间</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.createDateEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getBeginningWarehouseList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="beginningWarehouseDataList"
+      [getListHandle]="getBeginningWarehouseList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-billNo="billNo" let-ctx="_this">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[billNo].stockIn" (clickAction)="warehouseDetail(true, billNo)" *appAuthBtu="ActionCode.beginningInPutInStorage">入库</app-action>
+      <app-action [enabled]="actionStatus[billNo].finish" (clickAction)="statementFinish(billNo)" *appAuthBtu="ActionCode.beginningInFinish">结单</app-action>
+      <app-action [enabled]="actionStatus[billNo].print" (clickAction)="showPrintModal(ctx)" *appAuthBtu="ActionCode.beginningInPrint">打印</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #serialNumber let-billNo="billNo">
+    <span class="operate-text" (click)="warehouseDetail(false, billNo)">{{billNo}}</span>
+  </ng-template>
+
+  <ng-container *ngIf="selectedPage === PageType.DetailPage">
+    <app-beginning-detail (finish)="onChildFinish()" [billNo]="selectedBillNo" [stockIn]="stockIn"></app-beginning-detail>
+  </ng-container>
+
+  <ng-container *ngIf="selectedPage === PageType.LeadInPage">
+    <form nz-form class="vendor-edit p-t-md clear-fix" [formGroup]="leadInForm">
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzSpan="4" nzRequired>仓库编号</nz-form-label>
+          <nz-form-control nzSpan="8">
+            <input nz-input formControlName="warehouseCode" (focus)="showWarehouseModal()" (ngModelChange)="warehouseChange()"
+              readonly />
+            <nz-form-explain *ngIf="leadInForm.get('warehouseCode').dirty && leadInForm.get('warehouseCode').errors">
+              必填项
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzSpan="4" nzRequired>库区编号</nz-form-label>
+          <nz-form-control nzSpan="8">
+            <input nz-input formControlName="areaCode" (focus)="showReservoirModal()" readonly />
+            <nz-form-explain *ngIf="leadInForm.get('areaCode').dirty && leadInForm.get('areaCode').errors">
+              必填项
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzSpan="4">下载模板</nz-form-label>
+          <nz-form-control nzSpan="8">
+            <a [href]="href">下载</a>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzSpan="4" nzRequired>选择文件</nz-form-label>
+          <nz-form-control nzSpan="8">
+            <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzShowButton]="fileList.length < 1"
+               [nzRemove]="removeFile">
+              <button nz-button>
+                <i class="anticon anticon-upload"></i>
+                <span>添加文件</span>
+              </button>
+            </nz-upload>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="24" *ngIf="errorMessage.length !== 0">
+        <nz-form-item>
+          <nz-form-label nzSpan="4">错误信息</nz-form-label>
+          <nz-form-control nzSpan="8">
+            <div *ngFor="let item of errorMessage" class="errorInformation">第{{item.errorRow}}行:{{item.remark}}</div>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="16" nzOffset="4" class="m-t-sm p-b-md">
+        <button nz-button nzType="primary" class="submit-button" type="submit" (click)="leadingIn()">导入</button>
+        <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+      </div>
+    </form>
+  </ng-container>
+  <nz-modal class="choose-model-box" [(nzVisible)]="isWarehouseVisible" nzTitle="选择仓库" nzWidth="630px" (nzOnCancel)="warehouseHandleCancel()">
+    <app-ufast-table [tableConfig]="outWareHouseTableConfig" [dataList]="outWareHouseDataList" [getListHandle]="getWarehouseModalData"></app-ufast-table>
+    <ng-template #chooseWareHouse let-i="code">
+      <span class="operate-text" (click)="chooseWareHouseFun(i)">选择</span>
+    </ng-template>
+  </nz-modal>
+
+  <nz-modal class="choose-model-box" [(nzVisible)]="isVisibleReservoir" nzTitle="选择库区" nzWidth="630px" (nzOnCancel)="handleCancelReservoir()">
+    <app-ufast-table [tableConfig]="warehouseAreaTableConfig" [dataList]="reservoirDataList" [getListHandle]="getWarehouseAreaModalData"></app-ufast-table>
+    <ng-template #chooseReservoir let-i="code">
+      <span class="operate-text" (click)="chooseReservoirFun(i)">选择</span>
+    </ng-template>
+  </nz-modal>
+
+</app-tab-route>

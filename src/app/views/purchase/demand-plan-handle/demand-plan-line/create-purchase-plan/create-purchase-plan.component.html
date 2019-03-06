@@ -1,0 +1,71 @@
+<form nz-form [formGroup]="createPurchaseForm" class="order-header-form">
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired nzFor="monthPlanIn">计划月份</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-month-picker formControlName="monthPlanIn" [(ngModel)]="purchaseParams.monthPlanIn" nzPlaceHolder="计划月份" [nzDisabledDate]="disabledDate"></nz-month-picker>
+      <nz-form-explain *ngIf="createPurchaseForm.get('monthPlanIn').dirty && createPurchaseForm.get('monthPlanIn').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired nzFor="purchaseType">采购方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select style="width: 100%;" formControlName="purchaseType" [(ngModel)]="purchaseParams.purchaseType" nzPlaceHolder="自购/同购">
+        <nz-option *ngFor="let item of ('purchaseType' | mapList)" [nzValue]="item.value" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="createPurchaseForm.get('purchaseType').dirty && createPurchaseForm.get('purchaseType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired nzFor="purchasePlanType">采购计划类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select style="width: 100%;" formControlName="purchasePlanType" [(ngModel)]="purchaseParams.purchasePlanType" nzPlaceHolder="采购计划类型">
+        <nz-option *ngFor="let item of purchasePlanTypeList" [nzValue]="item.value" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="createPurchaseForm.get('purchasePlanType').dirty && createPurchaseForm.get('purchasePlanType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired nzFor="businessType">业务类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select style="width: 100%;" formControlName="businessType" [(ngModel)]="purchaseParams.businessType" nzPlaceHolder="业务类型">
+        <nz-option *ngFor="let item of businessTypeList" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="createPurchaseForm.get('businessType').dirty && createPurchaseForm.get('businessType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物料类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>{{purchaseParams.materialType | map: 'materialType2'}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">计划员</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>{{purchaseParams.planner}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>所属部门</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>{{purchaseParams.departmentName}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="split-bar">
+  <span>物料行</span>
+</div>
+<app-ufast-table [tableConfig]="purchasePlanCreateTableConfig" [dataList]="purchasePlanCreateList"></app-ufast-table>
+<div class="table-footer-bar">
+  <!--<button nz-button nzType="primary" (click)="savePurchasePlan()">保存</button>-->
+  <button nz-button nzType="primary" (click)="submitPurchasePlan()">提交</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">返回</button>
+</div>
+
+<ng-template #inputQuantityTpl let-index="index">
+  <nz-input-number style="width: 100%;" [(ngModel)]="purchasePlanCreateList[index].purchaseAmount" [nzMin]="0" [nzMax]="lengthLimit.max" [nzPrecision]="lengthLimit.precision"></nz-input-number>
+</ng-template>
+<ng-template #demandDateTpl let-index="index">
+  <nz-date-picker [(ngModel)]="purchasePlanCreateList[index].demandDate"></nz-date-picker>
+</ng-template>

@@ -1,0 +1,81 @@
+<ng-container>
+  <div>
+    <div class="detail-header-info">
+      <nz-form-item *ngFor="let item of fieldList;trackBy:trackByItem;">
+        <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text *ngIf="!item.pipe">{{negotiationDetailInfo[item.field]}}</nz-form-text>
+          <nz-form-text *ngIf="item.pipe">{{negotiationDetailInfo[item.field] | map:item.pipe}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+          <nz-form-label nzSpan="8">附件</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <app-action-group>
+              <app-action [enabled]="false">
+                <a *ngIf="negotiationDetailInfo.attachment" [href]="downLoadUrl" download>下载</a>
+                <ng-container *ngIf="!negotiationDetailInfo.attachment">下载</ng-container>
+              </app-action>
+            </app-action-group>
+          </nz-form-control>
+        </nz-form-item>
+    </div>
+    <div class="detail">
+      <nz-form-item style="width:66%;">
+        <nz-form-label nzSpan="4">谈判内容纪要</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <nz-form-text>{{negotiationDetailInfo['negotiationContent']}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+  </div>
+  <div class="split-bar"><span>供应商</span></div>
+  <app-ufast-table [tableConfig]="supplierTableConfig" [dataList]="supplierList"></app-ufast-table>
+</ng-container>
+<!-- 供应商报价信息 -->
+<div class="split-bar"><span>供应商报价信息</span></div>
+<nz-tabset nzType="card" [(nzSelectedIndex)]="tabIndex" (nzSelectedIndexChange)="changeTab($event)" style="height:auto;">
+  <nz-tab nzTitle="首轮报价">
+  </nz-tab>
+  <nz-tab nzTitle="最终报价&成交价格">
+  </nz-tab>
+</nz-tabset>
+<nz-table #rowTable [nzData]="tableDataList" [nzBordered]="true" [nzSize]="'small'" [nzLoading]="tableConfig.loading"
+      [nzPageIndex]="tableConfig.pageNum" [nzPageSize]="tableConfig.pageSize" [nzFrontPagination]="true"
+      [nzPageSizeOptions]="tableConfig.pageSizeOptions" [nzScroll]="{x: tableConfig.xScroll}" [nzShowPagination]="true" [nzShowQuickJumper]="true" [nzShowSizeChanger]="true">
+      <thead>
+        <tr>
+          <th rowspan="2" *ngFor="let item of tableConfig.headers;trackBy: trackByItem" [nzWidth]="item.width + 'px'">{{item.title}}</th>
+          <ng-container *ngIf="tableDataList.length > 0">
+            <th colspan="2" *ngFor="let supplier of tableDataList[0].summaryOfferBodyDOS;trackBy:trackByItem;">{{supplier.supplierName}}</th>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngIf="tableDataList.length > 0">
+            <ng-container *ngFor="let supplier of tableDataList[0].summaryOfferBodyDOS;trackBy: trackByItem;">
+              <th style="width: 80px">报价数量</th>
+              <th style="width: 80px">单价(元)</th>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of rowTable.data;trackBy:trackByItem;let i = 'index'">
+          <ng-container *ngFor="let header of tableConfig.headers;trackBy: trackByItem;">
+            <td *ngIf="header.pipe">{{row[header.field] | map:header.pipe}}</td>
+            <td *ngIf="!header.pipe">{{row[header.field]}}</td>
+          </ng-container>
+          <ng-container *ngFor="let supplierNum of row.summaryOfferBodyDOS;trackBy: trackByItem">
+            <td>{{supplierNum.supplierCount}}</td>
+            <td>{{supplierNum.supplierPrice}}</td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </nz-table>
+<div class="table-footer-bar">
+  <button nz-button nzType="info" (click)="auditPass()" *ngIf="!isDetailPage">审批通过</button>
+  <button nz-button nzType="info" (click)="auditReject()" *ngIf="!isDetailPage">审批拒绝</button>
+  <button nz-button nzType="info" (click)="onCancel()">关闭</button>
+</div>

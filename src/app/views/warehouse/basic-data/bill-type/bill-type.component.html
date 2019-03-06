@@ -1,0 +1,30 @@
+<app-tab-route tabTitle="单据类型">
+  <ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+
+    <app-ufast-table-nav [showAdvancedSearch]="false" [showSearch]="false" [leftTemplate]="leftTpl" [tableConfig]="tableConfig"
+      (refresh)="getList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addWarehouse()" *appAuthBtu="ActionCode.billTypeAdd">新增</button>
+      <button nz-button nzType="info" (click)="deleteBatchBillType(selectedListIds)" *appAuthBtu="ActionCode.billTypeDel">删除</button>
+    </ng-template>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="billTypeDataList" [getListHandle]="getList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+  </ng-container>
+  <ng-template #operation let-id="id" let-abnormalNo="abnormalNo" let-state="state">
+    <app-action-group>
+      <app-action (clickAction)="editWarehouse(id)" *appAuthBtu="ActionCode.billTypeEdit">编辑</app-action>
+      <app-action (clickAction)="deleteBillType(id)" *appAuthBtu="ActionCode.billTypeDel">删除</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-container *ngIf="selectedPage === tabPageType.AddPage">
+    <app-add-bill (finish)="onChildFinish()"></app-add-bill>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === tabPageType.EditPage">
+    <app-add-bill (finish)="onChildFinish()" [detailId]="detailId"></app-add-bill>
+  </ng-container>
+
+</app-tab-route>
+
+<ng-template #navBreakcrumb>
+  <app-nav-breadcrumb></app-nav-breadcrumb>
+</ng-template>

@@ -1,0 +1,66 @@
+<ng-container *ngIf="currentPageType === pageTypeEnum.areaList">
+  <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="库区编码" (search)="getWarehouseAreaList()" [searchText]="filters.code"
+    [tableConfig]="tableConfig" (searchTextChange)="searchTextChange($event)" (advancedSearch)="advancedSearch($event)"
+    (refresh)="getWarehouseAreaList()"></app-ufast-table-nav>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="goback()">返回上级</button>
+    <button nz-button nzType="info" (click)="addWarehouseArea()" *appAuthBtu="ActionCode.warehouseAreaAdd">新增库区</button>
+    <!-- <span class="operate-text" (click)="goback()">返回上级</span>
+    <span class="operate-text" (click)="addWarehouseArea()" *appAuthBtu="ActionCode.warehouseAreaAdd">新增库区</span> -->
+  </ng-template>
+
+  <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">库区编码</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input [(ngModel)]="filters.code">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">库区描述</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input [(ngModel)]="filters.remark">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24" class="btn-bar">
+      <button nz-button nzType="primary" (click)="getWarehouseAreaList()">搜索</button>
+      <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+      <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+    </div>
+  </div>
+
+  <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="warehouseAreaDataList" [getListHandle]="getWarehouseAreaList"></app-ufast-table>
+</ng-container>
+<ng-template #operation let-code="code" let-id="id" let-remark="remark" let-keeperName="keeperName" let-keeperId="keeperId" let-erpCode="erpCode">
+  <app-action-group>
+    <app-action (clickAction)="addLocation(code,id,keeperId,keeperName)" *appAuthBtu="ActionCode.locationAdd">添加储位</app-action>
+    <app-action (clickAction)="editWarehouseArea(code,id,remark,keeperName,keeperId, erpCode)" *appAuthBtu="ActionCode.warehouseAreaEdit">编辑</app-action>
+    <app-action (clickAction)="deleteWarehouse(id)" *appAuthBtu="ActionCode.warehouseAreaDel">删除</app-action>
+  </app-action-group>
+</ng-template>
+<ng-template #serialNumber let-code="code" let-id="id" let-keeperId="keeperId" let-keeperName="keeperName">
+  <span class="operate-text" (click)="locationManage(code,id,keeperId,keeperName)">{{code}}</span>
+</ng-template>
+
+<ng-container *ngIf="currentPageType === pageTypeEnum.addArea">
+  <app-add-warehouse-area (finish)="onChildPageFinish()" [warehouseCode]="warehouseCode" [warehouseId]="warehouseId"
+    [addData]="addData"></app-add-warehouse-area>
+</ng-container>
+
+<ng-container *ngIf="currentPageType === pageTypeEnum.editArea">
+  <app-add-warehouse-area (finish)="onChildPageFinish()" [editData]="editData" [warehouseCode]="warehouseCode"></app-add-warehouse-area>
+</ng-container>
+
+<ng-container *ngIf="currentPageType === pageTypeEnum.addLocation">
+  <app-add-location (finish)="onChildPageFinish()" [areaCode]="selectAreaCode" [areaId]="selectAreaId" [warehouseCode]="warehouseCode"
+    [defaultKeeper]="defaultKeeper"></app-add-location>
+</ng-container>
+
+<ng-container *ngIf="currentPageType === pageTypeEnum.areaDetail">
+  <app-location-manage (finish)="onChildPageFinish()" [areaId]="selectAreaId" [areaCode]="selectAreaCode"
+    [warehouseCode]="warehouseCode" [defaultKeeper]="defaultKeeper"></app-location-manage>
+</ng-container>

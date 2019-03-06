@@ -1,0 +1,249 @@
+<div>新增</div>
+<!-- <ng-container>
+    <form nz-form [formGroup]="newWarehouseForm">
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzSpan="4" nzRequired>仓库编号</nz-form-label>
+                <nz-form-control nzSpan="8">
+                    <input nz-input formControlName="warehouseCode">
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzSpan="4" nzRequired>仓库描述</nz-form-label>
+                <nz-form-control nzSpan="8">
+                    <input nz-input formControlName="description">
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzSpan="4">是否计划仓库</nz-form-label>
+                <nz-form-control nzSpan="8">
+                    <nz-radio-group formControlName="isPlan">
+                            <label nz-radio nzValue="1">是</label>
+                            <label nz-radio nzValue="0">否</label>
+                          </nz-radio-group>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+
+        <div nz-col nzSpan="24" nzOffset="4" class="m-t-sm p-b-md">
+            <button nz-button nzType="primary" class="submit-button" type="submit">保存</button>
+            <button nz-button nzType="primary" class="submit-button" nzGhost>取消</button>
+        </div>
+    </form>
+</ng-container> -->
+
+
+<!-- <ng-container>
+    <form nz-form [formGroup]="newMaterialForm">
+        <div class="panel-bar">
+            <div class="pull-left">
+                <i></i>
+                <span>物料信息</span>
+            </div>
+            <div class="pull-right">
+                <i class="fa fa-angle-double-up" *ngIf="showMaterialInformationBar === true" (click)="showMaterialInformation()"></i>
+                <i class="fa fa-angle-double-down" *ngIf="showMaterialInformationBar === false" (click)="showMaterialInformation()"></i>
+            </div>
+        </div>
+
+
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzSpan="4">库区编号</nz-form-label>
+                <nz-form-control nzSpan="8">
+                    <span>{{areaCode}}</span>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24">
+            <nz-form-item>
+                <nz-form-label nzSpan="4" nzRequired>货架编号</nz-form-label>
+                <nz-form-control nzSpan="8">
+                    <input nz-input formControlName="shelfNo">
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div nz-col nzSpan="24" nzOffset="4" class="m-t-sm p-b-md">
+            <button nz-button nzType="primary" class="submit-button" type="submit" (click)="submitLocation()">保存</button>
+            <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+        </div>
+    </form>
+</ng-container>
+
+<ng-container>
+    <div nz-col nzSpan="24">
+        <div class="materialInformation" *ngIf="showMaterialInformationBar === true">
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">自定义物料编码</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                        <input nz-input formControlName="customMaterialsNo">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">物料描述</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="materialsDes">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">基本计量单位</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="unit">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">全国统一价</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="price">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">标准价</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="standardPrice">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">采购组</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="purchaseGroup">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">产品组</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="productGroup">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">物料组</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="materialsGroup">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">物料组描述</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="materialsGroupDec">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">外部物料组</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="outMaterialsGroup">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">外部物料组描述</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="outMaterialsGroupDec">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">价格单位</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="priceUnit">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">物料分类</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="materialsType">
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">物料级别</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="grade">
+                        <span *ngIf="materialDataList.grade === 0">A</span>
+                        <span *ngIf="materialDataList.grade === 1">B</span>
+                        <span *ngIf="materialDataList.grade === 2">C</span>
+                        <span *ngIf="materialDataList.grade === null">-</span>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">是否关键件</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="crucialDevice">
+                        <span *ngIf="materialDataList.crucialDevice === 1">是</span>
+                        <span *ngIf="materialDataList.crucialDevice === 0">否</span>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="24">
+                <nz-form-item>
+                    <nz-form-label nzSpan="3">是否进口件</nz-form-label>
+                    <nz-form-control nzSpan="8">
+                            <input nz-input formControlName="entranceDevice">
+                        <span *ngIf="materialDataList.entranceDevice === 1">是</span>
+                        <span *ngIf="materialDataList.entranceDevice === 0">否</span>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+    </div>
+
+    <div nz-col nzSpan="24">
+        <div class="panel-bar">
+            <div class="pull-left">
+                <i></i>
+                <span>对应仓库保管员</span>
+            </div>
+            <div class="pull-right" (click)="showStorekeeper()">
+                <i class="fa fa-angle-double-up" *ngIf="showStorekeeperBar === true"></i>
+                <i class="fa fa-angle-double-down" *ngIf="showStorekeeperBar === false"></i>
+            </div>
+        </div>
+        <div class="storeKeeper" *ngIf="showStorekeeperBar === true">
+            <nz-form-item>
+                <nz-form-label nzSpan="3">仓库保管员</nz-form-label>
+                <nz-form-control nzSpan="8">
+                    <span>---</span>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </div>
+    <div nz-col nzSpan="24" class="btn-bar">
+        <div>
+            <button nz-button nzType="primary" nzGhost (click)="toggleManagePage()">返回</button>
+        </div>
+    </div>
+</ng-container> -->

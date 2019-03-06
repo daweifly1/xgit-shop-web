@@ -1,0 +1,94 @@
+<div nz-col nzSpan="24">
+  <div class="head-bar"><span>物料信息</span></div>
+  <div class="detail-header-info">
+    <nz-form-item *ngFor="let item of headerFieldList;trackBy: trackByNewsId">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{materialInfo[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{materialInfo[item.field] | map: item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+
+  <div class="head-bar" nz-col nzSpan="24"><span>厂矿信息</span></div>
+  <div class="detail-header-info">
+    <nz-form-item>
+      <nz-form-label nzSpan="6">采购组</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span>{{factoryInformation.purchasingGroupId}}</span>
+        <!-- <span *ngIf="factoryInformation.purchasingGroupName === '1'">材料采购组</span>
+        <span *ngIf="factoryInformation.purchasingGroupName === '2'">备件采购组</span>
+        <span *ngIf="factoryInformation.purchasingGroupName === '3'">设备采购组</span> -->
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">计划分解</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span *ngIf="factoryInformation.planDec === '1'">材料</span>
+        <span *ngIf="factoryInformation.planDec === '2'">备件</span>
+        <span *ngIf="factoryInformation.planDec === '3'">设备</span>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6">旧编码</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span>{{factoryInformation.oldCode}}</span>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">管理模式</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span>{{factoryInformation.managementMode | map: 'managementMode'}}</span>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">分工管理</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span>{{factoryInformation.divisionName}}</span>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">计划员</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span>{{factoryInformation.planner}}</span>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">保管员</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <span>{{factoryInformation.keeperName}}</span>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+
+  <div nz-col nzSpan="24">
+    <nz-table #locationTable nzBordered [nzData]="locationDataSet" nzSize="small">
+      <thead>
+        <tr>
+          <th nzWidth="50px" nzLeft="0px">默认</th>
+          <th>储位</th>
+          <th nzWidth="30%">保管员</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of locationTable.data;let i=index">
+          <td>
+            <span *ngIf="data.isDefault === 0">否</span>
+            <span *ngIf="data.isDefault === 1">是</span>
+          </td>
+          <td>
+            <span>{{data.storageCode}}</span>
+          </td>
+          <td>
+            <span>{{data.keeperName}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <div class="table-footer-bar">
+    <button  nz-button nzType="primary" nzGhost (click)="emitFinish()">关闭
+    </button>
+  </div>

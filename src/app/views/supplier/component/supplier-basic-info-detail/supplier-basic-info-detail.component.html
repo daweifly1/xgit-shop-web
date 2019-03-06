@@ -1,0 +1,17 @@
+<div class="detail-header-info">
+  <ng-container *ngFor="let item of infoFieldList;trackBy:trackByItem">
+    <nz-form-item *ngIf="!item.hide" style="width: 49.5%;" [ngStyle]="{width: _colNum === 2 ? '49.5':'100%'}">
+      <nz-form-label nzSpan="8"><span [ngStyle]="{color: item.light ? 'red': ''}">{{item.name}}</span></nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{_basicInfo[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{_basicInfo[item.field] | map:item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+  <nz-form-item style="width:100%;" *ngIf="!  profileHide">
+    <nz-form-label [nzSpan]="_colNum === 2 ? 4 : 8"><span [ngStyle]="{color: profileLight?'red':''}">公司简介</span></nz-form-label>
+    <nz-form-control [nzSpan]="24 - (_colNum === 2 ? 4 : 8)">
+      <nz-form-text>{{_basicInfo.profile}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</div>

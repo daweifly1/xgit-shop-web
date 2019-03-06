@@ -1,0 +1,111 @@
+<ng-container *ngIf="currentPage === FilePageEnum.MainPage">
+  <div class="qual-file-wrap">
+    <header>
+      <button nz-button nzType="info" (click)="addQualFile()">新增</button>
+      &nbsp;
+      <span class="operate-text"><a [href]="downloadTplUrl" target="_self" download>下载调查表模板</a></span>
+      &nbsp;
+      <span class="font-red-color">注：营业执照和调查表必填</span>
+    </header>
+    <app-ufast-table [tableConfig]="tableConfig" [dataList]="dataList"></app-ufast-table>
+  </div>
+</ng-container>
+<ng-template #operationTpl let-id="id">
+  <span class="operate-text" (click)="editFile(id)">编辑</span>
+  <span class="operate-text" (click)="delFile(id)">删除</span>
+</ng-template>
+<ng-template #affixTpl let-fileUrl="fileUrl" let-name="credentialName">
+  <span class="operate-text" (click)="viewFile(fileUrl)">预览</span>
+  <span class="operate-text"><a [href]="downloadUrl+fileUrl" [download]="name">下载</a></span>
+</ng-template>
+<ng-container *ngIf="currentPage === FilePageEnum.AddPage || currentPage === FilePageEnum.EditPage">
+  <div class="edit-file-wrap">
+    <form nz-form [formGroup]="fileInfoForm" class="file-form">
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>证件名称</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="credentialName" [maxlength]="MaxInputLenEnum.Default" />
+          <nz-form-explain *ngIf="fileInfoForm.get('credentialName').dirty && fileInfoForm.get('credentialName').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>发证机构</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="issuingAgency" [maxlength]="MaxInputLenEnum.Default" />
+          <nz-form-explain *ngIf="fileInfoForm.get('issuingAgency').dirty && fileInfoForm.get('issuingAgency').errors">
+            必填
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>有效期起</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-date-picker formControlName="validityPeriodStart" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          <nz-form-explain *ngIf="fileInfoForm.get('validityPeriodStart').dirty && fileInfoForm.get('validityPeriodStart').errors">
+            请选择有效期起始时间
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>有效期止</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-date-picker formControlName="validityPeriodEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          <nz-form-explain *ngIf="fileInfoForm.get('validityPeriodEnd').dirty && fileInfoForm.get('validityPeriodEnd').errors">
+            请选择有效期结束时间
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>文件类型</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-select formControlName="credentialType" [nzDisabled]="currentPage===FilePageEnum.EditPage">
+            <nz-option *ngFor="let item of fileTypeList; trackBy:trackByItem;" [nzLabel]="item.name" [nzValue]="item.id" [nzDisabled]="item.disabled"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="fileInfoForm.get('credentialType').dirty && fileInfoForm.get('credentialType').errors">
+            请选择文件类型
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">备注</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input formControlName="remark" [maxlength]="MaxInputLenEnum.Default" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8" nzRequired>文件</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-upload (nzChange)="onFileUploadChange($event)" [nzAction]="uploadUrl" [(nzFileList)]="fileList"
+                      [nzShowButton]="fileList.length < 1" [nzFileType]="fileMineType" [nzRemove]="onFileRemove">
+            <button nz-button>
+              <i class="anticon anticon-upload"></i><span>上传</span>
+            </button>
+          </nz-upload>
+          <nz-form-explain *ngIf="fileInfoForm.get('fileUrl').dirty && fileInfoForm.get('fileUrl').errors">
+            <div style="color:red;margin-top:5px;">请上传文件</div>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-row style="height:30px;">
+        <div nz-col [nzOffset]="8">
+          注:只支持pdf类型文件
+        </div>
+      </div>
+      <div nz-row >
+        <div nz-col [nzOffset]="8" class="footer-bar">
+          <button nz-button nzType="info" (click)="saveFileInfo()">保存</button>
+          <button nz-button nzType="info" (click)="cancelPage()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>
+<nz-modal [(nzVisible)]="viewFileModalShow" (nzOnCancel)="cancelViewFile()" [nzWidth]="'66%'" [nzFooter]="null">
+  <div class="view-file-wrap">
+    <pdf-viewer [src]="viewFileUrl" [show-all]="true"></pdf-viewer>
+    <div class="footer">
+    </div>
+  </div>
+</nz-modal>

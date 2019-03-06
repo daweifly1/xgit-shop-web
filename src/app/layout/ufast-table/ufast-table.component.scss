@@ -1,0 +1,15 @@
+:host-context .test-cell{}
+$pagination-height: 42px;
+.table-wrap-split-page {
+  position: relative;
+  height: inherit;
+  .content-wrap {
+    height: calc(100% - #{$pagination-height});
+  }
+  .pagination-wrap{
+    height: $pagination-height;
+    text-align: right;
+    padding-top: 10px;
+  }
+}
+

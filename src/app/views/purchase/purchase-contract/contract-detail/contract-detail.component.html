@@ -1,0 +1,43 @@
+<ng-container *ngIf="selectedPage === TabPageType.MainPage">
+  <app-ufast-form-detail [detailData]="contractInfo" [detailDataConfig]="contractDetailConfig"></app-ufast-form-detail>
+  <div class="detail-header-info">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">附件</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <span *ngIf="contractInfo.annexUrl" class="operate-text"><a [href]="downloadUrl + contractInfo.annexUrl" [download]="contractInfo.attachment" >下载</a></span>
+        <span *ngIf="!contractInfo.annexUrl">下载</span>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">合同模板</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <span class="operate-text" (click)="showContractModal()">{{contractInfo.clauseTemplate}}</span>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <app-ufast-table [dataList]="contractList" [tableConfig]="contractTableConfig" (selectedChange)="changeSelect($event)"></app-ufast-table>
+  <div class="table-footer-bar">
+    <button *ngIf="IsDetailPage === ContractDetailPage.ApplyReturn" nz-button nzType="primary" (click)="sendBack()">退回</button>
+    <ng-container *ngIf="IsDetailPage === ContractDetailPage.ReturnAudit">
+        <button *ngIf="IsDetailPage === ContractDetailPage.ReturnAudit"  nz-button nzType="primary" (click)="passCancel()">审核通过</button>
+        <button *ngIf="IsDetailPage === ContractDetailPage.ReturnAudit" nz-button nzType="primary" nzGhost (click)="rejectCancel()">审核拒绝</button>
+    </ng-container>
+    <button nz-button nzType="primary" nzGhost (click)="emitPage()">返回</button>
+  </div>
+</ng-container>
+<ng-container *ngIf="selectedPage === TabPageType.contractTemplatePage">
+  <div class="clause-content">
+    <div class="clause-item" *ngFor="let data of contractModelDetail; let i = index;">
+      <div class="clause-title">
+        {{data.seq}}、{{data.clauseTitle}}
+      </div>
+      <div>
+        <span>{{data.clauseContent}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" nzGhost (click)="backToContract()">返回</button>
+  </div>
+
+</ng-container>

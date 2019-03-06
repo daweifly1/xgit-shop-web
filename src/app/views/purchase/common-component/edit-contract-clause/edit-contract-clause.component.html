@@ -1,0 +1,15 @@
+<div class="clause-content">
+  <div class="clause-item"  *ngFor="let data of contractTemplateDetail; let i = index;">
+    <div class="clause-title">
+      {{data.seq}}、{{data.clauseTitle}}
+    </div>
+    <div>
+      <textarea nz-input rows="2" [(ngModel)]="contractTemplateDetail[i].clauseItem"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="submitClause()">保存</button>
+  <button nz-button nzType="primary" nzGhost (click)="backToContract()">返回</button>
+</div>

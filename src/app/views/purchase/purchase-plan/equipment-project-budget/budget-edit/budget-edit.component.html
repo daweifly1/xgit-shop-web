@@ -1,0 +1,158 @@
+<form nz-form [formGroup]="budgetEditValidateForm" class="order-header-form budget-edit-form">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzFor="orgName">业务实体</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input type="text" formControlName="orgName">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="projectCode">项目编码</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="projectCode">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="projectName">项目名称</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input placeholder="项目名称" formControlName="projectName" [maxlength]="textLength.default">
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('projectName').dirty&&budgetEditValidateForm.get('projectName').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('projectName').hasError('required')">
+          请填写项目名称
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('projectName').hasError('maxLength')">
+          项目名称不得超过50个字符
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="beginYear">起始年份</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input placeholder="起始年份" formControlName="beginYear">
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('beginYear').dirty&&budgetEditValidateForm.get('beginYear').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('beginYear').hasError('required')">
+          请填写起始年份
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('beginYear').hasError('formatError')">
+          请填入正确的年份
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="belongYear">所属年份</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input placeholder="所属年份" formControlName="belongYear">
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('belongYear').dirty&&budgetEditValidateForm.get('belongYear').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('belongYear').hasError('required')">
+          请填写所属年份
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('belongYear').hasError('formatError')">
+          请填入正确的年份
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzFor="managerDepartment" nzRequired>项目经理部</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-select formControlName="managerDepartmentId" placeholder="项目经理部" (ngModelChange)="deptChange($event)">
+        <nz-option *ngFor="let data of projectDeptList; trackBy: trackByItem" [nzValue]="data.code" [nzLabel]="data.code+' '+data.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('managerDepartmentId').dirty&&budgetEditValidateForm.get('managerDepartmentId').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('managerDepartmentId').hasError('required')">
+          请填写项目经理部
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="projectType">项目类别</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-select formControlName="projectTypeId" placeholder="项目类别" (ngModelChange)="typeChange($event)">
+        <nz-option *ngFor="let data of projectTypeList; trackBy: trackByItem" [nzValue]="data.code" [nzLabel]="data.code+' '+data.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('projectTypeId').dirty&&budgetEditValidateForm.get('projectTypeId').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('projectTypeId').hasError('required')">
+          请填写项目类别
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="projectTypeCode">项目类别编号</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input placeholder="项目类别编号" formControlName="projectTypeCode" [maxlength]="textLength.typeCode">
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('projectTypeCode').dirty&&budgetEditValidateForm.get('projectTypeCode').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('projectTypeCode').hasError('required')">
+          请填写项目类别编号
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('projectTypeCode').hasError('maxLength')">
+          项目类别编号不得超过3个字符
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('projectTypeCode').hasError('codeError')">
+          项目类别编号只能为数字或字母
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="seqNo">具体项目序号</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <input nz-input placeholder="具体项目序号" formControlName="seqNo" [maxlength]="textLength.seqNo">
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('seqNo').dirty&&budgetEditValidateForm.get('seqNo').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('seqNo').hasError('required')">
+          请填写具体项目序号
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('seqNo').hasError('maxLength')">
+          具体项目序号不得超过2个字符
+        </ng-container>
+        <ng-container *ngIf="budgetEditValidateForm.get('seqNo').hasError('codeError')">
+          具体项目序号只能为数字
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="totalInvest">设备总投资(万)</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-input-number style="width: 100%;" formControlName="totalInvest" [nzMin]="decimals.min" [nzMax]="decimals.max"
+                       [nzPrecision]="decimals.precision" [nzPlaceHolder]="'设备总投资'"></nz-input-number>
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('totalInvest').dirty&&budgetEditValidateForm.get('totalInvest').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('totalInvest').hasError('required')">
+          请填写设备总投资
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzFor="inPlanInvest">已提报计划总额(万)</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-input-number style="width: 100%;" formControlName="inPlanInvest" [nzMin]="0" [nzPlaceHolder]="'已提报计划总额'"></nz-input-number>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired nzFor="availableInvest">当年可用投资(万)</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-input-number style="width: 100%;" formControlName="availableInvest" [nzMin]="decimals.min" [nzMax]="decimals.max"
+                       [nzPrecision]="decimals.precision" [nzPlaceHolder]="'当年可用投资'"></nz-input-number>
+      <nz-form-explain *ngIf="budgetEditValidateForm.get('availableInvest').dirty&&budgetEditValidateForm.get('availableInvest').errors">
+        <ng-container *ngIf="budgetEditValidateForm.get('availableInvest').hasError('required')">
+          请填写当年可用投资
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="full-form-item">
+    <nz-form-label [nzSpan]="4" nzFor="remark">备注</nz-form-label>
+    <nz-form-control [nzSpan]="20">
+      <textarea row="3" nz-input placeholder="备注" formControlName="remark" [maxlength]="textLength.default"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="saveProjectBudget()">保存</button>
+  <button nz-button nzType="primary" (click)="submitProjectBudget()">提交</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">取消</button>
+</div>

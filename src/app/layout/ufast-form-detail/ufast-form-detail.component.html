@@ -1,0 +1,9 @@
+<div class="detail-header-info">
+    <nz-form-item *ngFor="let detailItem of detailDataConfig; trackBy: trackByItem" [ngClass]="{'full-form-item': detailItem.isFullSpan}">
+      <nz-form-label  [nzSpan]="detailItem.isFullSpan ? fullSpan.labelSpan : spanConfig.labelSpan ">{{detailItem.name}}</nz-form-label>
+      <nz-form-control  [nzSpan]="detailItem.isFullSpan ? fullSpan.valueSpan : spanConfig.valueSpan">
+        <nz-form-text *ngIf="!detailItem.pipe">{{detailData[detailItem.field]}}</nz-form-text>
+        <nz-form-text *ngIf="detailItem.pipe">{{detailData[detailItem.field] | map: detailItem.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+</div>

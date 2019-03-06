@@ -1,0 +1,134 @@
+<form nz-form [formGroup]="informationForm" class="order-header-form">
+  <div class="panel-bar">
+    <i></i>
+    <span>物流信息</span>
+  </div>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>物流单号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="logisticsNo" [maxlength]="maxLenInputEnum.LogisticsNo">
+      <nz-form-explain *ngIf="informationForm.get('logisticsNo').dirty && informationForm.get('logisticsNo').errors">
+        请输入正确的物流单号
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>物流公司</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="logisticsCompany" [maxlength]="maxLenInputEnum.Default">
+      <nz-form-explain *ngIf="informationForm.get('logisticsCompany').dirty && informationForm.get('logisticsCompany').errors">
+        物流公司不能为空
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>发货时间</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-date-picker formControlName="deliveryDate"></nz-date-picker>
+      <nz-form-explain *ngIf="informationForm.get('deliveryDate').dirty && informationForm.get('deliveryDate').errors">
+        发货时间不能为空
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>物流联系人</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="logisticsContact" [maxlength]="maxLenInputEnum.Default">
+      <nz-form-explain
+        *ngIf="informationForm.get('logisticsContact').dirty && informationForm.get('logisticsContact').errors">
+        物流联系人不能为空
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>物流联系电话</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="logisticsPhone">
+      <nz-form-explain
+        *ngIf="informationForm.get('logisticsPhone').dirty && informationForm.get('logisticsPhone').errors">
+        请输入正确的联系电话
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货人身份证号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="logisticsContactIdCard" [maxlength]="maxLenInputEnum.IdCard">
+      <nz-form-explain
+        *ngIf="informationForm.get('logisticsContactIdCard').dirty && informationForm.get('logisticsContactIdCard').errors">
+        请输入正确的身份证号
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>车牌号码</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="licensePlate" [maxlength]="maxLenInputEnum.LicensePlate">
+      <nz-form-explain *ngIf="informationForm.get('licensePlate').dirty && informationForm.get('licensePlate').errors">
+        车牌号码不能为空
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>运输方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select style="width: 100%;" formControlName="transportMode" nzAllowClear>
+        <nz-option *ngFor="let item of transportModeList;" [nzValue]="item.id" [nzLabel]="item.type"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="informationForm.get('transportMode').dirty && informationForm.get('transportMode').errors">
+        请选择运输方式
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>发运箱数</nz-form-label>
+      <nz-form-control nzSpan="16">
+          <nz-input-number style="width:100%;" [nzMin]="1" [nzPrecision]="0" [nzMax]="containerNumberMax.max" formControlName="containerNumber"></nz-input-number>
+        <nz-form-explain *ngIf="informationForm.get('containerNumber').dirty && informationForm.get('containerNumber').errors">
+            发运箱数不能为空
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流附件</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div class="clearfix">
+        <nz-upload [nzAction]="uploadUrl" nzListType="picture-card" [(nzFileList)]="fileList"
+                   [nzShowButton]="fileList.length < 1"
+                   [nzPreview]="handlePreview" (nzChange)="uploadFileChange($event)">
+          <i class="anticon anticon-plus"></i>
+          <div class="ant-upload-text">上传</div>
+        </nz-upload>
+        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                  (nzOnCancel)="previewVisible=false">
+          <ng-template #modalContent>
+            <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height': '100%' }"/>
+          </ng-template>
+        </nz-modal>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div nz-col nzSpan="24" class="shipping-information">
+  <div class="panel-bar">
+    <i></i>
+    <span>发货信息</span>
+  </div>
+  <div nz-col nzSpan="24" class="marginTop marginBottom">
+    <app-ufast-table [tableConfig]="tableConfig" [dataList]="orderList"></app-ufast-table>
+  </div>
+</div>
+
+
+<div class="btn">
+  <div nz-col nzSpan="10"></div>
+  <div nz-col nzSpan="12">
+    <button nz-button nzType="primary" class="submit-button" (click)="dispatch()">发货
+    </button>
+    <button nz-button nzType="primary" class="submit-button" style="margin-top: 30px;" nzGhost
+            (click)="emitFinish()">取消
+    </button>
+  </div>
+</div>

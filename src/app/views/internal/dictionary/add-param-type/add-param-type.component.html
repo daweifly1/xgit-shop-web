@@ -1,0 +1,35 @@
+<form nz-form [formGroup]="paramTypeForm" class="form">
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>参数类型</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="name" [maxlength]="InputMaxLen.Default">
+      <nz-form-explain *ngIf="paramTypeForm.get('name').dirty && paramTypeForm.get('name').errors">必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>类型编码</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="code" [maxlength]="InputMaxLen.Default">
+      <nz-form-explain *ngIf="paramTypeForm.get('code').dirty && paramTypeForm.get('code').errors">必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">所属组</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="groupName" [maxlength]="InputMaxLen.Default">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">备注</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input formControlName="remark" [maxlength]="InputMaxLen.Default">
+    </nz-form-control>
+  </nz-form-item>
+
+</form>
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="submit()">保存</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消</button>
+</div>

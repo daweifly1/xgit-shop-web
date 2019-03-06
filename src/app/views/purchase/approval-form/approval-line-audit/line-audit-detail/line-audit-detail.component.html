@@ -1,0 +1,69 @@
+<div>
+    <!--<app-purchase-steps [mainStep]="purchaseSteps.mainStep" [subStep]="purchaseSteps.subStep"></app-purchase-steps>-->
+    <div class="detail-header-info">
+      <nz-form-item *ngFor="let item of fieldList;trackBy:trackByItem">
+        <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text *ngIf="!item.pipe">{{purchaseInfo[item.field]}}</nz-form-text>
+          <nz-form-text *ngIf="item.pipe">{{purchaseInfo[item.field] | map:item.pipe}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">状态</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>
+            <span class="operate-text" (click)="showAuditProcess()">{{purchaseInfo['status'] | map: 'purchaseApprovalStatus'}}</span>
+          </nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">成交策略</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{purchaseInfo['strategy'] | map: 'purchaseDealStrategy'}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="width:66%;">
+        <nz-form-label nzSpan="4">计划来源</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <nz-form-text>{{purchaseInfo['purchaseSource']}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">条|款</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{purchaseInfo['clauseNo']}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <br/>
+      <nz-form-item style="width:66%;">
+        <nz-form-label nzSpan="4">条款内容</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <nz-form-text>{{purchaseInfo['clauseContent']}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <br/>
+      <nz-form-item style="width:66%;">
+        <nz-form-label nzSpan="4">说明</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <nz-form-text>{{purchaseInfo['remark']}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="split-bar">
+      <span>供应商</span>
+    </div>
+    <app-ufast-table [tableConfig]="supplierTableConfig" [dataList]="supplierTableList"></app-ufast-table>
+  
+    <div class="split-bar">
+      <span>计划行</span>
+    </div>
+    <app-ufast-table [dataList]="purchaseRowList" [tableConfig]="purchasePlanTableConfig"></app-ufast-table>
+  
+    <div class="table-footer-bar">
+      <ng-container *ngTemplateOutlet="operationTpl;context:detailCtx"></ng-container>
+      <button nz-button nzType="primary" [nzGhost]="true" (click)="exitPage()">返回</button>
+    </div>
+  </div>
+  
+  <app-purchase-audit-process [(show)]="isShowAuditProcess"></app-purchase-audit-process>
+  

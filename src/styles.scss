@@ -1,0 +1,11 @@
+/*
+  样式文件入口，全局有效。
+  全局样式应该写在src/global-styles 目录下的文件中，然后导入此文件中
+ */
+
+
+@import "global-styles/ng-zorro-custom";
+@import "global-styles/common";
+@import "global-styles/fonts/iconfont.css";
+//@import "global-styles/ngx-quill";
+

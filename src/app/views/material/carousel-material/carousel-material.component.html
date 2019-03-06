@@ -1,0 +1,203 @@
+<app-tab-route tabTitle="轮播图管理">
+  <ng-container *ngIf="tabIndex === 0" nzTitle="轮播图管理">
+
+    <div class="wrap">
+      <div class="table-nav-wrap clear-fix marginBottom">
+        <button nz-button nzType="info" (click)="switchTab('addCarousel')">新增</button>
+        <button nz-button nzType="default" (click)="deleteCarousel()">删除</button>
+      </div>
+      <div class="table-wrap">
+        <nz-table nzSize="small" #nzTable [nzData]="materialList" [nzBordered]="true" [nzShowPagination]="false" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th nzWidth="5%" nzShowCheckbox [(nzChecked)]="carouselTableConfig.allChecked" (nzCheckedChange)="checkAll($event)"></th>
+              <th nzWidth="15%">
+                <span>轮播图</span>
+              </th>
+              <th nzWidth="20%">
+                <span>标题</span>
+              </th>
+              <th nzWidth="20%">
+                <span>更新时间</span>
+              </th>
+              <th nzWidth="10%">
+                <span>状态</span>
+              </th>
+              <th nzWidth="25%">
+                <span>操作</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let carousel of nzTable.data;trackBy:trackByCarousel;let carouselIndex=index;">
+              <td nzShowCheckbox [(nzChecked)]="carousel.checked" (nzCheckedChange)="checkSingle($event,carousel)"></td>
+              <td>
+                <img [src]="fileServiceUrl + carousel.attachment" alt="轮播图">
+              </td>
+              <td>{{carousel.title}}</td>
+              <td>{{carousel.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+              <td [ngStyle]="{'color':carousel.ifShow == 1?'#009FE0':'#ccc'}">{{carousel.ifShow?"有效":"无效"}}</td>
+              <td class="operate-text" [ngClass]="{'options-cell':carousel.id !== '1'}">
+                <span class="operate-text" (click)="switchTab('lookOver',carousel)">查看</span>
+                <span class="operate-text" (click)="switchTab('editCarousel',carousel)">修改</span>
+                <span class="operate-text" (click)="ifshowCarousel(carousel.ifShow,carousel)">{{carousel.ifShow?"下架":"上架"}}</span>
+                <span class="operate-text" (click)="setTop(carousel.ifTop,carousel)">{{carousel.ifTop?"取消置顶":"置顶"}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tabPage === 'addCarousel'">
+    <div>
+      <!-- 此处用ngsubmit -->
+      <form nz-form class="add-form" [formGroup]="carouselForm">
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired nzFor="title">标题</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="title" id="title" maxlength="20">
+          </nz-form-control>
+          <div nz-col nzSpan="8" class="has-error p-l-xs">
+            <nz-form-explain *ngIf="carouselForm.get('title').dirty && carouselForm.get('title').errors">
+              请输入标题
+            </nz-form-explain>
+          </div>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>图片</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <div class="clearfix">
+              <nz-upload [nzAction]="uploadUrl" nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 1"
+                [nzPreview]="handlePreview" (nzChange)="uploadFileChange($event)">
+                <i class="anticon anticon-plus"></i>
+                <div class="ant-upload-text">上传</div>
+              </nz-upload>
+              <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                <ng-template #modalContent>
+                  <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height': '100%' }" />
+                </ng-template>
+              </nz-modal>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+      <div nz-row class="editor-width">
+        <div nz-col nzSpan="6" >详细信息：</div>
+        <div nz-col nzSpan="18">
+          <ueditor [config]="uEditorConfig" [(ngModel)]="editorContent" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+        </div>
+      </div>
+      <div nz-row class="editor-width">
+        <div nz-col nzSpan="6"></div>
+        <div nz-col nzSpan="18">
+          <button nz-button nzType="primary" class="submit-button" type="submit" (click)="add()">保存</button>
+          <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tabPage === 'lookOver'">
+    <div class="look">
+      <form [formGroup]="detailForm">
+        <nz-form-item>
+          <nz-form-label [nzSm]="2" [nzXs]="24" nzFor="title">标题</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-form-text>{{detailInfo.title}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="2" [nzXs]="24">附件</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <div class="clearfix">
+              <nz-upload class="view-upload" nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 0" [nzPreview]="handlePreview"
+                [nzSize]="100*1024">
+                <i class="anticon anticon-plus"></i>
+                <div class="ant-upload-text">Upload</div>
+              </nz-upload>
+              <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                <ng-template #modalContent>
+                  <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height': '100%' }" />
+                </ng-template>
+              </nz-modal>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="2" nzSpan="6">浏览量</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-form-text>{{detailInfo.viewCount}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="2" nzSpan="6">内容</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-form-text [innerHtml]="detailInfo.content"></nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+
+
+
+        <nz-form-item>
+          <nz-form-control [nzOffset]="2" [nzSpan]="12">
+            <button nz-button nzType="primary" (click)="goback()">返回</button>
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+
+    </div>
+  </ng-container>
+  <ng-container *ngIf="tabPage==='editCarousel'">
+    <div>
+      <form nz-form class="add-form" [formGroup]="detailForm">
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>标题</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="title" spellcheck="false" maxlength="20" />
+          </nz-form-control>
+          <div nz-col nzSpan="8" class="has-error p-l-xs">
+            <nz-form-explain *ngIf="detailForm.get('title').dirty && detailForm.get('title').errors">
+              请输入标题
+            </nz-form-explain>
+          </div>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>附件</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <div class="clearfix">
+              <nz-upload [nzAction]="uploadUrl" nzListType="picture-card" [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 1"
+                [nzPreview]="handlePreview" (nzChange)="uploadFileChange($event)"  [nzSize]="100*1024">
+                <i class="anticon anticon-plus"></i>
+                <div class="ant-upload-text">上传</div>
+              </nz-upload>
+              <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+                <ng-template #modalContent>
+                  <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height': '100%' }" />
+                </ng-template>
+              </nz-modal>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+
+      <div nz-row class="editor-width">
+        <div nz-col nzSpan="6" >详细信息：</div>
+        <div nz-col nzSpan="18">
+          <ueditor [config]="uEditorConfig" [(ngModel)]="editorContent" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+        </div>
+      </div>
+      <div nz-row class="editor-width">
+        <div nz-col nzSpan="6"></div>
+        <div nz-col nzSpan="18">
+          <button nz-button nzType="primary" class="submit-button" type="submit" (click)="editSubmit(editInfo.id)">保存</button>
+          <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</app-tab-route>

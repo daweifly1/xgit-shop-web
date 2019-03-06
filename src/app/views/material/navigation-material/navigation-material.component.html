@@ -1,0 +1,108 @@
+<app-tab-route tabTitle="导航管理">
+  <ng-container *ngIf="tabPageType === 0">
+    <div class="table-header">
+      <span class="operate-text" (click)="addOrEditNavigation(1)">新增</span>
+    </div>
+    <div class="table-wrap">
+      <nz-table nzSize="small" [nzShowPagination]="false" #deptTable [nzData]="navigationDataList" [nzBordered]="true" [nzLoading]="loading">
+        <thead>
+          <tr>
+            <th [nzWidth]="'45%'">导航名称</th>
+            <!-- <th [nzWidth]="'15%'">图片</th> -->
+            <th [nzWidth]="'15%'">Url</th>
+            <th [nzWidth]="'40%'">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let oneLevel of navigationDataList;trackBy:trackById;">
+            <tr>
+              <td>
+                <i class="anticon anticon-plus-square-o" (click)="expandNavigations(oneLevel)" *ngIf="oneLevel.leaf === 0 && !oneLevel.expand"></i>
+                <i class="anticon anticon-minus-square-o" (click)="expandNavigations(oneLevel)" *ngIf="oneLevel.leaf === 0 && oneLevel.expand"></i>
+                <span>{{oneLevel.name}}</span>
+              </td>
+              <!-- <td>
+                <img src="{{oneLevel.img}}" alt="轮播图">
+              </td> -->
+              <td>{{oneLevel.url}}</td>
+              <td>
+                <span class="operate-text" (click)="addOrEditNavigation(2,oneLevel)">编辑</span>
+                <!-- <span class="operate-text" (click)="deleteNavigation(oneLevel)">删除</span> -->
+                <span class="operate-text" (click)="addOrEditNavigation(1,oneLevel)" *ngIf="oneLevel.ifConfig">添加下级</span>
+              </td>
+            </tr>
+            <ng-container *ngIf="oneLevel.expand && oneLevel.children">
+              <ng-container *ngFor="let twoLevel of oneLevel.children;trackBy:trackById;">
+                <tr>
+                  <td [ngStyle]="{paddingLeft:'30px'}">
+                    <span>{{twoLevel.name}}</span>
+                  </td>
+                  <!-- <td>
+                    <img src="{{twoLevel.img}}" alt="">
+                  </td> -->
+                  <td>{{twoLevel.url}}</td>
+                  <td>
+                    <span class="operate-text" (click)="addOrEditNavigation(2,twoLevel)">编辑</span>
+                    <span class="operate-text" (click)="deleteNavigation(twoLevel,oneLevel)">删除</span>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+        </tbody>
+      </nz-table>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="tabPageType!==0">
+    <form nz-form class="navigation-form">
+      <nz-form-item>
+        <nz-form-label nzSpan="6">
+          <span class="font-red-color">*</span>导航名称</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input maxlength="50" [(ngModel)]="addOrEditName" name="navigationName" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <!-- <nz-form-item>
+        <nz-form-label nzSpan="6">
+          图片</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <nz-upload nzAction="cos/uploading/file" [nzFileList]="fileList" [nzLimit]="1" [nzSize]="102400" [nzRemove]="removeFile"
+            (nzChange)="uploadFileChange($event)" name="navigationImg">
+            <button nz-button>
+              <i class="anticon anticon-upload"></i>
+              <span>Upload</span>
+            </button>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item>
+        <nz-form-label nzSpan="6">
+          url</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input maxlength="50" [(ngModel)]="addUrl" name="navigationUrl" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item class="navigation-button">
+        <div nz-col nzSpan="6"></div>
+        <div nz-col nzSpan="18">
+          <button nz-button nzType="primary" nzSize="large" class="submit-button" (click)="editOrAddSubmit()">保存
+          </button>
+          <button nz-button nzType="primary" nzSize="large" nzGhost class="submit-button" (click)="toggleMainPage()">取消
+          </button>
+        </div>
+      </nz-form-item>
+    </form>
+  </ng-container>
+
+</app-tab-route>
+
+
+<ng-template #navBreakcrumb>
+  <app-nav-breadcrumb></app-nav-breadcrumb>
+</ng-template>

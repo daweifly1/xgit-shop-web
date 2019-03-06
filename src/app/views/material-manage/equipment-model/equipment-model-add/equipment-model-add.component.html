@@ -1,0 +1,76 @@
+<div nz-form [formGroup]="form" class="form">
+  <div>
+    <nz-form-item>
+      <nz-form-label nzSpan="4" nzRequired>设备分类</nz-form-label>
+      <nz-form-control nzSpan="10">
+        <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+          formControlName="materialClass" [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择设备分类" (ngModelChange)="changes($event)"
+          (nzClear)="clearMaterialClass()">
+        </nz-cascader>
+        <nz-form-explain *ngIf="form.get('materialClass').dirty && form.get('materialClass').errors&&!getFormControl('materialClass').hasError('isSelectedThird')">必填项，请输入
+        </nz-form-explain>
+        <nz-form-explain *ngIf="getFormControl('materialClass').hasError('isSelectedThird')">请选择含有第三级的物料分类
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="4" nzRequired>设备名称</nz-form-label>
+      <nz-form-control nzSpan="10">
+        <input nz-input (focus)="showDeviceName()" formControlName="materialName" readonly />
+        <nz-form-explain *ngIf="form.get('materialId').dirty && form.get('materialId').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="detail-table-header">
+    <button nz-button nzType="info" (click)="addDeviceName()">新增行</button>
+  </div>
+  <nz-table #deviceNameTable [nzData]="form.get('deviceNameArr')['controls']" [nzSize]="'small'" [nzBordered]="true"
+    [nzFrontPagination]="true" [(nzPageIndex)]="tableConfig.pageNum" [(nzPageSize)]="tableConfig.pageSize"
+    [nzShowPagination]="true" [nzPageSizeOptions]="tableConfig.pageSizeOptions" [nzShowQuickJumper]="true"
+    [nzShowSizeChanger]="true" nzScroll="{x: 800px}">
+    <thead>
+      <tr>
+        <th width="80px">操作</th>
+        <th width="80px">行号</th>
+        <th width="200px"><i style="color: red;">* </i>设备型号</th>
+      </tr>
+    </thead>
+    <tbody formArrayName="deviceNameArr">
+      <tr *ngFor="let item of deviceNameTable.data; let i = index;" [formGroupName]="tableConfig.pageSize * (tableConfig.pageNum - 1) + i">
+        <td nzLeft="0">
+          <span class="operate-text" (click)="delDeviceName(i)">删除</span>
+        </td>
+        <td>{{i + 1}}</td>
+        <td>
+          <nz-form-control>
+            <input nz-input formControlName="deviceModel" [maxlength]="maxLenInputEnum.Default" />
+          </nz-form-control>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+</div>
+
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" class="submit-button" (click)="save()">保存
+  </button>
+  <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+  </button>
+</div>
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="选择设备名称" nzWidth="630px" (nzOnCancel)="handleCancel()" [nzFooter]="null">
+  <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="materialNameSearchButton">
+      <input type="text" nz-input placeholder="名称" [(ngModel)]="materialFilter.name ">
+    </nz-input-group>
+    <ng-template #materialNameSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="getDeviceNameData()">搜索</button>
+    </ng-template>
+  </div>
+  <app-ufast-table [tableConfig]="deviceNameTableConfig" [dataList]="deviceNameDataList" [getListHandle]="getDeviceNameData"></app-ufast-table>
+  <ng-template #chooseDeviceName let-ctx="_this">
+    <span class="operate-text" (click)="chooseDeviceNameFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,114 @@
+<app-tab-route tabTitle="采购合同">
+  <ng-container *ngIf="selectedPage === TabPageType.MainPage">
+    <app-ufast-table-nav searchPlaceholder="合同编号" (search)="getContractList()"
+                         [(searchText)]="filters.contractNo" [tableConfig]="contractTableConfig"
+                         (refresh)="getContractList()" (advancedSearch)="showAdvancedSearch()"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="isShowAdvancedSearch">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">合同编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.contractNo" placeholder="合同编号">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">状态</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.status" nzAllowClear nzPlaceHolder="状态">
+              <nz-option *ngFor="let data of ('purchaseContractStatus' | mapList)" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">合同类型</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.contractType" nzAllowClear nzPlaceHolder="合同类型">
+              <nz-option *ngFor="let data of ('purchaseContractType' | mapList)" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">业务员</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.purchaseUser" placeholder="业务员">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="8">ERP同步</nz-form-label>
+            <nz-form-control nzSpan="16">
+              <nz-select style="width: 100%;" [(ngModel)]="filters.erpSyncFlag" nzAllowClear nzPlaceHolder="ERP同步">
+                <nz-option *ngFor="let data of ('erpSyncFlag' | mapList)" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">创建日期-开始</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.createDateStart" placeholder="创建日期开始" [nzDisabledDate]="disabledStartDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">创建日期-截止</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.createDateEnd" placeholder="创建日期截止" [nzDisabledDate]="disabledEndDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getContractList()">搜索</button>
+        <button nz-button nzType="info" (click)="resetSearch()">重置</button>
+        <button nz-button nzType="default" (click)="closeAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [dataList]="contractList" [tableConfig]="contractTableConfig"
+                     [getListHandle]="getContractList"></app-ufast-table>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === TabPageType.DetailPage">
+    <app-detail-contract [contractId]="currId" (backToMainPage)="onChildEmit($event)"></app-detail-contract>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === TabPageType.EditPage">
+    <app-edit-contract [contractId]="currId" [contractType]="'annualAgreement'" (backToMainPage)="onChildEmit($event)"></app-edit-contract>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === TabPageType.SignSealPage">
+    <app-trust-sign-pdf [pdfUrl]="selectedContractUrl" (finish)="exitSignPage($event)"></app-trust-sign-pdf>
+  </ng-container>
+  <ng-container *ngIf="selectedPage === TabPageType.AuditCancelPage">
+      <app-contract-detail [detailId]="currId" (backToMainPage)="onChildEmit($event)" [IsDetailPage]="isContractDetailPage"></app-contract-detail>
+    <!-- <app-detail-contract [contractId]="currId" (backToMainPage)="onChildEmit($event)" [footerActionTpl]="cancelAuditActionTpl"></app-detail-contract> -->
+  </ng-container>
+  <ng-container *ngIf="selectedPage === TabPageType.ContractDetailPage">
+    <app-contract-detail [detailId]="currId" (backToMainPage)="onChildEmit($event)" [IsDetailPage]="isContractDetailPage"></app-contract-detail>
+  </ng-container>
+  <ng-template #showDetailTpl let-id="id" let-contractNo="contractNo">
+    <span class="operate-text" (click)="contractDetail(id)">{{contractNo}}</span>
+  </ng-template>
+  <ng-template #operationTpl let-id="id" let-contractName="contractName" let-annexUrl="annexUrl">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].sign" (clickAction)="signContract(id, annexUrl)" *appAuthBtu="ActionCode.contractSign">签章</app-action>
+      <app-action *appAuthBtu="ActionCode.contractDownload">
+        <span appDownload [downloadUrl]="annexUrl ? (ftpService +annexUrl)  : (baseDownloadUrl + id)" [fileName]="contractName+ '.pdf'">下载</span>
+      </app-action>
+      <app-action (clickAction)="showDetail(id)">预览</app-action>
+      <app-action *appAuthBtu="ActionCode.contractApplyCancel" [enabled]="actionStatus[id].applyCancel" (clickAction)="onApplyCancel(id)">申请退回</app-action>
+      <app-action *appAuthBtu="ActionCode.contractAuditCancel" [enabled]="actionStatus[id].auditCancel" (clickAction)="onCancelAudit(id)">退回审核</app-action>
+      <!--<app-action (clickAction)="editContract(id)">编辑</app-action>-->
+      <app-action *appAuthBtu="ActionCode.contractErpSync" [enabled]="actionStatus[id].erpSync" (clickAction)="doErpSync(id)">ERP同步</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #cancelAuditActionTpl>
+    <button nz-button nzType="primary" (click)="passCancel()">审核通过</button>
+    <button nz-button nzType="primary" (click)="rejectCancel()">审核拒绝</button>
+  </ng-template>
+</app-tab-route>

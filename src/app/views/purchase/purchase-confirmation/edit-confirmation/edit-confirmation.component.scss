@@ -1,0 +1,10 @@
+.full-form-item {
+  width: 100%;
+}
+.full-form-item.form-text {
+  margin-bottom: 35px;
+}
+/deep/ .table-required-mark:before {
+  color: red;
+  content: '*';
+}

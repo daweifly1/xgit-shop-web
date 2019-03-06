@@ -1,0 +1,31 @@
+$content-width:600px;
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #999;
+  transition: all .3s;
+}
+
+.dynamic-delete-button:hover {
+  color: #777;
+}
+
+[nz-form] {
+  max-width: 900px;
+}
+.positionChange {
+  position: relative;
+  bottom: 8px;
+}
+.edit-add-form {
+  width: $content-width;
+  .del-btu-wrap {
+    text-align: right;
+  }
+}
+.footer-bar {
+  width: $content-width;
+  margin-top: 20px;
+}

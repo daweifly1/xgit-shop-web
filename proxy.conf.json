@@ -1,0 +1,11 @@
+{
+
+    "/site": {
+      "target": "http://gw.jt.com/",
+      "secure": false,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/site": "/"
+      }
+    }
+}

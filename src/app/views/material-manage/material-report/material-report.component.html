@@ -1,0 +1,317 @@
+<app-tab-route tabTitle="物料提报审核">
+  <ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="navLeftTpl" searchPlaceholder="物料名称" [(searchText)]="filters.name"
+      (advancedSearch)="fullSearch()" (search)="getDataList()" (refresh)="getDataList()">
+    </app-ufast-table-nav>
+    <!-- <ng-template #navLeftTpl>
+    <button nz-button nzType="info" (click)="batchAuditPass()" *appAuthBtu="ActionCode.divisionManagementDel">通过</button>
+    <button nz-button nzType="info" (click)="batchAuditNotPass()" *appAuthBtu="ActionCode.divisionManagementDel">拒绝</button>
+    </ng-template> -->
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料分类</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+              [(ngModel)]="materialClass" [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择三级分类">
+            </nz-cascader>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">提交时间开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.startCreateDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">提交时间结束</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.endCreateDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <!-- <nz-form-item>
+          <nz-form-label nzSpan="10">提报单位</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.reportDept">
+          </nz-form-control>
+        </nz-form-item> -->
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="filters.status" nzAllowClear>
+              <nz-option nzValue="0" nzLabel="待审核"></nz-option>
+              <nz-option nzValue="1" nzLabel="审核通过"></nz-option>
+              <nz-option nzValue="2" nzLabel="审核拒绝"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="advanceSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearchClose()">收起</button>
+      </div>
+    </div>
+
+    <nz-table #MaterialReportTable nzBordered [nzData]="materialReportList" nzSize="small" [nzScroll]="{ x:'3500px' }"
+      [nzFrontPagination]="false" [nzShowPagination]="tableConfig.showPagination" [nzPageSizeOptions]="tableConfig.pageSizeOptions"
+      [nzTotal]="tableConfig.total" [nzShowSizeChanger]="tableConfig.showPagination" [(nzPageSize)]="tableConfig.pageSize"
+      (nzPageSizeChange)="getDataList()" [(nzPageIndex)]="tableConfig.pageNum" (nzPageIndexChange)="getDataList()"
+      class="main-table">
+      <thead>
+        <tr>
+          <th nzShowCheckbox="true" nzWidth="50px" nzLeft="0px" [(nzChecked)]="allChecked" (nzCheckedChange)="checkAll($event)"
+            nzShowCheckbox></th>
+          <th nzWidth="150px" nzLeft="50px">操作</th>
+          <th nzWidth="300px">物料描述</th>
+          <th nzWidth="150px">物料类别</th>
+          <th nzWidth="200px">分类</th>
+          <th nzWidth="200px">物料名称</th>
+
+          <th nzWidth="100px">计量单位</th>
+          <th nzWidth="200px">型号规格规范</th>
+          <th nzWidth="200px">型号规格</th>
+          <th nzWidth="200px">零件号/图号</th>
+          <th nzWidth="200px">材质</th>
+          <th nzWidth="200px">品牌</th>
+          <th nzWidth="200px">进口国产</th>
+          <th nzWidth="200px">重要度</th>
+          <th nzWidth="200px">物资分类</th>
+          <th nzWidth="150px">审核状态</th>
+          <th nzWidth="180px">拒绝原因</th>
+          <th nzWidth="200px">提报人</th>
+          <th nzWidth="200px">提报单位</th>
+          <th nzWidth="200px">提报时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of MaterialReportTable.data;let i=index;">
+          <td nzShowCheckbox="true" nzLeft="0px" [(nzChecked)]="data._checked" (nzCheckedChange)="refreshStatus($event)">
+          </td>
+          <td nzLeft="50px">
+            <app-action-group>
+              <app-action [enabled]="buttonState[data.id].Pass" (clickAction)="auditPass(data)" *appAuthBtu="ActionCode.divisionManagementDel">通过</app-action>
+              <app-action [enabled]="buttonState[data.id].Reject" (clickAction)="aduitNotPass(data)" *appAuthBtu="ActionCode.divisionManagementDel">拒绝</app-action>
+            </app-action-group>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.materialDesc}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.materialType | map: 'materialType2'}} </span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <!-- <span>{{data.firstLevel}}/{{data.secondLevel}}/{{data.thirdLevel}}</span> -->
+                <span>{{data.fullClassName}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.name}}</span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.unit}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.originalSpecificationModel}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.specificationModel}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <input type="text" nz-input [(ngModel)]="data.specificationModel" [maxlength]="maxLenInputEnum.Default">
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.drawingNumber}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <input type="text" nz-input [(ngModel)]="data.drawingNumber" [maxlength]="maxLenInputEnum.Default">
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.material}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <input type="text" nz-input [(ngModel)]="data.material" [maxlength]="maxLenInputEnum.Default">
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.brand}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <input type="text" nz-input [(ngModel)]="data.brand" [maxlength]="maxLenInputEnum.Default">
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.importOrDomestic}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.importOrDomestic" nzAllowClear>
+                  <nz-option nzValue="进口" nzLabel="进口"></nz-option>
+                  <nz-option nzValue="进口国产化" nzLabel="进口国产化"></nz-option>
+                  <nz-option nzValue="国产" nzLabel="国产"></nz-option>
+                  <nz-option nzValue="转口" nzLabel="转口"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.importance}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.importance">
+                  <nz-option nzValue="1" nzLabel="1"></nz-option>
+                  <nz-option nzValue="2" nzLabel="2"></nz-option>
+                  <nz-option nzValue="3" nzLabel="3"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status === 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.materialClassification}}</span>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="data.status !== 1">
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.materialClassification"
+                  nzAllowClear>
+                  <nz-option nzValue="保险件" nzLabel="保险件"></nz-option>
+                  <nz-option nzValue="一般件" nzLabel="一般件"></nz-option>
+                  <nz-option nzValue="常耗件" nzLabel="常耗件"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.status | map: 'auditStatus'}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.auditRemark}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.reportUserName}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.reportDept}}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                <span>{{data.createDate | date:"yyyy-MM-dd HH:mm"}}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-container>
+
+  <ng-container *ngIf="selectedPage === tabPageType.ReportPage">
+    <form nz-form [formGroup]="form" class="form">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>原因</nz-form-label>
+        <nz-form-control nzSpan="10">
+          <textarea nz-input rows="2" formControlName="auditRemark" [maxlength]="maxLenInputEnum.Default"></textarea>
+          <nz-form-explain *ngIf="form.get('auditRemark').dirty && form.get('auditRemark').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+    <div class="btn">
+      <button nz-button nzType="primary" class="editable-add-btn" (click)="confirm()">确定</button>
+      <button nz-button nzType="primary" nzGhost class="editable-add-btn" (click)="cancel()">取消</button>
+    </div>
+  </ng-container>
+</app-tab-route>

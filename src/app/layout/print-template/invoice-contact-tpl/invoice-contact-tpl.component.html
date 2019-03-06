@@ -1,0 +1,77 @@
+<div style='font-size:16px;margin:0;padding:0;'>
+  <div style='margin-top:10mm;'>
+    <h2 style='text-align:center;'>江西铜业股份有限公司 结算付款通知单</h2>
+    <div style='margin:2mm;'>
+      <span>采购发票联系单号：{{_data.orderNo}}</span>
+      <span style='float:right;margin-right:60mm'>{{_data.invoiceDate | date:'yyyy 年 MM 月 dd 日'}}</span>
+    </div>
+    <div>
+      <table style='width:100%;border-collapse: collapse;border-color:#000;' cellspacing='0' border='1px' cellpadding='0'>
+        <tr>
+          <th style='font-weight:normal;width:15%;padding:5px;'>类别</th>
+          <th style='font-weight:normal;width:25%;padding:5px;'>金额</th>
+          <th style='font-weight:normal;padding:5px;'>备注</th>
+        </tr>
+        <tr>
+          <td style="padding:5px;">物资价款</td>
+          <td style="padding:5px;text-align:right;">{{_data.goodsPrice | number:'1.2-2'}}</td>
+          <td style="padding:5px;">发票号：{{_data.invoiceBillId}}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px;">运杂费</td>
+          <td style="padding:5px;text-align:right;">{{_data.transportFees | number: '1.2-2'}}</td>
+          <td style="padding:5px;">附件张数：{{_data.billNum}}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px;"></td>
+          <td style="padding:5px;text-align:right;"></td>
+          <td style="padding:5px;">合同号：{{_data.purchaseNos}}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px;">减：预付款</td>
+          <td style="padding:5px;text-align:right;">{{_data.prepayments|number:'1.2-2'}}</td>
+          <td rowspan='4' style='padding:0;'>
+            <table style='width:100%;height:100%;border-collapse: collapse;border-color:#000;' cellspacing='0'  cellpadding='0'>
+              <tr>
+                <td rowspan='4' style='padding:5px;text-align:center;width:15mm;border-right:1px solid #000;'>
+                  收<br/>款<br/>单<br/>位
+                </td>
+                <td style='width:20%;border-right:1px solid #000;padding:5px;'>全称</td>
+                <td style="padding:5px;">{{_data.payee}}</td>
+              </tr>
+              <tr>
+                <td style='padding:5px;width:15mm;border-right:1px solid #000;border-top:1px solid #000;'>地址</td>
+                <td style="padding:5px;border-top:1px solid #000;">{{_data.payeeAddress}}</td>
+              </tr>
+              <tr>
+                <td style='padding:5px;width:15mm;border-right:1px solid #000;border-top:1px solid #000;'>开户行</td>
+                <td style="padding:5px;border-top:1px solid #000;">{{_data.billBankAddress}}</td>
+              </tr>
+              <tr >
+                <td style='padding:5px;width:15mm;border-right:1px solid #000;border-top:1px solid #000;'>账号</td>
+                <td style="padding:5px;border-top:1px solid #000;">{{_data.billAccountNo}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px;">暂扣：质保金</td>
+          <td style="padding:5px;text-align:right;">{{_data.warranty|number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px;">减：扣款项</td>
+          <td style="padding:5px;text-align:right;">{{_data.deduction|number:'1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px;">合计</td>
+          <td style="padding:5px;text-align:right;">{{_data.total|number:'1.2-2'}}</td>
+        </tr>
+      </table>
+    </div>
+    <div style='margin:2mm;text-align:center;'>
+      <span style="float:left;">部门主管：{{_data.deptGovernor}}</span>
+      <span style='margin-left:-5mm;'>科室负责人：{{_data.sectionLeader}}</span>
+      <span style='float:right;margin-right:30mm'>经办人：{{_data.agent}}</span>
+    </div>
+  </div>
+</div>

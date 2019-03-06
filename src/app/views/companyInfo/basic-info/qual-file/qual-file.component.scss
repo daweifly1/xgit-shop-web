@@ -1,0 +1,26 @@
+.qual-file-wrap {
+  header {
+    padding: 0 0 10px 0;
+  }
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.edit-file-wrap {
+  .file-form{
+    width: 500px;
+    nz-form-item{
+      height: 30px;
+      margin-bottom: 24px;
+    }
+  }
+  .footer-bar {
+    margin-top: 10px;
+    button {
+      margin-right: 10px;
+    }
+  }
+}
+.view-file-wrap {
+
+}

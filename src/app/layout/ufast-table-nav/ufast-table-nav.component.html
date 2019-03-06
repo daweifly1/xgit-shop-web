@@ -1,0 +1,54 @@
+<div class="table-nav-wrap clear-fix">
+  <div class="left">
+    <ng-container [ngTemplateOutlet]="leftTemplate"></ng-container>
+  </div>
+  <div class="right">
+    <ng-container [ngTemplateOutlet]="rightTemplate"></ng-container>
+    <nz-input-group class="search-group" [nzPrefix]="prefixIcon" nzSearch [nzSuffix]="suffixButton" *ngIf="showSearch">
+      <input type="text" nz-input  [(ngModel)]="_searchText" (ngModelChange)="searchChange($event)" [placeholder]="searchPlaceholder">
+    </nz-input-group>
+    <nz-button-group>
+      <button nz-button *ngIf="showAdvancedSearch" (click)="onFullSearch()" title="高级搜索"><i class="bkrFont bkr-advanced-search"></i></button>
+      <button nz-button *ngIf="showRefresh" (click)="onRefresh()" title="刷新"><i class="bkrFont bkr-refresh"></i></button>
+      <button nz-button *ngIf="_tableConfig" (click)="onTableConfig($event)" title="配置表格列" style="font-size:16px;"><i class="anticon anticon-setting"></i></button>
+    </nz-button-group>
+
+  </div>
+</div>
+<app-right-side-box [(show)] = "showTableConfig" title="配置表格列" [width]="350">
+  <div class="table-config">
+    <div class="tabset-wrap">
+      <nz-tabset nzType="card">
+      <nz-tab nzTitle="显示的列">
+        <div *ngFor="let header of latestTableHeaders;trackBy: trackByItem;" class="config-item">
+          <label nz-checkbox [(ngModel)]="header.show" (ngModelChange)="showColChange($event, header)">{{header.title}}</label>
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="调整顺序">
+        <div *ngFor="let header of latestTableHeaders;trackBy: trackByItem;let i=index;" class="config-item config-sort">
+          <span>{{header.title}}</span>
+          <span class="right">
+            <span class="operate-text" [ngClass]="{'operate-text-disabled': i === 0}" (click)="moveUp(i)">上移</span>
+            <span class="operate-text" [ngClass]="{'operate-text-disabled': i === latestTableHeaders.length - 1}" (click)="moveDown(i)">下移</span>
+          </span>
+        </div>
+      </nz-tab>
+      <nz-tab nzTitle="固定的列">
+        <div *ngFor="let header of latestTableHeaders; trackBy: trackByItem;let i = index;" class="config-item">
+          <label nz-checkbox [ngModel]="header.fixed" (ngModelChange)="onFixedChange($event, i)">{{header.title}}</label>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+    </div>
+    <div class="footer">
+      <button nz-button="" nzType="primary" (click)="submitConfig()">确定</button>
+      <button nz-button="" nzType="primary" [nzGhost]="true" (click)="cancelConfig()">取消</button>
+    </div>
+  </div>
+</app-right-side-box>
+<ng-template #prefixIcon>
+  <i class="anticon anticon-search" style="font-size:18px;"></i>
+</ng-template>
+<ng-template #suffixButton>
+  <button nz-button nzType="primary" nzSearch (click)="onSearch()">搜索</button>
+</ng-template>

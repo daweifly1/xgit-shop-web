@@ -1,0 +1,114 @@
+<app-tab-route tabTitle="领料组包">
+  <ng-container *ngIf="selectedPage === PageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="tableConfig"
+      searchPlaceholder="领料申请单号" (advancedSearch)="fullSearch()" [(searchText)]="filters.applyNo"></app-ufast-table-nav>
+
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">配送号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.distributionNum">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.status" name="status" (ngModelChange)="statusChange($event)" nzAllowClear>
+              <nz-option *ngFor="let item of orderStatusList;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">出库类别</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.outType" name="status" nzAllowClear>
+              <nz-option *ngFor="let item of outTypeList;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div> -->
+      <!-- <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">领料申请单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.applyNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div> -->
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">领料出库单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.pickingNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">领料部门</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.applyDepartment">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">收货人</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.receiverName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">保管员</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.keeperName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">物料编码</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <input nz-input [(ngModel)]="filters.materialCode">
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="6">
+          <nz-form-item>
+            <nz-form-label nzSpan="10">打印状态</nz-form-label>
+            <nz-form-control nzSpan="14">
+              <nz-select class="selectStyle" [(ngModel)]="filters.isPrint" name="status" nzAllowClear>
+                <nz-option *ngFor="let item of ('pickingOutIsPrint' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+                  [nzValue]="item.value">
+                </nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearch()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="dataList" (selectedChange)="changeSelect($event)"
+      [getListHandle]="getDataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="addPickingOut()" *appAuthBtu="ActionCode.pickingPackageDistribution">组包配送/生成出库单</button>
+    <button nz-button nzType="info" (click)="print()" *appAuthBtu="ActionCode.pickingPackagePrint">打印</button>
+    <nz-select style="width: 200px;" [(ngModel)]="sort" nzAllowClear nzPlaceHolder="列表排序方式" (ngModelChange)="getDataList()">
+      <nz-option nzValue="nlssort(a.receiver_name,'NLS_SORT=SCHINESE_PINYIN_M'),nlssort(f.keeper_name,'NLS_SORT=SCHINESE_PINYIN_M'),nlssort(a.receiver_address,'NLS_SORT=SCHINESE_PINYIN_M')" nzLabel="组包排序"></nz-option>
+      <nz-option nzValue="picking_row_no desc,d.apply_no desc,d.row_no" nzLabel="单据排序"></nz-option>
+    </nz-select>
+  </ng-template>
+</app-tab-route>

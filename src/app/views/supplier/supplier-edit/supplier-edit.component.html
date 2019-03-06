@@ -1,0 +1,362 @@
+<div class="supplier-edit-wrap">
+  <header>
+    <button nz-button nzType="info" (click)="quitDetailPage()">退出</button>
+    <button nz-button nzType="info" (click)="onSubmit()" *appAuthBtu="ActionCode.basiciInfoSubmit">提交</button>
+  </header>
+  <div class="content-wrap">
+    <div class="left">
+      <nz-radio-group [(ngModel)]="currentPage" (ngModelChange)="changeTab($event)">
+        <div *ngFor="let tag of leftMenuList;" class="tag-item-wrap">
+          <label nz-radio-button [nzValue]="tag.id">{{tag.name}}</label>
+        </div>
+      </nz-radio-group>
+    </div>
+    <div class="right scrollbar-style">
+      <ng-container *ngIf="currentPage === PageTypeEnum.BasicInfoPage">
+        <form nz-form [formGroup]="infoForm" >
+          <div class="order-header-form">
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>公司名称</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="name" [maxlength]="MaxInputLenEnum.Name" />
+                <nz-form-explain *ngIf="infoForm.get('name').dirty && infoForm.get('name').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>企业性质</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <nz-select formControlName="companyNature" style="width: 100%;">
+                  <nz-option *ngFor="let item of companyNatureList; trackBy:trackByItem" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+                <nz-form-explain *ngIf="infoForm.get('companyNature').dirty && infoForm.get('companyNature').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>统一社会信用代码</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="socialCreditCode" [maxlength]="MaxInputLenEnum.SocialCreditCode" />
+                <nz-form-explain *ngIf="infoForm.get('socialCreditCode').dirty && infoForm.get('socialCreditCode').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>企业类型</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <nz-select formControlName="companyType" style="width: 100%;">
+                  <nz-option *ngFor="let item of companyTypeList; trackBy:trackByItem" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+                <nz-form-explain *ngIf="infoForm.get('companyType').dirty && infoForm.get('companyType').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="single-row-item" >
+              <nz-form-label nzSpan="4" nzRequired>企业注册地址</nz-form-label>
+              <nz-form-control nzSpan="8">
+                <app-area-selector formControlName="registAreaCode" ></app-area-selector>
+                <nz-form-explain *ngIf="infoForm.get('registAreaCode').dirty && infoForm.get('registAreaCode').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+              <nz-form-control  nzSpan="12" class="split-right">
+                <input nz-input formControlName="registDetailsAddress" [maxlength]="MaxInputLenEnum.RegistDetailsAddress" />
+                <nz-form-explain *ngIf="infoForm.get('registDetailsAddress').dirty && infoForm.get('registDetailsAddress').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="single-row-item">
+              <nz-form-label nzSpan="4" nzRequired>企业办公地址</nz-form-label>
+              <nz-form-control nzSpan="8">
+                <app-area-selector formControlName="workAreaCode"></app-area-selector>
+                <nz-form-explain *ngIf="infoForm.get('workAreaCode').dirty && infoForm.get('workAreaCode').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+              <nz-form-control nzSpan="12" class="split-right">
+                <input nz-input formControlName="workDetailsAddress" [maxlength]="MaxInputLenEnum.WorkDetailsAddress" />
+                <nz-form-explain *ngIf="infoForm.get('workDetailsAddress').dirty && infoForm.get('workDetailsAddress').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>成立日期</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <nz-date-picker formControlName="setUpDate"></nz-date-picker>
+                <nz-form-explain *ngIf="infoForm.get('setUpDate').dirty && infoForm.get('setUpDate').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>注册资本(万元)</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <nz-input-number style="width: 100%;" [nzPrecision]="4" [nzMax]="maxMoney" formControlName="registCapital" [nzMin]="0"></nz-input-number>
+                <nz-form-explain *ngIf="infoForm.get('registCapital').dirty && infoForm.get('registCapital').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>法定代表人</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="legalPerson" [maxlength]="MaxInputLenEnum.LegalPerson" />
+                <nz-form-explain *ngIf="infoForm.get('legalPerson').dirty && infoForm.get('legalPerson').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <br/>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>邮政编码</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="postcode" [maxlength]="MaxInputLenEnum.Postcode" />
+                <nz-form-explain *ngIf="infoForm.get('postcode').dirty && infoForm.get('postcode').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="single-row-item">
+              <nz-form-label nzSpan="4" nzRequired>通讯地址</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <input nz-input formControlName="contactAddress" [maxlength]="MaxInputLenEnum.ContactAddress" />
+                <nz-form-explain *ngIf="infoForm.get('contactAddress').dirty && infoForm.get('contactAddress').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>收款开户银行</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="collectingBank" [maxlength]="MaxInputLenEnum.CollectingBank" />
+                <nz-form-explain *ngIf="infoForm.get('collectingBank').dirty && infoForm.get('collectingBank').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>收款银行账号</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="collectingBankAccount" [maxlength]="MaxInputLenEnum.CollectingBankAccount" />
+                <nz-form-explain *ngIf="infoForm.get('collectingBankAccount').dirty && infoForm.get('collectingBankAccount').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>收款银行行号</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="collectingBankLineNum" [maxlength]="MaxInputLenEnum.CollectingBankLineNum" />
+                <nz-form-explain *ngIf="infoForm.get('collectingBankLineNum').dirty && infoForm.get('collectingBankLineNum').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>收款开户行地址</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="collectingBankAddress" [maxlength]="MaxInputLenEnum.CollectingBankAddress" />
+                <nz-form-explain *ngIf="infoForm.get('collectingBankAddress').dirty && infoForm.get('collectingBankAddress').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>开户银行</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="bankOfDeposit" [maxlength]="MaxInputLenEnum.BankOfDeposit" />
+                <nz-form-explain *ngIf="infoForm.get('bankOfDeposit').dirty && infoForm.get('bankOfDeposit').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" nzRequired>银行账号</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <input nz-input formControlName="bankOfDepositAccount" [maxlength]="MaxInputLenEnum.BankOfDepositAccount" />
+                <nz-form-explain *ngIf="infoForm.get('bankOfDepositAccount').dirty && infoForm.get('bankOfDepositAccount').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="single-row-item">
+              <nz-form-label nzSpan="4" nzRequired>开户行地址</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <input nz-input formControlName="bankOfDepositAddress" [maxlength]="MaxInputLenEnum.BankOfDepositAddress" />
+                <nz-form-explain *ngIf="infoForm.get('bankOfDepositAddress').dirty && infoForm.get('bankOfDepositAddress').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="8" >所属行业</nz-form-label>
+              <nz-form-control nzSpan="16">
+                <nz-select formControlName="industry" style="width: 100%;" nzAllowClear>
+                  <nz-option *ngFor="let item of industryList; trackBy:trackByItem" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+                </nz-select>
+                <nz-form-explain *ngIf="infoForm.get('industry').dirty && infoForm.get('industry').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <nz-form-item style="margin-bottom:10px" class="single-row-item">
+            <nz-form-label nzSpan="4" nzRequired>经营范围</nz-form-label>
+            <nz-form-control nzSpan="20">
+              <textarea nz-input formControlName="scopeOfBusiness" [maxlength]="MaxInputLenEnum.ScopeOfBusiness"></textarea>
+              <nz-form-explain *ngIf="infoForm.get('scopeOfBusiness').dirty && infoForm.get('scopeOfBusiness').errors">
+                必填
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <div class="order-header-form">
+            <nz-form-item class="single-row-item">
+              <nz-form-label nzSpan="4" nzRequired>与江铜合作范围</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <input nz-input formControlName="cooperationScope" [maxlength]="MaxInputLenEnum.CooperationScope" />
+                <nz-form-explain *ngIf="infoForm.get('cooperationScope').dirty && infoForm.get('cooperationScope').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="single-row-item">
+              <nz-form-label nzSpan="4" >公司网址</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <input nz-input formControlName="website" [maxlength]="MaxInputLenEnum.Website" />
+              </nz-form-control>
+            </nz-form-item>
+            <br/>
+            <nz-form-item class="single-row-item">
+              <nz-form-label nzSpan="4" nzRequired>公司简介</nz-form-label>
+              <nz-form-control nzSpan="20">
+                <textarea nz-input formControlName="profile" [maxlength]="MaxInputLenEnum.Profile"></textarea>
+                <nz-form-explain *ngIf="infoForm.get('profile').dirty && infoForm.get('profile').errors">
+                  必填
+                </nz-form-explain>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </form>
+      </ng-container>
+      <ng-container *ngIf="currentPage === PageTypeEnum.ContactPage">
+        <div class="supplier-contact-wrap">
+          <header>
+            <button nz-button nzType="info" (click)="addContact()" *appAuthBtu="ActionCode.contractInfoAdd">新增</button>
+          </header>
+          <form [formGroup]="contactTableForm" nz-form>
+            <nz-table  nzSize="small" [nzScroll]="{x:'1400px'}" [nzBordered]="true" [nzData]="contactTableForm.controls['contactArr'].controls">
+              <thead>
+                <tr>
+                  <th nzWidth="60px" nzLeft="0">操作</th>
+                  <th nzWidth="60px" nzLeft="60px">常用</th>
+                  <th nzWidth="120px"><span class="red-color">*</span>名称</th>
+                  <th nzWidth="100px">职务</th>
+                  <th nzWidth="100px"><span class="red-color">*</span>手机</th>
+                  <th nzWidth="140px"><span class="red-color">*</span>邮箱</th>
+                  <th nzWidth="100px">电话</th>
+                  <th nzWidth="100px">传真</th>
+                  <th nzWidth="140px">备注</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="contactArr" >
+                <tr *ngFor="let item of contactTableForm.controls['contactArr'].controls;let i=index;" [formGroupName]='i'>
+                  <td nzLeft="0">
+                    <app-action-group>
+                      <app-action *appAuthBtu="ActionCode.contractInfoDel" [enabled]="!item.value['isCommonlyUsed']" (clickAction)="delContactRow(i)">删除</app-action>
+                    </app-action-group>
+                  </td>
+                  <td nzLeft="60px"><label nz-checkbox formControlName="isCommonlyUsed" [nzDisabled]="item.value['isCommonlyUsed']" (ngModelChange)="changeDefaultContact($event, i)"></label></td>
+                  <td><input nz-input formControlName="name" [maxlength]="MaxInputLenEnum.Default" /></td>
+                  <td><input nz-input formControlName="position" [maxlength]="MaxInputLenEnum.Position" /></td>
+                  <td><input nz-input formControlName="cellphone" [maxlength]="MaxInputLenEnum.Default" /></td>
+                  <td><input nz-input formControlName="email" [maxlength]="MaxInputLenEnum.Default" /></td>
+                  <td><input nz-input formControlName="phone"  /></td>
+                  <td><input nz-input formControlName="fax" [maxlength]="MaxInputLenEnum.Default" /></td>
+                  <td><input nz-input formControlName="remark" [maxlength]="MaxInputLenEnum.Default" /></td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </form>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currentPage === PageTypeEnum.QualFilePage">
+        <div class="supplier-contact-wrap">
+          <header>
+            <button nz-button nzType="info" (click)="addQualFile()" *appAuthBtu="ActionCode.qualificationFileAdd">新增</button>
+            &nbsp;
+            <span class="operate-text"><a [href]="downloadTplUrl" target="_self" download>下载调查表模板</a></span>
+            &nbsp;
+            <span class="font-red-color">注：营业执照和调查表必填</span>
+          </header>
+          <form [formGroup]="qualFileTableForm" nz-form>
+            <nz-table  nzSize="small" [nzScroll]="{x:'1400px'}" [nzBordered]="true" [nzData]="qualFileTableForm.controls['qualFileArr'].controls">
+              <thead>
+              <tr>
+                <th nzWidth="60px" nzLeft="0">操作</th>
+                <th nzWidth="100px" ><span class="red-color">*</span>证件名称</th>
+                <th nzWidth="100px"><span class="red-color">*</span>发证机构</th>
+                <th nzWidth="100px"><span class="red-color">*</span>证件类型</th>
+                <th nzWidth="100px"><span class="red-color">*</span>有效期起</th>
+                <th nzWidth="100px"><span class="red-color">*</span>有效期止</th>
+                <th nzWidth="80px"><span class="red-color">*</span>附件</th>
+                <th nzWidth="100px">备注</th>
+              </tr>
+              </thead>
+              <tbody formArrayName="qualFileArr" >
+              <tr *ngFor="let item of qualFileTableForm.controls['qualFileArr'].controls;let i=index;" [formGroupName]='i'>
+                <td nzLeft="0"><span class="operate-text" (click)="delQualFileRow(i)" *appAuthBtu="ActionCode.qualificationFileDel">删除</span></td>
+                <td><input nz-input formControlName="credentialName" [maxlength]="MaxInputLenEnum.Default" /></td>
+                <td><input nz-input formControlName="issuingAgency" [maxlength]="MaxInputLenEnum.Default" /></td>
+                <td>
+                  <nz-select formControlName="credentialType" style="width:100%;" [nzDisabled]="!!item.value.id">
+                    <nz-option *ngFor="let type of qualFileType;trackBy:trackByItem" [nzValue]="type.id" [nzLabel]="type.name"></nz-option>
+                  </nz-select>
+                </td>
+                <td><nz-date-picker formControlName="validityPeriodStart"></nz-date-picker></td>
+                <td><nz-date-picker formControlName="validityPeriodEnd"></nz-date-picker></td>
+                <td>
+                  <app-action-group>
+                    <app-action (clickAction)="uploadQualFiel(i)">上传</app-action>
+                    <app-action [enabled]="item.value.fileUrl" (clickAction)="viewQualFiel(item.value.fileUrl)">预览</app-action>
+                    <app-action [enabled]="false">
+                      <a *ngIf="item.value.fileUrl" [href]="downloadUrl + item.value.fileUrl" download>下载</a>
+                      <ng-container *ngIf="!item.value.fileUrl">下载</ng-container>
+                    </app-action>
+                  </app-action-group>
+                </td>
+                <td><input nz-input formControlName="remark" [maxlength]="MaxInputLenEnum.Default" /></td>
+              </tr>
+              </tbody>
+            </nz-table>
+          </form>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currentPage === PageTypeEnum.ContractRecordPage">
+        <app-problem-record [supplierId]="basicInfo.id" [problemRecordType]="ProblemRecordType.ContractProblem"></app-problem-record>
+      </ng-container>
+      <ng-container *ngIf="currentPage === PageTypeEnum.QualityRecordPage">
+        <app-problem-record [supplierId]="basicInfo.id" [problemRecordType]="ProblemRecordType.QualityProblem"></app-problem-record>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-template #operationTpl let-id="id">
+  <app-action-group>
+    <app-action (clickAction)="editContact(id)" [enabled]="true" >编辑</app-action>
+    <app-action (clickAction)="delContact(id)" [enabled]="true">删除</app-action>
+  </app-action-group>
+</ng-template>
+<nz-modal [(nzVisible)]="viewQualFielModalShow" (nzOnCancel)="cancelViewFile()" [nzWidth]="'66%'" [nzFooter]="null">
+  <div class="view-file-wrap">
+    <pdf-viewer [src]="viewQualFileUrl" [show-all]="true"></pdf-viewer>
+    <div class="footer">
+    </div>
+  </div>
+</nz-modal>

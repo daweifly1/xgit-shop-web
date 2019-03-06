@@ -1,0 +1,206 @@
+<ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+  <div>
+    <button nz-button nzType="info" class="editable-add-btn" (click)="addRow()">新增行</button>
+    <button nz-button nzType="info" class="editable-add-btn" (click)="deleteBranch()">删除</button>
+    <button nz-button nzType="info" class="editable-add-btn" (click)="handInBatch()">提报</button>
+    <button nz-button nzType="info" nzGhost nzType="primary" (click)="goback()">取消</button>
+  </div>
+
+  <nz-table #beforeUseTable nzBordered [nzData]="beforeNameDataSet" nzSize="large" [nzScroll]="{ x:'3400px' }">
+    <thead>
+      <tr>
+        <th nzShowCheckbox="true" nzWidth="50px" nzLeft="0px" [(nzChecked)]="allChecked" (nzCheckedChange)="checkAll($event)"></th>
+        <th nzWidth="200px" nzLeft="50px">操作</th>
+        <th nzWidth="300px">物料名称</th>
+        <th nzWidth="200px">物料类别</th>
+        <th nzWidth="200px">分类</th>
+        <!-- <th nzWidth="200px">曾用名</th> -->
+        <th nzWidth="120px">计量单位</th>
+        <th nzWidth="200px"><i style="color: red;">* </i>主机名称</th>
+        <th nzWidth="200px"><i style="color: red;">* </i>主机型号</th>
+        <th nzWidth="200px">型号规格规范</th>
+        <th nzWidth="200px">型号规格</th>
+        <th nzWidth="200px">零件号/图号</th>
+        <th nzWidth="200px">材质</th>
+        <th nzWidth="200px">品牌</th>
+        <th nzWidth="200px">进口国产</th>
+        <th nzWidth="200px"> <i style="color: red;">* </i>重要度</th>
+        <th nzWidth="200px">物资分类</th>
+        <th nzWidth="200px"><i style="color: red;">* </i>总成或部装</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of beforeUseTable.data;let i=index;">
+        <td nzShowCheckbox="true" nzLeft="0px" [(nzChecked)]="data._checked" (nzCheckedChange)="refreshStatus($event)">
+        </td>
+        <td nzLeft="50px">
+          <span class="operate-text" (click)="nameMatch(data.name)">名称匹配</span>
+          <span class="operate-text" (click)="handIn(data.id)">提报</span>
+          <span class="operate-text" (click)="deleteRow(i)">移除</span>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <span class="operate-text" (click)="goback()">{{data.name}}</span>
+
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <span>{{data.materialType | map: 'materialTemplateType'}} </span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <span>{{data.fullClassName}}</span>
+            </div>
+          </div>
+        </td>
+        <!-- <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <nz-select nzPlaceHolder="请选择" [(ngModel)]="data.formerName" style="width: 100%">
+                  <nz-option *ngFor="let item of data.formerNameArray" nzValue="{{item.materialTemplateUsedName}}" nzLabel="{{item.materialTemplateUsedName}}"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </td> -->
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <span>{{data.unit}}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper" *ngIf="data.materialType === 2">
+              <!-- <span>{{data.deviceName}}</span> -->
+              <!-- <nz-select nzPlaceHolder="请选择" [(ngModel)]="data.deviceName" style="width: 100%" (ngModelChange)="deviceNameChange($event)">
+                  <nz-option *ngFor="let item of data.deviceNameList" nzValue="{{item.materialTemplateUsedName}}" nzLabel="{{item.materialTemplateUsedName}}"></nz-option>
+              </nz-select> -->
+              <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.deviceId" (ngModelChange)="deviceIdChange($event, data)">
+                  <nz-option *ngFor="let item of choosedEquipmentList;trackBy:trackByNewsId;" [nzValue]="item.id" [nzLabel]="item.materialName"></nz-option>
+                </nz-select>
+            </div>
+            <div class="editable-cell-text-wrapper" *ngIf="data.materialType !== 2">
+                <span>无</span>
+              </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell" *ngIf="data.materialType === 2">
+            <div class="editable-cell-text-wrapper">
+              <!-- <nz-select nzPlaceHolder="请选择" [(ngModel)]="data.deviceModel" style="width: 100%" (click)="getUnitType(data.deviceId)">
+                  <nz-option *ngFor="let item of unitType" nzValue="{{item.modelName}}" nzLabel="{{item.modelName}}"></nz-option>
+              </nz-select> -->
+              <input nz-input (focus)="showDeviceModelModal(data)" [(ngModel)]="data.deviceModel" readonly />
+            </div>
+          </div>
+          <div class="editable-cell" *ngIf="data.materialType !== 2">
+              <div class="editable-cell-text-wrapper">
+                无
+              </div>
+            </div>
+        </td>
+        <td>
+            <div class="editable-cell">
+                <div class="editable-cell-text-wrapper">
+                  <span>{{data.originalSpecificationModel}}</span>
+                  </div>
+            </div>
+          </td>
+        <td>
+          <div class="editable-cell">
+              <div class="editable-cell-text-wrapper">
+                  <textarea nz-input rows="1" [(ngModel)]="data.specificationModel" [maxlength]="maxLenInputEnum.Default"></textarea>
+                </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+                <textarea nz-input rows="1" [(ngModel)]="data.drawingNumber" [maxlength]="maxLenInputEnum.Default"></textarea>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+                <textarea nz-input rows="1" [(ngModel)]="data.material" [maxlength]="maxLenInputEnum.Default"></textarea>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <textarea nz-input rows="1" [(ngModel)]="data.brand" [maxlength]="maxLenInputEnum.Default"></textarea>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+
+              <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.importOrDomestic" nzAllowClear>
+                <nz-option nzValue="进口" nzLabel="进口"></nz-option>
+                <nz-option nzValue="进口国产化" nzLabel="进口国产化"></nz-option>
+                <nz-option nzValue="国产" nzLabel="国产"></nz-option>
+                <nz-option nzValue="转口" nzLabel="转口"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+
+              <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.importance">
+                <nz-option [nzValue]="1" [nzLabel]="1"></nz-option>
+                <nz-option [nzValue]="2" [nzLabel]="2"></nz-option>
+                <nz-option [nzValue]="3" [nzLabel]="3"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+
+              <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.materialClassification" nzAllowClear>
+                <nz-option nzValue="保险件" nzLabel="保险件"></nz-option>
+                <nz-option nzValue="一般件" nzLabel="一般件"></nz-option>
+                <nz-option nzValue="常耗件" nzLabel="常耗件"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="data.assemblyOrPart">
+                <nz-option [nzValue]="0" nzLabel="总成"></nz-option>
+                <nz-option [nzValue]="1" nzLabel="部装"></nz-option>
+              </nz-select>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</ng-container>
+<ng-container *ngIf="selectedPage === tabPageType.NameMatchPage">
+  <app-name-match (finish)="onChildPageFinish()" [materialName]="materialName"></app-name-match>
+</ng-container>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="选择设备型号" [nzFooter]="null" nzWidth="630px"
+  (nzOnCancel)="handleCancel()">
+  <app-ufast-table [tableConfig]="deviceModelTableConfig" [dataList]="deviceModelDataList" [getListHandle]="getDeviceModelData"></app-ufast-table>
+  <ng-template #chooseDeviceModel let-modelName="modelName">
+    <span class="operate-text" (click)="chooseDeviceModelFun(modelName)">选择</span>
+  </ng-template>
+</nz-modal>

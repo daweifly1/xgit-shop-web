@@ -1,0 +1,55 @@
+<app-tab-route tabTitle="修改审核">
+  <ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+    <app-ufast-table-nav (advancedSearch)="advancedSearchBtn()" searchPlaceholder="公司名称" [(searchText)]="filters.name" (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="dataTableConfig" ></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">代码</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.code">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">类别</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.materialType">
+              <nz-option *ngFor="let item of ('materialType2'|mapList); trackBy: trackByItem" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">审核状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.auditStatus">
+              <nz-option *ngFor="let item of auditStatusList; trackBy: trackByItem" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchBtn()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [dataList]="dataList" [tableConfig]="dataTableConfig" [getListHandle]="getDataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #codeTpl let-code="code">
+    <span class="operate-text" (click)="goDetailPage(code)">{{code}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === PageTypeEnum.DetailPage">
+    <app-modify-detail (finish)="returnMainPage()" [id]="selectedCode"></app-modify-detail>
+  </ng-container>
+</app-tab-route>

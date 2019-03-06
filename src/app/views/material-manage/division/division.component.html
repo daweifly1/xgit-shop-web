@@ -1,0 +1,56 @@
+<app-tab-route tabTitle="厂矿分工">
+  <ng-container *ngIf="selectedPage === PageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="tableConfig"
+      searchPlaceholder="物资大类" (advancedSearch)="fullSearch()" [(searchText)]="filters.divisionName"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.factoryDivisionAdd">新增</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物资大类</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.divisionName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">计划员</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.salesmanName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">保管员</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.keeperName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearch()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="dataList" [getListHandle]="getDataList">
+    </app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-id="id">
+    <app-action-group>
+      <app-action (clickAction)="edit(id)" *appAuthBtu="ActionCode.factoryDivisionEdit">编辑</app-action>
+      <app-action (clickAction)="delete(id)" *appAuthBtu="ActionCode.factoryDivisionDel">删除</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-container *ngIf="selectedPage === PageType.AddPage">
+    <app-add-division (finish)="onChildPageFinish()" [detailId]="detailId"></app-add-division>
+  </ng-container>
+
+  <ng-container *ngIf="selectedPage === PageType.EditPage">
+      <app-add-division (finish)="onChildPageFinish()" [detailId]="detailId"></app-add-division>
+    </ng-container>
+</app-tab-route>

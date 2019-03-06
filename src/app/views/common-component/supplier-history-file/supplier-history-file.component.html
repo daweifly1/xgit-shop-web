@@ -1,0 +1,14 @@
+<div class="wrap">
+  <app-ufast-table [tableConfig]="dataTableConfig" [dataList]="dataList" [getListHandle]="getList"></app-ufast-table>
+</div>
+<ng-template #affixTpl let-fileUrl="fileUrl" let-name="credentialName">
+  <span class="operate-text" (click)="viewFile(fileUrl)">预览</span>
+  <span class="operate-text"><a [href]="downloadUrl + fileUrl" [download]="name">下载</a></span>
+</ng-template>
+<nz-modal [(nzVisible)]="viewFileModalShow" (nzOnCancel)="cancelViewFile()" [nzWidth]="'66%'" [nzFooter]="null">
+  <div class="view-file-wrap">
+    <pdf-viewer [src]="viewFileUrl" [show-all]="true"></pdf-viewer>
+    <div class="footer">
+    </div>
+  </div>
+</nz-modal>

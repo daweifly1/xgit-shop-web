@@ -1,0 +1,25 @@
+.problem-record-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+header {
+  margin-bottom: 10px;
+}
+.table-wrap{
+  position: absolute;
+}
+.edit-add-wrap{
+  form{
+    width: 500px;
+    nz-form-item{
+      height: 30px;
+      margin-bottom: 20px;
+    }
+  }
+  .footer-bar {
+    button {
+      margin-right: 10px;
+    }
+  }
+}

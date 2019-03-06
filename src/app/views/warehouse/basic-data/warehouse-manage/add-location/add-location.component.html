@@ -1,0 +1,115 @@
+<ng-container>
+  <form nz-form [formGroup]="newLocationForm">
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4">库区编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <span>{{areaCode}}</span>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>货架编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="shelfNo" [maxlength]="maxLenInputEnum.Default">
+          <nz-form-explain *ngIf="newLocationForm.get('shelfNo').dirty && newLocationForm.get('shelfNo').errors  && !getFormControl('shelfNo').hasError('engAndNum')">必填项，请输入
+          </nz-form-explain>
+          <nz-form-explain *ngIf="getFormControl('shelfNo').hasError('engAndNum')">请输入数字和字母</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>货架描述</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="shelfType" [maxlength]="maxLenInputEnum.Default">
+          <nz-form-explain *ngIf="newLocationForm.get('shelfType').dirty && newLocationForm.get('shelfType').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>排起止编号</nz-form-label>
+        <nz-form-control nzSpan="3">
+          <nz-input-number formControlName="beginRowNo" [nzMin]="1" [nzStep]="1" [nzPrecision]="0" [nzPlaceHolder]="placeholder"
+            [nzSize]="100" class="selectStyle"></nz-input-number>
+          <nz-form-explain *ngIf="newLocationForm.get('beginRowNo').dirty && newLocationForm.get('beginRowNo').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+        <div nz-col nzSpan="1" style="margin-top: 7px">&nbsp;&nbsp;&nbsp;&nbsp;~</div>
+        <nz-form-control nzSpan="4">
+          <nz-input-number formControlName="endRowNo" [nzMin]="1" [nzStep]="1" [nzPrecision]="0" [nzPlaceHolder]="placeholder" class="selectStyle"></nz-input-number>
+          <nz-form-explain *ngIf="newLocationForm.get('endRowNo').dirty && newLocationForm.get('endRowNo').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>层</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <nz-input-number formControlName="floorNum" [nzMin]="1" [nzStep]="1" [nzPrecision]="0" [nzPlaceHolder]="placeholder" class="selectStyle"></nz-input-number>
+          <nz-form-explain *ngIf="newLocationForm.get('floorNum').dirty && newLocationForm.get('floorNum').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>列</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <nz-input-number formControlName="columnNum" [nzMin]="1" [nzStep]="1" [nzPrecision]="0" [nzPlaceHolder]="placeholder" class="selectStyle"></nz-input-number>
+          <nz-form-explain *ngIf="newLocationForm.get('columnNum').dirty && newLocationForm.get('columnNum').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>位</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <nz-input-number formControlName="locationNum" [nzMin]="1" [nzStep]="1" [nzPrecision]="0" [nzPlaceHolder]="placeholder" class="selectStyle"></nz-input-number>
+          <nz-form-explain *ngIf="newLocationForm.get('locationNum').dirty && newLocationForm.get('locationNum').errors">必填项，请输入
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>保管员</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input nzSize="default" formControlName="keeperName" readonly (focus)="showVisiblekeeperNameModal()" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+    <div nz-col nzSpan="20" nzOffset="4" class="m-t-sm p-b-md">
+      <button nz-button nzType="primary" class="submit-button" type="submit" (click)="submitLocation()">保存</button>
+      <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+    </div>
+  </form>
+
+  <nz-modal class="choose-model-box" [(nzVisible)]="isVisiblekeeperName" nzTitle="选择保管员" nzWidth="630px" (nzOnCancel)="handleCancelKeeperName()">
+    <div class="transportSearch clear-fix">
+      <nz-input-group class="search-group" nzSearch [nzSuffix]="transportSearchButton">
+        <input type="text" nz-input placeholder="请输入保管员名称" [(ngModel)]="keeperNameFilter.name">
+      </nz-input-group>
+      <ng-template #transportSearchButton>
+        <button nz-button nzType="primary" nzSearch (click)="searchKeeperName()">搜索</button>
+      </ng-template>
+    </div>
+    <app-ufast-table [tableConfig]="keeperNameTableConfig" [dataList]="keeperNameDataList" [getListHandle]="getKeeperNameModalData"></app-ufast-table>
+    <ng-template #chooseKeeperName let-name="name" let-userId="userId">
+      <span class="operate-text" (click)="chooseKeeperNameFun(name,userId)">选择</span>
+    </ng-template>
+  </nz-modal>
+</ng-container>

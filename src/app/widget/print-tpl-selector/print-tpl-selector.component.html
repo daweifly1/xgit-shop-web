@@ -1,0 +1,16 @@
+<div class="modal-body-wrap">
+  <div class="content">
+    <nz-form-item>
+      <nz-form-label nzSpan="5">请选择模板</nz-form-label>
+      <nz-form-control nzSpan="19">
+        <nz-select style="width:100%;" [(ngModel)]="selectedIndex">
+          <nz-option *ngFor="let item of templateList;let i=index;" [nzLabel]="item.templateName" [nzValue]="i"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="footer">
+    <button nz-button nzType="primary" nzSize="large" (click)="previewTpl()">打印预览</button>
+    <button nz-button nzType="primary" nzSize="large" (click)="printTpl()">开始打印</button>
+  </div>
+</div>

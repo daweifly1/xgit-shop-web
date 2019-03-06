@@ -1,0 +1,57 @@
+<app-tab-route tabTitle="个人信息">
+  <div class="personal-info-wrap">
+    <form nz-form class="user-info-form" [formGroup]="personalForm" (ngSubmit)="updateInfo()">
+      <nz-form-item>
+        <nz-form-label nzSpan="6">登录名称</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <nz-form-text>{{userInfo.loginName}}</nz-form-text>
+        </nz-form-control>
+
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="6">登录密码</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <nz-form-text>******&emsp;<span class="operate-text" (click)="navigatePd()">修改密码</span></nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="6">所属部门</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <nz-form-text>{{userInfo.deptName}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="6">角色</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <nz-form-text>{{userInfo.roleNames}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="6"><span class="font-red-color">*</span>真实姓名</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input formControlName="name" spellcheck="false" maxlength="20"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="6">手机号</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input formControlName="mobile" spellcheck="false"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="6">电子邮箱</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input formControlName="email" spellcheck="false"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <div nzSpan="6" nz-col></div>
+        <div nzSpan="18" nz-col>
+          <button nz-button nzType="primary" type="submit" class="submit-button">保存</button>
+          <button nz-button nzType="primary" nzGhost (click)="getPersonalInfo()" class="submit-button">重置
+          </button>
+        </div>
+      </nz-form-item>
+    </form>
+  </div>
+</app-tab-route>

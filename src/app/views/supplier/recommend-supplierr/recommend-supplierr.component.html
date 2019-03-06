@@ -1,0 +1,74 @@
+<div class="recommend-wrap">
+  <div class="detail-header-info">
+    <nz-form-item style="width: 50%" *ngFor="let item of fieldList;trackBy:trackByItem">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{supplierInfo[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{supplierInfo[item.field] | map:item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item style="width: 100%">
+      <nz-form-label nzSpan="4">企业简介</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{supplierInfo['profile']}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <form [formGroup]="infoForm" nz-form>
+    <nz-form-item style="width:50%">
+      <nz-form-label nzRequired nzSpan="8">企业类别</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-select formControlName="materialType" style="width:100%;">
+          <nz-option *ngFor="let item of ('materialType2'|mapList); trackBy:trackByItem;" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="infoForm.get('materialType').dirty && infoForm.get('materialType').errors">
+          请选择企业类别
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item style="width:50%;">
+      <nz-form-label nzRequired nzSpan="8">限定供应范围</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-select formControlName="supplierSupply" style="width:100%;" nzMode="multiple">
+          <nz-option *ngFor="let item of supplierScopeList; trackBy:trackByItem;" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="infoForm.get('supplierSupply').dirty && infoForm.get('supplierSupply').errors">
+          请选择至少选择一种
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="4">拟购产品</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="proposedProduct" [maxlength]="MaxInputLenEnum.Product" />
+        <nz-form-explain *ngIf="infoForm.get('proposedProduct').dirty && infoForm.get('proposedProduct').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="4">推荐说明</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <textarea nz-input formControlName="recommendExplanation" [maxlength]="MaxInputLenEnum.Explanation"></textarea>
+        <nz-form-explain *ngIf="infoForm.get('recommendExplanation').dirty && infoForm.get('recommendExplanation').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired nzSpan="4">推荐为</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-radio-group formControlName="recommendedFor">
+          <ng-container *ngIf="source !== RecommendTypeEnum.SelfToCommon">
+            <label nz-radio [nzValue]="RecommendTypeEnum.Self" *ngIf="!isManager">自购供应商</label>
+          </ng-container>
+          <label nz-radio [nzValue]="RecommendTypeEnum.Common">统购供应商</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="table-footer-bar">
+    <button nz-button nzType="info" (click)="doSubmit()">提交</button>
+    <button nz-button nzType="info" (click)="onCancel()">取消</button>
+  </div>
+</div>

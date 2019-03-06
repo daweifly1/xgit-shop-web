@@ -1,0 +1,51 @@
+.contract-main-container {
+  margin: 10px 20px;
+}
+.container {
+  margin-top: 20px;
+  .ant-form-item-label,.ant-form-item-control-wrapper {
+    height: 28px;
+  }
+}
+.contract-title {
+  text-align: center;
+}
+.clause-item {
+  text-indent: 5px;
+  margin-bottom: 5px;
+  white-space: pre-wrap;
+}
+.contract-deal {
+  .deal-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .deal-info {
+      width: 50%;
+      border: 1px solid #cccccc;
+    }
+    .deal-info.border-right {
+      border: none;
+      border-top: 1px solid #cccccc;
+      border-bottom: 1px solid #cccccc;
+      border-left: 1px solid #cccccc;
+    }
+    .deal-title {
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
+    .deal-detail {
+      padding-left: 20px;
+      border-top: 1px solid #cccccc;
+      div {
+        min-height: 25px;
+        line-height: 25px;
+        word-break: break-all;
+      }
+    }
+  }
+  .confirm-info {
+    text-align: center;
+  }
+}

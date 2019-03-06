@@ -1,0 +1,59 @@
+<app-tab-route tabTitle="核心指标">
+  <div class="main-wrap">
+    <div class="left-wrap">
+      <div class="purchase-differences-wrap">
+        <div class="purchase-differences-wrap-content">
+          <nz-tabset [nzSelectedIndex]="tabIndex" (nzSelectedIndexChange)="changeTab($event)" style="height:auto;">
+            <nz-tab nzTitle="采购差异趋势图">
+                <div echarts  id="purchase-barchart" [options]="purchaseOptions"  style="height: 300px;width: 800px;"></div>
+            </nz-tab>
+            <nz-tab nzTitle="材料采购差异趋势图">
+                <div echarts  id="material-barchart" [options]="materialPurchaseOptions"  style="height: 300px;width: 800px;"></div>
+            </nz-tab>
+            <nz-tab nzTitle="备件采购差异趋势图">
+                <div echarts  id="spare-barchart" [options]="sparePurchaseOptions"  style="height: 300px;width: 800px;"></div>
+            </nz-tab>
+          </nz-tabset>
+
+        </div>
+      </div>
+      <div class="stock-finance-wrap">
+        <nz-tabset  (nzSelectedIndexChange)="changeTab($event)" style="height:auto;">
+          <nz-tab nzTitle="合计库存金额图表">
+              <div echarts  id="stock-finance" [options]="stockFinanceOptions"  style="height: 350px;width: 800px;"></div>
+          </nz-tab>
+          <nz-tab nzTitle="材料库存金额图表">
+              <div echarts  id="material-stock-finance" [options]="materialStockFinanceOptions"  style="height: 350px;width: 800px;"></div>
+          </nz-tab>
+          <nz-tab nzTitle="备件库存金额图表">
+              <div echarts  id="spare-stock-finance" [options]="spareStockFinanceOptions"  style="height: 350px;width: 800px;"></div>
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+    <!-- <div class="right-wrap">
+      <div class="purchase-differences-wrap">
+        <div class="purchase-differences-wrap-content" style="width: 88%;height: 350px;">
+            <div class="completion-rate" (click)="completionRate()">
+              <div class="pic"><i class="fa fa-pie-chart"></i></div>
+              <div class="progress-rate">86%</div>
+              <div class="progress-rate">计划完成率(月度)</div>
+            </div>
+            <div class="contract-quantity" (click)="contractQuantity()">
+                <div class="pic"><i class="fa fa-pie-chart"></i></div>
+                <div class="progress-rate">86%</div>
+                <div class="progress-rate">合同数量(月度)</div>
+            </div>
+            <div class="settlement-amount" (click)="settlementAmount()">
+                <div class="pic"><i class="fa fa-pie-chart"></i></div>
+                <div class="progress-rate">86%</div>
+                <div class="progress-rate">结算数量(月度)</div>
+            </div>
+        </div>
+      </div>
+      <div class="data-wrap">
+          <div echarts  id="barchart" [options]="pieOptions"  style="height: 350px;width: 90%;"></div>
+      </div>
+    </div> -->
+  </div>
+</app-tab-route>

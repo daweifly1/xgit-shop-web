@@ -1,0 +1,60 @@
+<div class="side-menu-wrap" [ngClass]="{'hide-side-menu':isCollapsed}"
+     [ngStyle]="{'width':sideMenu.children.length === 0? '0px': isCollapsed ? '':width}">
+  <!--<div class="loading-mask" *ngIf="loading">-->
+    <!--<div>-->
+      <!--<nz-spin nzSize="large"></nz-spin>-->
+    <!--</div>-->
+  <!--</div>-->
+  <div class="side-menu-title" *ngIf="sideMenu.name.length > 0">
+    <span><i class="anticon anticon-appstore-o"></i></span>
+    <span>{{sideMenu.name}}</span>
+  </div>
+  <div class="side-menu scrollbar-style">
+    <ul nzMode="inline"  nz-menu nzTheme="dark" class="side-menu-list" >
+      <ng-container *ngFor="let item of sideMenu.children;">
+        <li nz-submenu *ngIf="item.children.length && item.children.length > 0; else noSubItem;" >
+        <span title class="one-level-title">
+          <span>
+            <img *ngIf= "item.icon" [src]="item.icon" />
+            <!--<i *ngIf= "!item.icon" class="anticon anticon-share-alt"></i>-->
+          </span>
+          <span>{{item.name}}</span>
+        </span>
+          <ul>
+            <ng-container *ngFor="let subItem of item.children;">
+              <li nz-menu-item *ngIf="subItem.children && subItem.children.length === 0; else subGroupItem;" [nzDisabled]="tabsetService.disabledMenu" (click)="navigate(subItem, selectedItem === subItem.url)"
+                  [nzSelected]="selectedItem === subItem.url">
+                <span class="two-level-title">{{subItem.name}}</span>
+              </li>
+              <ng-template #subGroupItem>
+                <li nz-menu-group>
+                  <span class="two-level-title" title>{{subItem.name}}</span>
+                  <ul>
+                    <li nz-menu-item *ngFor="let minItem of subItem.children;" [nzDisabled]="tabsetService.disabledMenu" (click)="navigate(minItem, selectedItem ===  minItem.url)"
+                        [nzSelected]="selectedItem ===  minItem.url">
+                      <span class="three-level-title">{{minItem.name}}</span>
+                    </li>
+                  </ul>
+                </li>
+              </ng-template>
+            </ng-container>
+          </ul>
+        </li>
+        <ng-template #noSubItem>
+          <li nz-menu-item (click)="navigate(item, selectedItem === item.url)" [nzDisabled]="tabsetService.disabledMenu" [nzSelected]="selectedItem === item.url">
+          <span>
+            <img *ngIf= "item.icon" [src]="item.icon" />
+            <!--<i *ngIf= "!item.icon" class="anticon anticon-share-alt"></i>-->
+          </span>
+            <span>{{item.name}}</span></li>
+        </ng-template>
+      </ng-container>
+    </ul>
+  </div>
+  <button class="switch-bar-btu" nz-button (click)="toggleCollapsed()" style="padding:0;">
+    <i class="anticon" [class.anticon-menu-unfold]="isCollapsed" [class.anticon-menu-fold]="!isCollapsed" ></i>
+  </button>
+</div>
+
+
+

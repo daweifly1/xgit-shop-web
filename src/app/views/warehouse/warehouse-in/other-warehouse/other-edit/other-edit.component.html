@@ -1,0 +1,26 @@
+
+  <div class="detail-header-info">
+    <nz-form-item *ngFor="let item of headerFieldList;trackBy:trackByItem">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{mouseDetail[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{mouseDetail[item.field] | map:item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+
+
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+
+<app-ufast-table [tableConfig]="tableConfig" [dataList]="OtherDetailDataList"></app-ufast-table>
+<ng-template #operation let-index="index" let-disabledNum="disabledNum">
+  <nz-input-number class="selectStyle" [nzMin]="materialNumMin" [nzMax]="materialNumMax" [nzPrecision]="materialNumDec" [nzStep]="materialNumMin" [(ngModel)]="OtherDetailDataList[index].qty" [nzDisabled]="disabledNum" ></nz-input-number>
+</ng-template>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" class="submit-button" (click)="submitWarehouse()">提交</button>
+  <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+  </button>
+</div>

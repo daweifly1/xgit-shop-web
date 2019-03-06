@@ -1,0 +1,76 @@
+<ng-container *ngIf="currentPageType === tabPageType.ContractPage">
+  <app-ufast-table-nav searchPlaceholder="请输入合同编号" (search)="getContractList()"
+                       [(searchText)]="contractFilters.purchaseNo" (advancedSearch)="toggleAdvancedSearch($event)" (refresh)="getContractList()"
+                       [leftTemplate]="tableLeftTpl" [tableConfig]="contractTableConfig"></app-ufast-table-nav>
+  <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">合同类型</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-select nzPlaceHolder="请选择" [(ngModel)]="contractFilters.contractType" style="width: 100%" [nzAllowClear]="true">
+            <nz-option *ngFor="let item of contractTypeList" [nzValue]="item.id" [nzLabel]="item.type"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">合同编号</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input [(ngModel)]="contractFilters.purchaseNo" [maxlength]="searchInputLen">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">收货方</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input [(ngModel)]="contractFilters.shipToName" [maxlength]="searchInputLen">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">供应商</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="contractFilters.vendorName" type="text" [maxlength]="inputMaxLength">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">创建日期-开始</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-date-picker [(ngModel)]="contractFilters.startContractDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">创建日期-截止</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-date-picker [(ngModel)]="contractFilters.endContractDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24" class="btn-bar">
+      <button nz-button nzType="primary" (click)="getContractList()">搜索</button>
+      <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+      <button nz-button nzType="default" (click)="toggleAdvancedSearch()">收起</button>
+    </div>
+  </div>
+  <app-ufast-table class="main-table" [tableConfig]="contractTableConfig" [dataList]="contractList" [getListHandle]="getContractList"
+                   (selectedChange)="changeSelect($event)"></app-ufast-table>
+</ng-container>
+<ng-template #tableLeftTpl>
+  <button nz-button nzType="info" (click)="emitFinish()">返回</button>
+</ng-template>
+<ng-template #operationTpl let-no="poHeaderId" let-contractType="contractType" let-fullName="fullName">
+  <span class="operate-text" (click)="addDispatch(no,contractType, fullName)">发货</span>
+</ng-template>
+
+<ng-container *ngIf="currentPageType === tabPageType.OrderPage">
+  <app-edit-dispatch-bill (finish)="onChildFinish($event)" [contractNo]="contractNo" [addOrder]="true" [contractType]="contractType" [contractInfo]="contractInfo"></app-edit-dispatch-bill>
+</ng-container>
+

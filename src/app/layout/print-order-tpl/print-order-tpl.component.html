@@ -1,0 +1,60 @@
+<div *ngFor="let dataItem of _data.data;let i=index;" style="page-break-after:always;">
+<div style="overflow: hidden;margin:0;padding:0;"  [ngStyle]="{width:previewStyle.paperConfig.width+previewStyle.paperConfig.unit}">
+  <div style="position:relative;border:1px dashed #ccc;margin: 0 auto;box-sizing:border-box;width:100%;" [ngStyle]="{padding:previewStyle.paperMargin.top + previewStyle.paperMargin.unit + ' '+previewStyle.paperMargin.right + previewStyle.paperMargin.unit+' '+
+  previewStyle.paperMargin.bottom + previewStyle.paperMargin.unit+' '+previewStyle.paperMargin.left + previewStyle.paperMargin.unit, borderWidth:previewStyle.borderWidth}">
+    <div style="width:100%;text-align:center;padding:3px 0;box-sizing:border-box;" [ngStyle]="{fontSize:_data.config.headFontSize+'px',fontWeight:_data.config.isHeadlineFontBold?700:''}">
+      {{_data.config.headMessage}}
+    </div>
+    <div style="width:100%;box-sizing:border-box;" [ngStyle]="{fontSize:contentSetting.fontSize+'px'}">
+      <div style="width:100%; min-height:90px;box-sizing:border-box;">
+        <ng-container *ngFor="let header of headerColInfo;">
+          <ng-container *ngIf="header.isQrCode && header.isChecked">
+            <div style="position:absolute;width:100px;height:100px;box-sizing:border-box;" [ngStyle]="{top:pageSetting.paperMargin.top + pageSetting.paperMargin.unit,
+            right:pageSetting.paperMargin.right + pageSetting.paperMargin.unit}">
+              <qrcode [size]="100" [qrdata]="dataItem.headerInfo[_data.cacheHeaderFootDiction[header.keyName].Value]" level="H" [usesvg]="true"></qrcode>
+            </div>
+          </ng-container>
+          <div style="display:inline-block;box-sizing:border-box;" *ngIf="_data.cacheHeaderFootDiction[header.keyName] && header.isChecked && !header.isQrCode" [ngStyle]="{width:(header.isAloneRow?100:99/contentSetting.tableHeadColNum) + '%',height:contentSetting.headAndFooterHigh+'mm'}">
+            <ng-container *ngIf="header.alias;else aliasTpl;">{{header.alias}}</ng-container>
+            <ng-template #aliasTpl>{{_data.cacheHeaderFootDiction[header.keyName].Name}}</ng-template>
+            <span *ngIf="_data.cacheHeaderFootDiction[header.keyName].pipe">：{{dataItem.headerInfo[_data.cacheHeaderFootDiction[header.keyName].Value]|map:_data.cacheHeaderFootDiction[header.keyName].pipe}}</span>
+            <span *ngIf="!_data.cacheHeaderFootDiction[header.keyName].pipe">：{{dataItem.headerInfo[_data.cacheHeaderFootDiction[header.keyName].Value]}}</span>
+          </div>
+        </ng-container>
+      </div>
+      <table style="width:100%;margin: 10px 0;" cellspacing="0" [ngStyle]="{fontSize:contentSetting.fontSize+'px'}">
+        <tr>
+          <ng-container *ngFor="let col of bodyColumnInfo;">
+            <th *ngIf="_data.printTempBdDiction[col.keyName] && col.isChecked" style="font-weight: 700;border:1px solid #000;margin:0;text-align:left;">
+              <ng-container *ngIf="col.alias;else colAliasTpl;">{{col.alias}}</ng-container>
+              <ng-template #colAliasTpl>{{_data.printTempBdDiction[col.keyName].Name}}</ng-template>
+            </th>
+          </ng-container>
+        </tr>
+        <tr *ngFor="let item of dataItem.dataList;">
+          <ng-container *ngFor="let col of bodyColumnInfo;">
+            <td *ngIf="_data.printTempBdDiction[col.keyName] && col.isChecked" style="border: 1px solid #ccc;margin:0;text-align:left;" >
+              <ng-container *ngIf="_data.printTempBdDiction[col.keyName].pipe">{{item[_data.printTempBdDiction[col.keyName].Value] | map: _data.printTempBdDiction[col.keyName].pipe}}</ng-container>
+              <ng-container *ngIf="!_data.printTempBdDiction[col.keyName].pipe">{{item[_data.printTempBdDiction[col.keyName].Value]}}</ng-container>
+            </td>
+          </ng-container>
+        </tr>
+      </table>
+      <div style="position:relative;box-sizing:border-box;">
+      <ng-container *ngFor="let footer of footerColInfo;">
+        <div *ngIf="footer.isQrCode" style="position:absolute;top:0;right:0;width:100px;height:100px;box-sizing:border-box;">
+          <qrcode [size]="100" [qrdata]="dataItem.headerInfo[_data.cacheHeaderFootDiction[footer.keyName].Value]" level="H" [usesvg]="true"></qrcode>
+        </div>
+        <div style="display:inline-block;box-sizing:border-box;" *ngIf="_data.cacheHeaderFootDiction[footer.keyName] && footer.isChecked && !footer.isQrCode" [ngStyle]="{width:(footer.isAloneRow?100:99/contentSetting.tableEndColNum) + '%',height:contentSetting.headAndFooterHigh+'mm'}">
+          <ng-container *ngIf="footer.alias;else footerAliasTpl;">{{footer.alias}}</ng-container>
+          <ng-template #footerAliasTpl>{{_data.cacheHeaderFootDiction[footer.keyName].Name}}</ng-template>
+          <span *ngIf="_data.cacheHeaderFootDiction[footer.keyName].pipe">：{{dataItem.headerInfo[_data.cacheHeaderFootDiction[footer.keyName].Value] | map:_data.cacheHeaderFootDiction[footer.keyName].pipe}}</span>
+          <span *ngIf="!_data.cacheHeaderFootDiction[footer.keyName].pipe">：{{dataItem.headerInfo[_data.cacheHeaderFootDiction[footer.keyName].Value]}}</span>
+        </div>
+      </ng-container>
+      </div>
+      <div style="word-break: break-all;word-wrap:break-word;box-sizing:border-box;"><span [innerHtml]="(_data.config.bottomMessage||'')|html"></span></div>
+    </div>
+  </div>
+</div>
+</div>

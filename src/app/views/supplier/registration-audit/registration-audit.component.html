@@ -1,0 +1,63 @@
+<app-tab-route tabTitle="注册审核">
+  <ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+    <app-ufast-table-nav (refresh)="getDataList()" [(searchText)]="filters.name" (search)="getDataList()" searchPlaceholder="公司名称" (advancedSearch)="advancedSearchBtn()" [tableConfig]="dataTableConfig"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">公司名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select [nzAllowClear]="true" style="width: 100%;" [(ngModel)]="filters.status">
+              <nz-option *ngFor="let item of supplierStatusList; trackBy: trackById" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">注册日期-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.startRegistDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">注册日期-结束</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.endRegistDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchBtn()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="dataTableConfig" [dataList]="dataList" [getListHandle]="getDataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-supplierId="supplierId" let-id="id">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[supplierId].lurking" (clickAction)="setLurking(id)" *appAuthBtu="ActionCode.registrationAuditSetToPotential">设为潜在</app-action>
+      <app-action [enabled]="actionStatus[supplierId].register" (clickAction)="setRegister(id)" *appAuthBtu="ActionCode.registrationAuditSetToRegister">设为注册</app-action>
+      <app-action [enabled]="actionStatus[supplierId].recommend" (clickAction)="goRecommend(supplierId)" *appAuthBtu="ActionCode.registrationAuditRecommend">推荐</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #supplierNameTpl let-name="name" let-supplierId="supplierId">
+    <span class="operate-text" (click)="goDetailPage(supplierId)">{{name}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === PageTypeEnum.DetailPage">
+    <app-supplier-detail [supplierId]="selectedSupplierId" (finish)="returnMainPage()"></app-supplier-detail>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.RecommendPage">
+    <app-recommend-supplierr [isManager]="true" [source]="recommendSrouce" [supplierId]="selectedSupplierId" (finish)="returnMainPage()"></app-recommend-supplierr>
+  </ng-container>
+</app-tab-route>

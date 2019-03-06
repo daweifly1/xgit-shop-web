@@ -1,0 +1,66 @@
+<ng-container *ngIf="currentPage === tabPageType.ManagePage">
+  <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="合同号" (refresh)="getStockRecordDataList()" (search)="getStockRecordDataList()"
+    (advancedSearch)="onAdvancedSearch()" [(searchText)]="filters.contractNo" [tableConfig]="tableConfig"></app-ufast-table-nav>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="emitFinish()">返回上级</button>
+  </ng-template>
+  <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+    <div class="advanceSearch-form">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">合同号</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filters.contractNo" name="contractNo">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">接收号</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filters.erpNo" name="erpNo">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">物料编码</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filters.materialCode" name="materialCode">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">是否条码管理</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select class="selectStyle" [(ngModel)]="filters.barcodeFlag" name="barcodeFlag">
+            <nz-option *ngFor="let item of barcodeFlagList;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">入库时间-开始</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-date-picker name="startCreateDate"  [(ngModel)]="filters.startCreateDate"
+            [nzDisabledDate]="disabledStart"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">入库时间-截止</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-date-picker name="endCreateDate"  [(ngModel)]="filters.endCreateDate"
+            [nzDisabledDate]="disabledEnd"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24" class="btn-bar">
+      <button nz-button nzType="primary" (click)="getStockRecordDataList()">搜索</button>
+      <button nz-button nzType="info" (click)="reset()">重置</button>
+      <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+    </div>
+  </div>
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="stockRecordDataList" [getListHandle]="getStockRecordDataList"
+    (selectedChange)="changeSelect($event)"></app-ufast-table>
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" class="submit-button" (click)="confirm()">确定</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+    </button>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentPage === tabPageType.AddPage">
+  <app-add-purchase-out (finish)="childPageFinish($event)" [stockRecordData]="selectRecordSelect" [editId]="editId"></app-add-purchase-out>
+</ng-container>

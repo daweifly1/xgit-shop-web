@@ -1,0 +1,114 @@
+<app-tab-route tabTitle="调拨单">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="调拨单号" (refresh)="getRegionAllotDataList()"
+      (search)="getRegionAllotDataList()" (advancedSearch)="onAdvancedSearch()" [(searchText)]="filters.allotOrder"
+      [tableConfig]="tableConfig"></app-ufast-table-nav>
+
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <form class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">调拨单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.allotOrder" name="allotOrder">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">调度员</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.dispatcherName" name="dispatcherName">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单部门</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.deptName" name="deptName">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单人</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.createName" name="createName">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">调入状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.inState" name="inState" nzAllowClear>
+              <nz-option *ngFor="let item of inOutState;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">调出状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.outState" name="outState" nzAllowClear>
+              <nz-option *ngFor="let item of inOutState;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker name="createDateStart" [nzShowTime]="{ nzFormat: 'HH:mm' }" [(ngModel)]="filters.createDateStart" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">制单时间-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker name="createDateEnd" [nzShowTime]="{ nzFormat: 'HH:mm' }" [(ngModel)]="filters.createDateEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">CRM单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.crmOrder" name="crmOrder">
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getRegionAllotDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="regionAllotDataList" [getListHandle]="getRegionAllotDataList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+
+  </ng-container>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.regionalAllocationAdd">新增</button>
+    <!-- <button nz-button nzType="info" (click)="export()">导出</button>
+    <button nz-button nzType="info">导出全部</button> -->
+  </ng-template>
+  <ng-template #operationTpl let-id="id">
+    <app-action-group>
+      <app-action [enabled]="buttonState[id].edit" (clickAction)="edit(id)" *appAuthBtu="ActionCode.regionalAllocationEdit">编辑</app-action>
+      <!-- <app-action [enabled]="buttonState[id].audit" (clickAction)="audit(id)">审核</app-action> -->
+      <app-action [enabled]="buttonState[id].outbound" (clickAction)="outbound(id)" *appAuthBtu="ActionCode.regionalAllocationDelivery">出库</app-action>
+      <app-action [enabled]="buttonState[id].inbound" (clickAction)="inbound(id)" *appAuthBtu="ActionCode.regionAllocationPutInStorage">入库</app-action>
+      <app-action [enabled]="buttonState[id].del" (clickAction)="deleteRegionAllot(id)" *appAuthBtu="ActionCode.regionAllocationDel">删除</app-action>
+      <app-action [enabled]="buttonState[id].print" (clickAction)="print(id)" *appAuthBtu="ActionCode.regionAllocationPrint">打印</app-action>
+      <app-action *appAuthBtu="ActionCode.regionAllocationErpSync">领出过账</app-action>
+      <app-action *appAuthBtu="ActionCode.regionAllocationErpSync">领入过账</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #orderTpl let-allotOrder="allotOrder" let-id="id">
+    <span class="operate-text" (click)="detail(id)">{{allotOrder}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === tabPageType.AddPage">
+    <app-add-region-allot (finish)="childPageFinish()" [editId]="editId"></app-add-region-allot>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <app-add-region-allot (finish)="childPageFinish()" [editId]="editId"></app-add-region-allot>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <app-detail-retion-allot [detailId]="editId" [isAuditPage]="isAuditPage" (finish)="childPageFinish()"></app-detail-retion-allot>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.AuditPage">
+    <app-detail-retion-allot [detailId]="editId" [isAuditPage]="isAuditPage" (finish)="childPageFinish()"></app-detail-retion-allot>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.ReceivePage">
+    <app-receive-retion-allot [detailId]="editId" [isInboundPage]="isInboundPage" [isOutboundPage]="isOutboundPage" (finish)="childPageFinish()"></app-receive-retion-allot>
+  </ng-container>
+</app-tab-route>

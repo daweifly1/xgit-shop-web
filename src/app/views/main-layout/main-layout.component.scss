@@ -1,0 +1,70 @@
+@import "../../../global-styles/variable";
+
+.top-menu-bar {
+  background: #fff;
+  color: #333;
+  font-size: 16px;
+  width: 100%;
+  overflow: hidden;
+  height: $top-menu-bar-height;
+  border-bottom: 0;
+
+  li {
+    height: $top-menu-bar-height;
+    line-height: $top-menu-bar-height;
+  }
+
+  .logo-wrap {
+    width: $side-menu-bar-width;
+    background: #009FE0;
+  }
+  .logo-wrap img {
+    width: $logo-width;
+    height: $logo-height;
+    max-height: $top-menu-bar-height;
+    vertical-align: middle;
+  }
+
+  .right-action-wrap {
+    float: right;
+    height: $top-menu-bar-height;
+    line-height: $top-menu-bar-height;
+    color: #009FE0;
+    font-size: 14px;
+    margin-right: 30px;
+
+    & > div {
+      display: inline-block;
+      margin-left: 20px;
+    }
+    .exit-wrap {
+      cursor: pointer;
+    }
+  }
+}
+
+.main-container {
+  position: relative;
+  min-width: 1200px;
+  height: calc(100% - #{$top-menu-bar-height});
+  height: -webkit-calc(100% - #{$top-menu-bar-height});
+  height: -moz-calc(100% - #{$top-menu-bar-height});
+}
+
+.content-container {
+  display: flex;
+  background: #F2F2F2;
+  height: 100%;
+  transition: margin .2s linear;
+  -webkit-transition: margin .2s linear;
+  -moz-transition: margin .2s linear;
+  -o-transition: margin .2s linear;
+
+  .tabset-wrap {
+    width: 100%;
+    height: 100%;
+    padding: $tab-page-padding-top $tab-page-padding-right $tab-page-padding-bottom $tab-page-padding-left;
+  }
+}
+
+

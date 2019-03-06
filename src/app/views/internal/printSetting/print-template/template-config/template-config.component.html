@@ -1,0 +1,156 @@
+<div class="wrap">
+  <div class="header-bar">
+    <span class="tpl-name-wrap"><label><span class="red-color">*</span>模板名称：</label><input nz-input [(ngModel)]="submitData.templateName" /></span>
+    <span><label nz-checkbox [(ngModel)]="submitData.isDefault">设置为默认模板</label></span>
+  </div>
+  <div class="middle">
+    <div class="left">
+      <div class="title item">
+        <header>标题样式</header>
+        <div nz-row>
+          <div nz-col nzSpan="8">单据名称：</div>
+          <div nz-col nzSpan="15"><input nz-input [(ngModel)]="submitData.headMessage" /></div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8">字体大小：</div>
+          <div nz-col nzSpan="15">
+            <nz-select [(ngModel)]="submitData.headFontSize">
+              <nz-option *ngFor="let item of titleFontSizeList;" [nzLabel]="item" [nzValue]="item"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8"></div>
+          <div nz-col nzSpan="15"><label nz-checkbox [(ngModel)]="submitData.isHeadlineFontBold">字体加粗</label></div>
+        </div>
+      </div>
+      <div class="content item">
+        <header>内容排版</header>
+        <div nz-row>
+          <div nz-col nzSpan="8">字体大小</div>
+          <div nz-col nzSpan="15">
+            <nz-select [(ngModel)]="contentSetting.fontSize">
+              <nz-option *ngFor="let item of contentFontSizeList;" [nzLabel]="item" [nzValue]="item"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8"><span class="red-color">*</span>商品行高(mm)：</div>
+          <div nz-col nzSpan="15"> <nz-input-number [(ngModel)]="contentSetting.rowHigh" [nzMin]="0" [nzStep]="1"></nz-input-number></div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8"><span class="red-color">*</span>头尾行高(mm)：</div>
+          <div nz-col nzSpan="15"> <nz-input-number [nzPrecision]="0.1" [(ngModel)]="contentSetting.headAndFooterHigh" [nzMin]="0" [nzStep]="1"></nz-input-number></div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8"><span class="red-color">*</span>表头列数：</div>
+          <div nz-col nzSpan="15">
+            <nz-select [(ngModel)]="contentSetting.tableHeadColNum">
+              <nz-option *ngFor="let item of headAndEndColNum;" [nzLabel]="item" [nzValue]="item"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8"><span class="red-color">*</span>表尾列数：</div>
+          <div nz-col nzSpan="15">
+            <nz-select [(ngModel)]="contentSetting.tableEndColNum">
+              <nz-option *ngFor="let item of headAndEndColNum;" [nzLabel]="item" [nzValue]="item"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+      <div class="item" *ngFor="let item of tplTableConfig; trackBy:trackByItem;">
+        <header>
+          <span>{{item.name}}信息</span>
+          <div class="float-right" (click)="onColSetting(item)">{{item.name}}设置</div>
+        </header>
+        <div nz-row >
+          <div nz-col nzSpan="8" *ngFor="let cell of item.list;trackBy:trackByItem;">
+            <label nz-checkbox [(ngModel)]="cell.isChecked" *ngIf="item.diction[cell.keyName]">
+              <ng-container *ngIf="cell.alias;else aliasTpl;">{{cell.alias}}</ng-container>
+              <ng-template #aliasTpl>{{item.diction[cell.keyName].Name}}</ng-template>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="custom-table-end item">
+        <header>自定义表尾</header>
+        <textarea nz-input placeholder="请输入表尾" [ngModel]="submitData.bottomMessage|spaceChange" [maxlength]="150" (ngModelChange)= onCustomFooter($event)></textarea>
+      </div>
+    </div>
+    <div class="right">
+      <header>打印预览</header>
+      <div class="page-setting">
+        <div class="page-set-item">
+          <span>纸张设置</span>
+          <span>
+            <label>类型</label>
+            <nz-select style='width:100px;' [(ngModel)]="pageSetting.paperConfig">
+              <nz-option *ngFor="let item of paperConfigList;" [nzLabel]="item.name" [nzValue]="item"></nz-option>
+            </nz-select>
+          </span>
+          <span><label>宽({{pageSetting.paperConfig.unit}})：</label><nz-input-number [nzPrecision]="0.1"  [nzMin]="10" [nzDisabled]="pageSetting.paperConfig.readonly" [(ngModel)]="pageSetting.paperConfig.width"></nz-input-number></span>
+          <span><label>高({{pageSetting.paperConfig.unit}})：</label><nz-input-number [nzPrecision]="0.1"  [nzMin]="10" [nzDisabled]="pageSetting.paperConfig.readonly" [(ngModel)]="pageSetting.paperConfig.height"></nz-input-number></span>
+          <span>
+            <label>打印方向</label>
+            <nz-select style="width:100px" [(ngModel)]="pageSetting.printDir">
+              <nz-option *ngFor="let item of printDirList;trackBy:trackByItem;" [nzLabel]="item.label" [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </span>
+        </div>
+        <div class="page-set-item">
+          <span>边距({{pageSetting.paperMargin.unit}})</span>
+          <span><label>上边距：</label><nz-input-number [nzPrecision]="0.1" [nzMax]="290" [nzMin]="0" [(ngModel)]="pageSetting.paperMargin.top"></nz-input-number></span>
+          <span><label>下边距：</label><nz-input-number [nzPrecision]="0.1" [nzMax]="290" [nzMin]="0" [(ngModel)]="pageSetting.paperMargin.bottom"></nz-input-number></span>
+          <span><label>左边距：</label><nz-input-number [nzPrecision]="0.1" [nzMax]="210" [nzMin]="0" [(ngModel)]="pageSetting.paperMargin.left"></nz-input-number></span>
+          <span><label>右边距：</label><nz-input-number [nzPrecision]="0.1" [nzMax]="210" [nzMin]="0" [(ngModel)]="pageSetting.paperMargin.right"></nz-input-number></span>
+        </div>
+      </div>
+      <div class="order-view">
+        <app-print-order-tpl [data]="tplViewData" [preview]="true" [formatData]="tplViewFormatData"></app-print-order-tpl>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer fixed-footer-button-wrap">
+    <button nz-button nzType="primary" (click)="submitTpl()">保存</button>
+    <button nz-button nzType="primary" [nzGhost]="true" (click)="previewPrint()">预览</button>
+    <button nz-button nzType="primary" [nzGhost]="true" (click)="onCancel()">取消</button>
+  </div>
+</div>
+<nz-modal class="set-modal" nzWidth="650px" [(nzVisible)]="showSetting" [nzTitle]="selectedSetItem.name + '设置'" (nzOnCancel)="onSetModalCancel()" [nzOkText]="null" nzCancelText="关闭">
+  <div class="set-modal-wrap">
+  <nz-table [nzData]="selectedSetItem.list" [nzBordered]="true" [nzShowPagination]="false" [nzScroll]="{y:'395px'}">
+    <thead>
+      <tr>
+        <th [nzWidth]="'100px'">默认列名</th>
+        <th [nzWidth]="'120px'">自定义列名</th>
+        <ng-container *ngIf="selectedSetItem.type !== TableCellTypeEnum.Body">
+          <th [nzWidth]="'100px'">独行显示</th>
+          <th [nzWidth]="'150px'">操作</th>
+        </ng-container>
+
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let row of selectedSetItem.list;trackBy:trackByItem;let i= index;">
+        <tr *ngIf="selectedSetItem.diction[row.keyName]">
+          <td>{{selectedSetItem.diction[row.keyName].Name}}</td>
+          <td><input nz-input [(ngModel)]="row.alias"></td>
+          <ng-container *ngIf="selectedSetItem.type !== TableCellTypeEnum.Body">
+            <td><label nz-checkbox [(ngModel)]="row.isAloneRow"></label><span>独行显示</span></td>
+            <td>
+              <span class="operate-text" [ngStyle]="{color:i===0?'#ccc':''}" (click)="toTopOne(i)">上移</span>
+              <span class="operate-text" [ngStyle]="{color:i===selectedSetItem.list.length-1?'#ccc':''}" (click)="toBottomOne(i)">下移</span>
+              <span class="operate-text" *ngIf="row.isHeader" (click)="headerToFooter(i)">移至表尾</span>
+              <span class="operate-text" *ngIf="!row.isHeader" (click)="footerToHeader(i)">移至表头</span>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+  </nz-table>
+  </div>
+</nz-modal>

@@ -1,0 +1,57 @@
+$table-nav-bar-height: 30px;
+
+.table-nav-wrap {
+  height: $table-nav-bar-height;
+  position: relative;
+  margin-bottom: 10px;
+
+  .left {
+    float: left;
+  }
+
+  .right {
+    float: right;
+
+    .search-group {
+      width: 300px;
+      vertical-align: middle;
+    }
+
+    .refresh {
+      font-size: 20px;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ccc;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 3px;
+    }
+
+  }
+
+}
+.table-config{
+  height: 100%;
+  .config-item {
+    padding:5px 10px;
+  }
+  .config-sort {
+    .right {
+      float: right;
+    }
+  }
+  $footer-height:40px;
+  .tabset-wrap {
+    height: calc(100% - #{$footer-height});
+    overflow: auto;
+  }
+  .footer {
+    height: $footer-height;
+    line-height: $footer-height;
+    padding: 0 10px;
+    button {
+      margin-right: 20px;
+    }
+  }
+}

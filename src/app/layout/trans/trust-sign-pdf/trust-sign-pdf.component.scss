@@ -1,0 +1,37 @@
+$left-menu-width:200px;
+.wrap {
+  height: 100%;
+  .left-menu {
+    width: $left-menu-width;
+    float: left;
+    height: 100%;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+
+    .top-button-wrap {
+      text-align: center;
+      button:first-child {
+        margin-right: 20px;
+      }
+    }
+    .action-ul {
+      margin-top: 20px;
+      padding: 0 0 0 20px;
+      li {
+        list-style: none;
+        margin-bottom: 20px;
+      }
+    }
+  }
+  .right {
+    margin-left: $left-menu-width;
+    height: 100%;
+  }
+}
+
+.plugin-msg-wrap {
+  p {
+    font-size: 16px;
+  }
+}

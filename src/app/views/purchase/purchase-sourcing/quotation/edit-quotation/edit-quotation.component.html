@@ -1,0 +1,199 @@
+<app-ufast-form-detail [detailDataConfig]="enquiryDateConfig" [detailData]="enquiryDetail"></app-ufast-form-detail>
+<form nz-form [formGroup]="editQuotationForm" class="order-header-form edit-quotation-form">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="quotationValidDate" nzRequired>报价有效期</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-date-picker type="text" formControlName="quotationValidDate"></nz-date-picker>
+      <nz-form-explain
+        *ngIf="editQuotationForm.get('quotationValidDate').dirty && editQuotationForm.get('quotationValidDate').errors">
+        必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="isAgreeForward" nzRequired>提前接收报价</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <nz-select style="width: 100%;" formControlName="isAgreeForward">
+        <nz-option *ngFor="let data of ('yesOrNo' | mapList)" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+        <nz-form-explain
+          *ngIf="editQuotationForm.get('isAgreeForward').dirty && editQuotationForm.get('isAgreeForward').errors">
+          必填项，请输入
+        </nz-form-explain>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="contact" nzRequired>报价联系人</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="contact" [maxlength]="lengthLimit.default">
+      <nz-form-explain *ngIf="editQuotationForm.get('contact').dirty && editQuotationForm.get('contact').errors">
+        必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="contactTel" nzRequired>联系电话</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="contactTel" [maxlength]="lengthLimit.default">
+      <nz-form-explain *ngIf="editQuotationForm.get('contactTel').dirty && editQuotationForm.get('contactTel').errors">
+        请输入正确的电话
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="9" nzFor="currency" nzRequired>币种</nz-form-label>
+    <nz-form-control [nzSpan]="15">
+      <input nz-input type="text" formControlName="currency" [maxlength]="lengthLimit.default">
+      <nz-form-explain *ngIf="editQuotationForm.get('currency').dirty && editQuotationForm.get('currency').errors">
+        必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="full-form-item">
+    <nz-form-label [nzSpan]="3" nzFor="quotationExplain">报价说明</nz-form-label>
+    <nz-form-control [nzSpan]="21">
+      <textarea nz-input type="text" formControlName="quotationExplain" [maxlength]="lengthLimit.maxLength"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="split-bar">
+  <span>报价物料行</span>
+</div>
+<div class="detail-table-header">
+  <button nz-button nzType="info" (click)="onImport()">导入报价</button>
+  <a [href]="downTplUrl" download>下载模板</a>
+</div>
+<div class="detail-table-header edit-material">
+  <!-- <div> <button nz-button nzType="info">导入报价</button></div> -->
+  <div class="batch-wrap">
+    <label class="batch-label">批量修改交货日期</label>
+    <nz-date-picker [(ngModel)]="batchData.deliverDate" (ngModelChange)="batchModify('deliverDate')"
+                    appFixDatepickerBug></nz-date-picker>
+  </div>
+  <div class="batch-wrap">
+    <label>批量修改运输方式</label>
+    <nz-select [(ngModel)]="batchData.transportWay" (ngModelChange)="batchModify('transportWay')" nzPlaceHolder="运输方式">
+      <nz-option *ngFor="let data of transportList;trackBy:trackByItem;" [nzValue]="data.name"
+                 [nzLabel]="data.name"></nz-option>
+    </nz-select>
+  </div>
+  <div class="batch-wrap">
+    <label>批量修改税码</label>
+    <nz-select [(ngModel)]="batchData.tax" nzPlaceHolder="税码" [nzDropdownMatchSelectWidth]="false"
+               (ngModelChange)="batchModify('tax')">
+      <nz-option *ngFor="let data of rateList;trackBy:trackByItem;" [nzValue]="data.taxRateCode"
+                 [nzLabel]="data.taxRateCode"></nz-option>
+    </nz-select>
+  </div>
+</div>
+
+<form [formGroup]="materialTableForm" nz-form class="quota-material-form">
+  <nz-table #materialTable nzSize="small" [nzScroll]="{x:'3000px'}" [nzBordered]="true"
+            [nzData]="materialTableForm.get('materialArr')['controls']" [nzShowPagination]="true"
+            [nzPageSizeOptions]="materialTableConfig.pageSizeOptions" [nzFrontPagination]="true"
+            [(nzPageIndex)]="materialTableConfig.pageNum" [(nzPageSize)]="materialTableConfig.pageSize"
+            [nzShowSizeChanger]="true">
+    <thead>
+    <tr>
+      <th nzWidth="100px">操作</th>
+      <th nzWidth="80px">行号</th>
+      <th nzWidth="100px" nzLeft="0px">物料编码</th>
+      <th nzWidth="140px" nzLeft="90px">物料名称</th>
+      <th nzWidth="100px">零件号/图号</th>
+      <th nzWidth="100px">材质</th>
+      <th nzWidth="100px">规格型号</th>
+      <th nzWidth="100px">品牌</th>
+      <th nzWidth="140px">进口/国产</th>
+      <th nzWidth="140px">技术参数</th>
+      <th nzWidth="140px">供应商规格型号</th>
+      <th nzWidth="140px">供应商技术参数</th>
+      <th nzWidth="100px">单位</th>
+      <th nzWidth="100px">数量</th>
+      <th nzWidth="100px">需求日期</th>
+      <th nzWidth="150px"><span class="red-color">*</span>交货日期</th>
+      <th nzWidth="140px"><span class="red-color">*</span>运输方式</th>
+      <th nzWidth="140px"><span class="red-color">*</span>品牌/厂家</th>
+      <th nzWidth="140px">报价备注</th>
+      <th nzWidth="100px">使用单位</th>
+      <th nzWidth="140px">备注</th>
+      <th nzWidth="100px"><span class="red-color">*</span>可供数量</th>
+      <th nzWidth="100px"><span class="red-color">*</span>含税单价</th>
+      <th nzWidth="160px"><span class="red-color">*</span>税码</th>
+      <th nzWidth="100px">报价总价</th>
+      <th nzWidth="80px">附件</th>
+    </tr>
+    </thead>
+    <tbody formArrayName="materialArr">
+    <tr *ngFor="let item of materialTable.data;let i=index;"
+        [formGroupName]="materialTableConfig.pageSize * (materialTableConfig.pageNum - 1) + i">
+      <td>
+        <span *ngIf="!item.controls['disabled'].value" class="operate-text" (click)="abandonQuota(item)">放弃报价</span>
+        <span *ngIf="item.controls['disabled'].value" class="operate-text" (click)="cancelAbandon(item)">取消放弃</span>
+      </td>
+      <td>{{item.controls['lineNo'].value}}</td>
+      <td nzLeft="0px">{{item.controls['materialCode'].value}}</td>
+      <td nzLeft="90px">{{item.controls['materialName'].value}}</td>
+      <td>{{item.controls['drawingNumber'].value}}</td>
+      <td>{{item.controls['materialTexture'].value}}</td>
+      <td>{{item.controls['materialModel'].value}}</td>
+      <td>{{item.controls['brand'].value}}</td>
+      <td>{{item.controls['materialFrom'].value}}</td>
+      <td>{{item.controls['technicalParameters'].value}}</td>
+      <td><input nz-input formControlName="supplierModel" [maxlength]="lengthLimit.default"/></td>
+      <td><input nz-input formControlName="supplierTechParam" [maxlength]="lengthLimit.default"/></td>
+      <td>{{item.controls['unit'].value}}</td>
+      <td>{{item.controls['purchaseQuantity'].value}}</td>
+      <td>{{item.controls['demandDate'].value | date: 'yyyy-MM-dd'}}</td>
+      <td>
+        <nz-date-picker formControlName="deliverDate"></nz-date-picker>
+      </td>
+      <td>
+        <nz-select style="width: 100%;" formControlName="transportWay">
+          <nz-option *ngFor="let data of transportList;trackBy:trackByItem;" [nzValue]="data.name"
+                     [nzLabel]="data.name"></nz-option>
+        </nz-select>
+      </td>
+      <td><input nz-input formControlName="supplierBrand" [maxlength]="lengthLimit.default"/></td>
+      <td><input nz-input formControlName="quotationRemark" [maxlength]="lengthLimit.default"/></td>
+      <td>{{item.controls['useOrgName'].value}}</td>
+      <td>{{item.controls['remark'].value}}</td>
+      <td>
+        <nz-input-number formControlName="availableQuantity" [nzMin]="lengthLimit.materialNumMin" [nzMax]="lengthLimit.max"
+                         [nzPrecision]="lengthLimit.precision"
+                         (ngModelChange)="handleQuantityChange($event, item)" [nzStep]="lengthLimit.materialNumMin"></nz-input-number>
+      </td>
+      <td>
+        <nz-input-number nz-input formControlName="supplierUnitPrice" [nzMin]="lengthLimit.moneyMin" [nzMax]="lengthLimit.moneyMax"
+                         [nzPrecision]="lengthLimit.moneyPrecision" [nzStep]="lengthLimit.moneyMin"
+                         (ngModelChange)="handlePriceChange($event, item)"></nz-input-number>
+      </td>
+      <td>
+        <nz-select style="width: 100%;" formControlName="tax" nzPlaceHolder="税码" [nzDropdownMatchSelectWidth]="false">
+          <nz-option *ngFor="let data of rateList;" [nzValue]="data.taxRateCode"
+                     [nzLabel]="data.taxRateCode"></nz-option>
+        </nz-select>
+      </td>
+      <td>{{item.controls['totalAmount'].value}}</td>
+      <td>下载</td>
+    </tr>
+    </tbody>
+  </nz-table>
+</form>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="saveForm()" [disabled]="!actionStatus.save">保存</button>
+  <button nz-button nzType="primary" (click)="submitForm()" [disabled]="!actionStatus.submit">提交</button>
+  <button nz-button nzType="primary" (click)="cancelQuota()" [disabled]="!actionStatus.cancel">放弃</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(true)">取消</button>
+</div>
+<ng-template #uploadModalErrMsgTpl>
+  <nz-form-item *ngIf="importErrMsgList.length > 0">
+    <nz-form-label nzSpan="6">错误信息</nz-form-label>
+    <nz-form-control>
+      <nz-form-text class="upload-error-msg">
+      <div *ngFor="let item of importErrMsgList;">第{{item.importErrorRow}}行:{{item.importRemark}}</div>
+      </nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</ng-template>

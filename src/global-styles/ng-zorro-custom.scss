@@ -1,0 +1,192 @@
+@import "./variable";
+
+.ant-tabs-bar {
+  margin-bottom: 0;
+}
+
+.ant-tabs-bar, .ant-table table {
+  background: $light-bg;
+}
+
+.tabset-wrap {
+  .ant-tabs-tabpane::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  .ant-tabs-tabpane::-webkit-scrollbar-thumb {
+    background: #b0b0b0;
+    border-radius: 4px;
+  }
+}
+
+.ant-tabs-content {
+  height: calc(100% - 40px);
+}
+
+.ant-tabs-tabpane {
+  height: 100%;
+  background: $light-bg;
+  overflow-y: auto;
+  padding: $length-10;
+}
+
+nz-tabset {
+  height: 100%;
+}
+/**
+  修改tabset overflow使每个tab页能滚动
+**/
+.ant-tabs {
+  overflow: visible;
+}
+
+table {
+  padding: 0 !important;
+}
+
+.ant-table-row th {
+  background: #EDEDEB !important;
+}
+
+.ant-divider-horizontal {
+  margin: 0;
+}
+// 覆盖按钮样式
+.ant-btn-info {
+  color: #009fe0;
+  border-color: #009fe0;
+}
+
+.ant-btn-info:hover,
+.ant-btn-info:focus {
+  color: #40a9ff;
+  background-color: #fff;
+  border-color: #40a9ff;
+}
+
+.ant-btn-info:active,
+.ant-btn-info.active {
+  color: #096dd9;
+  background-color: #fff;
+  border-color: #096dd9;
+}
+
+/** nz 材设新增**/
+.ant-btn-primary {
+  background: #009FE0;
+  border-color: #009FE0;
+}
+
+.ant-form-item {
+  font-size: 12px;
+}
+
+// .ant-table-bordered .ant-table-tbody > tr > td{
+//   text-align: center;
+// }
+// .ant-table-small > .ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th{
+//   text-align: center;
+// }
+
+.ant-upload {
+  font-size: 22px;
+}
+
+.indexPicture {
+  .ant-upload.ant-upload-select-picture-card,
+  .ant-upload-list-picture-card .ant-upload-list-item,
+  .ant-upload-list-item.ant-upload-list-item-done,
+  .ant-upload-list-item.ant-upload-list-item-uploading,
+  .ant-upload-list-item.ant-upload-list-item-removed,
+  .ant-upload-list-item.ant-upload-list-item-error {
+    height: 200px;
+    width: 200px;
+    margin: 30px 0 0 50px;
+  }
+}
+
+.vendor-edit {
+  .ant-form-item {
+    margin-bottom: 0;
+  }
+  .ant-form-explain {
+    margin-top: 8px;
+  }
+
+  .ant-calendar-picker {
+    width: 100%;
+  }
+}
+
+.ant-calendar-picker {
+  width: 100%;
+}
+
+.ant-tabs-tabpane {
+  background: #FFF;
+}
+
+.table-nav-wrap {
+
+  .ant-input-affix-wrapper .ant-input-prefix {
+    left: 6px;
+  }
+  .ant-input {
+    padding-right: 65px !important;
+  }
+  .ant-input,
+  .ant-btn {
+    height: 30px;
+    font-size: 12px;
+  }
+  .ant-btn-group {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+nz-table {
+  tr{
+    color: $basic-font-color;
+    th.ant-table-selection-column[nzshowcheckbox],td.ant-table-selection-column[nzshowcheckbox] {
+      min-width:20px;
+      max-width:30px;
+      width:30px;
+    }
+  }
+
+}
+nz-message-container {
+  .ant-message {
+    top: 30px;
+    font-size:16px;
+    .ant-message-notice-content{
+
+      padding:0;
+      .ant-message-custom-content {
+        padding: 10px 16px;
+        border-radius: 4px;
+      }
+      .ant-message-error {
+        background:#FFF1F0;
+        border:1px solid #FFA39E;
+      }
+      .ant-message-success {
+        background:#f6ffed;
+        border: 1px solid #B7EB8F;
+      }
+      .ant-message-info {
+        background:#E6F7FF;
+        border: 1px solid #91D5FF ;
+      }
+      .ant-message-warning {
+        background:#FFfbe6;
+        border: 1px solid #FFE58F;
+      }
+    }
+  }
+}
+.ant-input-disabled, .ant-select-disabled, .ant-cascader-picker-disabled, .ant-btn[disabled] {
+  color:rgba(0,0,0,0.6);
+}

@@ -1,0 +1,96 @@
+<ng-container *ngIf="selectedPage === tabPageType.detailPage">
+<app-purchase-steps [mainStep]="purchaseSteps.mainStep" [subStep]="purchaseSteps.subStep"></app-purchase-steps>
+<div class="detail-header-info">
+  <nz-form-item *ngFor="let item of detailDataConfig; trackBy: trackByItem" [ngClass]="{'full-form-item': item.isFullSpan}">
+    <nz-form-label [nzSpan]="item.isFullSpan ? 3 : 9">{{item.name}}</nz-form-label>
+    <nz-form-control [nzSpan]="item.isFullSpan ? 21 : 15">
+      <nz-form-text *ngIf="item.pipe" [ngClass]="item.classList" (click)="onItemClick(item.click)">{{confirmationDetail[item.field] | map: item.pipe}}</nz-form-text>
+      <nz-form-text *ngIf="!item.pipe && !item.isDownload" [ngClass]="item.classList" (click)="onItemClick(item.click)">{{confirmationDetail[item.field]}}</nz-form-text>
+      <nz-form-text *ngIf="item.isDownload">
+        <ng-container *ngIf="confirmationDetail.attachmentUrl">
+          <span class="operate-text"><a [href]="downloadUrl + confirmationDetail.attachmentUrl" download>下载</a></span>
+        </ng-container>
+        <ng-container *ngIf="!confirmationDetail.attachmentUrl">下载</ng-container>
+      </nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div>
+  <div class="split-bar">
+    <span>详情行</span>
+  </div>
+  <nz-tabset [(nzSelectedIndex)]="tabIndex" [nzType]="'card'">
+    <nz-tab nzTitle="物料行">
+      <!--<app-ufast-table [dataList]="materialLineList" [tableConfig]="materialTableConfig"></app-ufast-table>-->
+      <nz-table #materialRow [nzData]="materialLineList" [nzBordered]="true" nzSize="small" [nzLoading]="materialTableConfig.loading" [(nzPageIndex)]="materialTableConfig.pageNum" [(nzPageSize)]="materialTableConfig.pageSize"
+                [nzFrontPagination]="true"  [nzPageSizeOptions]="materialTableConfig.pageSizeOptions" [nzScroll]="{x: materialTableXScroll+'px'}">
+        <thead>
+        <tr>
+          <th rowspan="2" *ngFor="let item of materialTableConfig.headers;trackBy:trackByItem" [nzWidth]="item.width + 'px'">{{item.title}}</th>
+          <ng-container *ngIf="materialLineList.length > 0">
+            <th colspan="2" *ngFor="let supplier of materialLineList[0].priceRecordVOS;trackBy:trackByItem;">{{supplier.supplierName}}</th>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngIf="materialLineList.length > 0">
+            <ng-container *ngFor="let supplier of materialLineList[0].priceRecordVOS ;trackBy:trackByItem;">
+              <th nzWidth="100px">报价数量</th>
+              <th nzWidth="100px">单价(元)</th>
+            </ng-container>
+          </ng-container>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of materialRow.data;trackBy:trackByItem;">
+          <ng-container *ngFor="let header of materialTableConfig.headers;trackByItem">
+            <td *ngIf="header.pipe">{{row[header.field]|map:header.pipe}}</td>
+            <td *ngIf="!header.pipe">{{row[header.field]}}</td>
+          </ng-container>
+          <ng-container  *ngFor="let supplierNum of row.priceRecordVOS;trackBy:trackByItem;">
+            <td>{{supplierNum.supplierCount ? supplierNum.supplierCount : ''}}</td>
+            <td>{{supplierNum.supplierPrice ? supplierNum.supplierPrice : ''}}</td>
+          </ng-container>
+        </tr>
+        </tbody>
+      </nz-table>
+    </nz-tab>
+    <nz-tab nzTitle="合同维护/预览" (nzSelect)="getContractInfo()">
+      <app-ufast-table [dataList]="contractList" [tableConfig]="contractTableConfig"></app-ufast-table>
+    </nz-tab>
+  </nz-tabset>
+</div>
+<div class="table-footer-bar">
+  <ng-container *ngIf="isAuditPage">
+      <button nz-button nzType="primary" *appAuthBtu="ActionCode.confirmationAudit" (click)="agreeAudit()">审核通过</button>
+      <button nz-button nzType="primary" *appAuthBtu="ActionCode.confirmationAudit" (click)="refuseAudit()">审核拒绝</button>
+  </ng-container>
+  <ng-container *ngIf="showAuditFlowBtu">
+    <button nz-button nzType="primary" *appAuthBtu="ActionCode.confirmationAudit" (click)="auditAgreeFlow()">审核通过</button>
+    <button nz-button nzType="primary" *appAuthBtu="ActionCode.confirmationAudit" (click)="auditRejectFlow()">审核拒绝</button>
+  </ng-container>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">返回</button>
+</div>
+<nz-modal nzTitle="审批意见" nzWidth="500px" [(nzVisible)]="auditModalShow" (nzOnCancel)="cancelAuditModal()" (nzOnOk)="confirmAuditModal()">
+    <nz-form-item>
+      <nz-form-label nzSpan="4">审批意见</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <textarea nz-input placeholder="请输入审批意见" [(ngModel)]="auditSubmitData.comments"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </nz-modal>
+</ng-container>
+<ng-container *ngIf="selectedPage === tabPageType.contractDetailPage">
+  <app-detail-contract [contractId]="currContractId" (backToMainPage)="onContractEmit($event)"></app-detail-contract>
+</ng-container>
+
+<ng-template #contractViewTpl let-contractId="id">
+  <app-action-group>
+    <app-action (clickAction)="viewContract(contractId)">预览</app-action>
+  </app-action-group>
+</ng-template>
+<app-purchase-audit-process [processId]="confirmationDetail.processId" [(show)]="isShowAuditProcess"></app-purchase-audit-process>
+<nz-modal [(nzVisible)]="isShowRefuseModal" nzTitle="The first Modal" (nzOnCancel)="isShowRefuseModal = false" (nzOnOk)="refuseAudit()">
+  <p>请输入拒绝原因：</p>
+  <input type="text" nz-input [(ngModel)]="refuseReason">
+</nz-modal>
+

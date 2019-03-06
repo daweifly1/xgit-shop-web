@@ -1,0 +1,113 @@
+<app-tab-route tabTitle="审批表列表">
+  <ng-container *ngIf="currentPage === PageTypeEnum.ManagePage">
+    <app-ufast-table-nav [tableConfig]="tableConfig" searchPlaceholder="审批表编号" [(searchText)]="filterData.approveNo" (refresh)="getDataList()" (search)="getDataList()" (advancedSearch)="onAdvancedSearch()"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix advanceSearch-form" *ngIf="showAdvancedSearch">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">审批表编号</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filterData.approveNo">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">状态</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filterData.status">
+            <nz-option *ngFor="let item of ('purchaseApprovalStatus'|mapList)" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">采购方式</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filterData.purchaseMethod">
+            <nz-option *ngFor="let item of ('purchaseWay'|mapList)" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <!--<nz-form-item>-->
+        <!--<nz-form-label nzSpan="10">物料类型</nz-form-label>-->
+        <!--<nz-form-control nzSpan="14">-->
+          <!--<nz-select style="width:100%;" nzAllowClear [(ngModel)]="filterData.materialType">-->
+            <!--<nz-option *ngFor="let item of ('materialType2'|mapList)" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>-->
+          <!--</nz-select>-->
+        <!--</nz-form-control>-->
+      <!--</nz-form-item>-->
+      <nz-form-item>
+        <nz-form-label nzSpan="10">创建日期-开始</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-date-picker [(ngModel)]="filterData.startDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">创建日期-结束</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-date-picker [(ngModel)]="filterData.endDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="resetSearch()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [getListHandle]="getDataList" [dataList]="dataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-id="id" let-approveNo="approveNo" let-returnStatus="returnStatus" let-purchaseWay="purchaseMethod" let-changeMethodStatus="changeMethodStatus">
+    <app-action-group >
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="goChildPage(id, PageTypeEnum.EditPage)" *appAuthBtu="ActionCode.approvalFormEdit">编辑</app-action>
+      <app-action [enabled]="actionStatus[id].approval" (clickAction)="goChildPage(id, PageTypeEnum.DetailPage, changeMethodStatus, returnStatus)" *appAuthBtu="ActionCode.approvalFormAudit">审批</app-action>
+      <app-action [enabled]="actionStatus[id].askPrice" (clickAction)="goAskPrice(id)" *appAuthBtu="ActionCode.approvalFormAskPrice">询价</app-action>
+      <app-action [enabled]="actionStatus[id].dealPrice" (clickAction)="goChildPage(id, PageTypeEnum.DealPricePage)" *appAuthBtu="ActionCode.approvalFormDealPrice">价格处理</app-action>
+      <!--<app-action [enabled]="actionStatus[id].viewPrice" *appAuthBtu="ActionCode.approvalFormViewPrice">查看报价</app-action>-->
+      <app-action [enabled]="actionStatus[id].viewPrice" (clickAction)="createPrice(id)" *appAuthBtu="ActionCode.approvalFormCreatePrice">生成报价</app-action>
+
+      <app-action [enabled]="actionStatus[id].cancellation" (clickAction)="onCancellation(id)" *appAuthBtu="ActionCode.approvalFormCancellation">作废</app-action>
+      <app-action [enabled]="actionStatus[id].approveApplyReturn" (clickAction)="approveApplyReturn(id)" *appAuthBtu="ActionCode.approveApplyReturn">申请退回</app-action>
+      <app-action [enabled]="actionStatus[id].switchPurchaseWay" (clickAction)="onSwitchPurchaseWay(id, purchaseWay)" *appAuthBtu="ActionCode.approvalFormSwitchPurchaseWay">转换采购方式</app-action>
+      <app-action [enabled]="actionStatus[id].createPlan" (clickAction)="addNegotiationPlan(approveNo, id)" *appAuthBtu="ActionCode.negotiationPlanAdd">建谈判预案</app-action>
+      <!-- <app-action [enabled]="actionStatus[id].createSummary" (clickAction)="addNegotiationMinutes(approveNo, id)" *appAuthBtu="ActionCode.negotiationMinutesAdd">建谈判纪要</app-action> -->
+
+    </app-action-group>
+  </ng-template>
+  <ng-template #approvalNoTpl let-approveNo="approveNo" let-id="id" let-changeMethodStatus="changeMethodStatus">
+    <span class="operate-text" (click)="goChildPage(id, PageTypeEnum.DetailPage, changeMethodStatus)">{{approveNo}}</span>
+  </ng-template>
+
+  <ng-container *ngIf="currentPage === PageTypeEnum.DetailPage">
+    <app-approval-form-detail [operationTpl]="DetailOpTpl" [auditFlowData]="auditFlowData" [formId]="selectedId" (finish)="exitChildPage()"></app-approval-form-detail>
+  </ng-container>
+  <ng-template #DetailOpTpl let-orderInfo="orderInfo" let-finishHandle="finishHandle" let-approveNo="approveNo">
+    <button nz-button nzType="primary" [disabled]="!actionStatus[selectedId].approval" (click)="approvalPass(finishHandle)" *appAuthBtu="ActionCode.approvalFormAudit">审核通过</button>
+    <button nz-button nzType="primary" [disabled]="!actionStatus[selectedId].approval" (click)="approvalReject(finishHandle)" *appAuthBtu="ActionCode.approvalFormAudit">审核拒绝</button>
+    <button nz-button nzType="primary" [disabled]="!actionStatus[selectedId].switchPurchaseWay" (click)="onSwitchPurchaseWay(selectedId, orderInfo.purchaseWay)" *appAuthBtu="ActionCode.approvalFormSwitchPurchaseWay">转换采购方式</button>
+    <button nz-button nzType="primary" [disabled]="!actionStatus[selectedId].createPlan"  *appAuthBtu="ActionCode.negotiationPlanAdd" (click)="addNegotiationPlan(orderInfo.approveNo)">建谈判预案</button>
+  </ng-template>
+  <ng-container *ngIf="currentPage === PageTypeEnum.EditPage">
+    <app-new-approval-form (finish)="exitChildPage()" [formId]="selectedId" [isNew]="false"></app-new-approval-form>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.DealPricePage">
+    <app-deal-price [formId]="selectedId" (finish)="exitChildPage()"></app-deal-price>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.InquiryPricePage">
+    <app-new-ask-price [approvalId]="selectedId" (finish)="exitChildPage()" [isNew]="true"></app-new-ask-price>
+  </ng-container>
+</app-tab-route>
+<nz-modal nzTitle="转换采购方式" [(nzVisible)]="switchWayModalShow" (nzOnOk)="onOkSwitchWay()" nzWidth="500px" (nzOnCancel)="cancelSwitchWay()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>采购方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select [(ngModel)]="selectedPurchaseWay" style="width:100%;" nzPlaceHolder="请选择采购方式">
+        <nz-option *ngFor="let value of purchaseWayList;trackBy:trackByItem;" [nzValue]="value" nzLabel="{{value|map:'purchaseWay'}}"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+</nz-modal>
+<nz-modal nzTitle="申请退回" [(nzVisible)]="switchApplyReturnShow" (nzOnOk)="onOkSwitchApplyReturn()" nzWidth="500px" (nzOnCancel)="cancelSwitchApplyReturn()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>理由</nz-form-label>
+    <nz-form-control nzSpan="20">
+      <textarea nz-input type="text" [(ngModel)]="reason"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+</nz-modal>
+

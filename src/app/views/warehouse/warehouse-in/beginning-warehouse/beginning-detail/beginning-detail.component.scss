@@ -1,0 +1,15 @@
+
+.head-bar {
+  color: #333;
+  font-size: 14px;
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+
+  &>span:first-child {
+    border-left: 5px solid #f60;
+    padding-left: 5px;
+  }
+}
+.marginTop {
+    margin-top: 20px;
+}

@@ -1,0 +1,77 @@
+<app-tab-route tabTitle="物料分类">
+  <ng-container *ngIf="selectedPage === 0">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" (search)="getDataList()" [tableConfig]="tableConfig"
+      [searchPlaceholder]="searchPlaceholder" (advancedSearch)="fullSearch()" [(searchText)]="filters.materialCalssName"
+      (refresh)="reset()">
+    </app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="toAddPage('0',null)" *appAuthBtu="ActionCode.materialClassAdd">新增</button>
+      <button nz-button nzType="info" [nzGhost]="true" (click)="startBatch()" *appAuthBtu="ActionCode.materialClassEnable">启用</button>
+      <button nz-button nzType="info" [nzGhost]="true" (click)="batchDel()" *appAuthBtu="ActionCode.materialClassEnable">禁用</button>
+      <button nz-button nzType="info" [nzGhost]="true" (click)="backUpperLeavel()" *ngIf="cacheFilters.length>0">返回上级</button>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">分类名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.materialCalssName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料类别</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <!-- <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="filters.materialType">
+              <nz-option nzValue="" nzLabel="请选择"></nz-option>
+              <nz-option nzValue="0" nzLabel="材料"></nz-option>
+              <nz-option nzValue="1" nzLabel="设备/备件"></nz-option>
+            </nz-select> -->
+            <nz-select class="selectStyle" [(ngModel)]="filters.materialType"  nzAllowClear>
+                <nz-option *ngFor="let item of ('materialTemplateType' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+                  [nzValue]="item.value">
+                </nz-option>
+              </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearch()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="dataList" (selectedChange)="changeSelect($event)"
+      [getListHandle]="getDataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operation let-id="id" let-isDel="isDel" let-childCount="childCount" let-level="level" let-materialType="materialType"
+    let-materialCalssName="materialCalssName">
+    <app-action-group>
+      <app-action [enabled]="buttonState[id].edit" (clickAction)="update(id)" *appAuthBtu="ActionCode.materialClassEdit">编辑</app-action>
+      <app-action [enabled]="buttonState[id].add" (clickAction)="addChildClass(id, materialType, materialCalssName, level)"
+        *appAuthBtu="ActionCode.materialClassAdd">添加下级</app-action>
+      <app-action [enabled]="buttonState[id].view" (clickAction)="viewChildren(id,level)">查看下级</app-action>
+      <app-action [enabled]="buttonState[id].start" (clickAction)="startItem(id)" *appAuthBtu="ActionCode.materialClassEnable">启用</app-action>
+      <app-action [enabled]="buttonState[id].forbidden" (clickAction)="forbiddenItem(id)" *appAuthBtu="ActionCode.materialClassEnable">禁用</app-action>
+    </app-action-group>
+
+    <!-- <span [appEnable]="buttonState[id].edit" (click)="update(id)" *appAuthBtu="ActionCode.materialClassEdit">修改</span>
+    <span [appEnable]="buttonState[id].add" (click)="addChildClass(id, materialType, materialCalssName)" *appAuthBtu="ActionCode.materialClassAdd">添加下级</span>
+    <span [appEnable]="buttonState[id].view" (click)="viewChildren(id,level)" *appAuthBtu="ActionCode.materialClassView">查看下级</span>
+    <nz-popover nzPlacement="right">
+      <span class="operate-text" nz-popover>.&nbsp;.&nbsp;.</span>
+      <ng-template #nzTemplate>
+        <span [appEnable]="buttonState[id].del" (click)="delItem(id)" *appAuthBtu="ActionCode.materialClassDel">删除</span>
+      </ng-template>
+    </nz-popover> -->
+  </ng-template>
+  <ng-container *ngIf="selectedPage === 1">
+    <app-material-class-add [pId]="pId" [dataItem]="dataItem" (backToListPage)="backToList()" [materialType]="materialType"
+      [categoryParent]="categoryParent" [level]="level"></app-material-class-add>
+  </ng-container>
+
+</app-tab-route>

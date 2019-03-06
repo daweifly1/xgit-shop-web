@@ -1,0 +1,30 @@
+<div class="purchase-steps">
+  <div *ngFor="let data of allPurchaseSteps; let i = index" class="steps" [ngClass]="{'step-width-6': true,'step-active': i<=activeStep.mainStepIndex}">
+    <div class="step-item" (click)="showSubSteps(i, $event)" cdkOverlayOrigin>{{data.name}}</div>
+    <div class="step-line" *ngIf="i !== allPurchaseSteps.length - 1" [ngClass]="{'line-width-6': true}"></div>
+  </div>
+</div>
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="isShowSubSteps" [cdkConnectedOverlayOrigin]="cdkOverlayOrigin"
+             [cdkConnectedOverlayHasBackdrop]="true" (backdropClick)="onSubStepClickBack()"
+             [cdkConnectedOverlayOffsetX]='subStepsOffset.x' [cdkConnectedOverlayOffsetY]="subStepsOffset.y">
+  <div class="sub-step">
+    <ng-container *ngIf="this.currIndex === activeStep.mainStepIndex">
+      <div *ngFor="let data of allPurchaseSteps[this.currIndex].subSteps; let i = index" class="steps" [ngClass]="{'step-active': i<=activeStep.subStepIndex}">
+        <div class="step-item">{{data.name}}</div>
+        <div class="step-line" *ngIf="i !== allPurchaseSteps[this.currIndex].subSteps.length - 1"></div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="this.currIndex < activeStep.mainStepIndex">
+      <div *ngFor="let data of allPurchaseSteps[this.currIndex].subSteps; let i = index" class="steps" [ngClass]="['step-active']">
+        <div class="step-item">{{data.name}}</div>
+        <div class="step-line" *ngIf="i !== allPurchaseSteps[this.currIndex].subSteps.length - 1"></div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="this.currIndex > activeStep.mainStepIndex">
+      <div *ngFor="let data of allPurchaseSteps[this.currIndex].subSteps; let i = index" class="steps">
+        <div class="step-item">{{data.name}}</div>
+        <div class="step-line" *ngIf="i !== allPurchaseSteps[this.currIndex].subSteps.length - 1"></div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

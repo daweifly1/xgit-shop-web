@@ -1,0 +1,106 @@
+<div class="detail-header-info">
+  <nz-form-item>
+    <nz-form-label nzSpan="10">盘点单号</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.checkOrderNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="10">盘点类型</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div *ngIf="InventoryDetail.checkType === 0">根据仓库</div>
+      <div *ngIf="InventoryDetail.checkType === 1">根据保管员</div>
+      <div *ngIf="InventoryDetail.checkType === 2">根据库区</div>
+      <div *ngIf="InventoryDetail.checkType === 3">根据物料</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="10">仓库</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.warehouseCode}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="InventoryDetail.checkType === 2">
+    <nz-form-label nzSpan="10">库区</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.locationCodesStr}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="InventoryDetail.checkType === 1">
+    <nz-form-label nzSpan="10">保管员</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.keeperName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="10">盘点描述</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.checkOrderDes}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="10">盘点状态</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div *ngIf="InventoryDetail.status === 0">未盘点</div>
+      <div *ngIf="InventoryDetail.status === 1">盘点启动</div>
+      <div *ngIf="InventoryDetail.status === 2">盘点结束</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="10">计划盘点日期</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.plannedDate | date:'yyyy-MM-dd'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="10">创建人</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.createName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="10">制单时间</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.createDate | date:'yyyy-MM-dd HH:mm'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="10">启动人</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <div>{{InventoryDetail.startName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+<div class="detail-table-header" *ngIf="!detailPage">
+  <button nz-button nzType="info"  appDownload [downloadUrl]="importUrl" fileName="takeStock.xls" reqMethod="post" [reqParam]="importParam">导出</button>
+  <button nz-button nzType="info" (click)="importMaterial()">导入</button>
+</div>
+<!-- <app-ufast-table [tableConfig]="tableConfig" [dataList]="materialDataList" [getListHandle]="getMaterialList"></app-ufast-table> -->
+<app-ufast-table [tableConfig]="tableConfig" [dataList]="materialDataList"></app-ufast-table>
+
+<ng-template #actAmountTpl let-ctx="_this">
+  <nz-input-number [nzPrecision]="materialNumDec" [nzMin]="0" [nzMax]="materialNumMax" [nzStep]="materialNumMin" [(ngModel)]="ctx.actAmount"></nz-input-number>
+</ng-template>
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" class="submit-button"  *ngIf="!detailPage" (click)="inventory()">盘点
+  </button>
+  <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">返回
+  </button>
+</div>
+<ng-template #uploadModalErrMsgTpl>
+  <nz-form-item *ngIf="importErrMsgList.length > 0">
+    <nz-form-label nzSpan="6">错误信息</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-form-text class="upload-error-msg">
+        <div *ngFor="let item of importErrMsgList;">第{{item.excelRow}}行:{{item.excelErrMsg}}</div>
+        <div *ngFor="let item of importErrMsgList;">第{{item.excelRow}}行:{{item.excelErrMsg}}</div>
+      </nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</ng-template>

@@ -1,0 +1,195 @@
+<app-tab-route tabTitle="资讯管理">
+  <ng-container *ngIf="tabPageType === 0">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" [searchPlaceholder]="searchPlaceholder" (search)="getNewsList()" [(searchText)]="filters.title"
+      (refresh)="refresh()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addOrEditNewsTab(1)" *appAuthBtu="ActionCode.infoAdd">新增</button>
+      <button nz-button nzType="info" (click)="deleteNews()" *appAuthBtu="ActionCode.infoDel">删除</button>
+      <nz-select nzPlaceHolder="请选择文章类型" [(ngModel)]="typeId" (ngModelChange)="getNewsTypeChange($event)" class="selectStyle">
+        <nz-option *ngFor="let type of newsTypeDataList;trackBy:trackByNewsId;" [nzValue]="type.id" [nzLabel]="type.typeName"></nz-option>
+      </nz-select>
+    </ng-template>
+
+    <div class="table-wrap">
+      <nz-table nzSize="small" [nzData]="newsDataList" #newsTable [nzTotal]="newsTableConfig.total"
+                [(nzPageIndex)]="newsTableConfig.pageNum" nzShowSizeChanger (nzPageSizeChange)="getNewsListPageSize($event)"
+        [nzBordered]="true" [(nzPageSize)]="newsTableConfig.pageSize" [nzFrontPagination]="false" [nzShowQuickJumper]="true"
+        [nzLoading]="newsTableConfig.loading" (nzPageIndexChange)="getNewsList($event)" class="user-table">
+        <thead>
+          <tr>
+            <th [ngStyle]="{'width':'40px'}" nzShowCheckbox [(nzChecked)]="newsTableConfig.allChecked" (nzCheckedChange)="checkNewsTableAll($event)"></th>
+            <th *ngFor="let headItem of newsTableConfig.header;trackBy:trackByTableHeader" [ngStyle]="{'width':headItem.width}">
+              <span>{{headItem.name}}</span>
+            </th>
+            <th [ngStyle]="{'width':'220px'}">
+              <span>操作</span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of newsTable.data;trackBy:trackByNewsId;let rowIndex = index;">
+            <td [ngStyle]="{'width':'40px'}" nzShowCheckbox [(nzChecked)]="row.checked" (nzCheckedChange)="checkNewsTableSingle($event,row)"></td>
+            <td *ngFor="let rowFieldName of newsTableConfig.header;" [ngStyle]="{'width':rowFieldName.width}">
+              <ng-container [ngSwitch]="rowFieldName.field">
+                <ng-container *ngSwitchCase="'type'">
+                  {{row[rowFieldName.field] | map:rowFieldName.pipe}}
+                </ng-container>
+                <ng-container *ngSwitchCase="'attachment'">
+                  <img [src]="fileServiceUrl+ row[rowFieldName.field]" style="height:50px;" alt="">
+                </ng-container>
+                <ng-container *ngSwitchCase="'updateDate'">
+                  <span>{{row.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                </ng-container>
+                <ng-container *ngSwitchCase="'ifShow'">
+                  <span *ngIf="row[rowFieldName.field] === 1">有效</span>
+                  <span *ngIf="row[rowFieldName.field] === 0" [ngStyle]="{'color':row[rowFieldName.field] === 0?'#ccc':''}">无效</span>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  <span>{{row[rowFieldName.field]}}</span>
+                </ng-container>
+              </ng-container>
+            </td>
+            <td [ngStyle]="{'width':'220px'}">
+              <span class="operate-text" (click)="addOrEditNewsTab(3,row)">查看</span>
+              <ng-container *ngIf="row.ifShow === 1" ><span class="operate-text" (click)="showNews(0,row)" *appAuthBtu="ActionCode.infoEnable">下架</span></ng-container>
+              <ng-container *ngIf="row.ifShow === 0"><span class="operate-text"  (click)="showNews(1,row)" *appAuthBtu="ActionCode.infoEnable">上架</span></ng-container>
+              <ng-container *ngIf="row.ifShow === 1"><span class="operate-text" style="color: #ccc;" *appAuthBtu="ActionCode.infoEdit">修改</span></ng-container>
+              <ng-container *ngIf="row.ifShow === 0"><span class="operate-text" (click)="addOrEditNewsTab(2,row)" *appAuthBtu="ActionCode.infoEdit">修改</span></ng-container>
+              <ng-container *ngIf="row.ifTop === 1 && row.ifShow === 1"><span class="operate-text" (click)="setTop(0,row)" *appAuthBtu="ActionCode.infoSticky">取消置顶</span></ng-container>
+              <ng-container *ngIf="row.ifTop === 1 && row.ifShow === 0"><span class="operate-text"  style="color: #ccc;" *appAuthBtu="ActionCode.infoSticky">取消置顶</span></ng-container>
+              <ng-container *ngIf="row.ifTop === 0 && row.ifShow === 1"><span class="operate-text" (click)="setTop(1,row)" *appAuthBtu="ActionCode.infoSticky">置顶</span></ng-container>
+              <ng-container *ngIf="row.ifTop === 0 && row.ifShow === 0"><span class="operate-text" style="color: #ccc;" *appAuthBtu="ActionCode.infoSticky">置顶</span></ng-container>
+            </td>
+          </tr>
+        </tbody>
+
+      </nz-table>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tabPageType === 1 || tabPageType === 2">
+    <div class="edit-add-page">
+      <form nz-form [formGroup]="NewsInfoForm" class="edit-add-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>标题</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="title" nzSize="default" spellcheck="false" maxlength="40" />
+            <nz-form-explain *ngIf="NewsInfoForm.get('title').dirty && NewsInfoForm.get('title').errors">请输入标题</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>类型</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-select formControlName="type" nzPlaceHolder="请选择文章类型" class="selectStyle" (ngModelChange)="editOrAddTypeChange($event)">
+              <nz-option *ngFor="let type of newsTypeDataList" nzValue="{{type.id}}" nzLabel="{{type.typeName}}"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="NewsInfoForm.get('type').dirty && NewsInfoForm.get('type').errors">请选择类型</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">文章摘要</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <textarea nz-input formControlName="intro" placeholder="" [nzAutosize]="{ minRows: 2, maxRows: 10 }" maxlength="200"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" [nzRequired] = "attachRequired">附件</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-upload
+              [nzAction]="uploadImgUrl"
+              nzListType="picture-card"
+              [(nzFileList)]="fileList" [nzSize]="10*1024"
+              [nzShowButton]="fileList.length < 1" [nzPreview]="handlePreview" >
+              <i class="anticon anticon-plus"></i>
+              <div class="ant-upload-text">上传</div>
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent"
+                      [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+      <div class="edit-add-form">
+        <div nz-row >
+          <div nz-col nzSpan="6" style="text-align:right;">详细信息：</div>
+          <div nz-col nzSpan="18">
+            <ueditor [config]="uEditorConfig" [(ngModel)]="editorContent" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+          </div>
+        </div>
+        <div nz-row style="margin-top:15px;">
+          <div nz-col nzSpan="6"></div>
+          <div nz-col nzSpan="18">
+            <button nz-button nzType="primary" class="submit-button" (click)="addOrEditSubmit()">保存</button>
+            <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tabPageType === 3">
+    <div class="edit-add-page accessory">
+      <form nz-form class="view-form edit-add-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="2">标题</nz-form-label>
+          <nz-form-control nzSpan="22">
+            <nz-form-text>{{newsInfo.title}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="2">类型</nz-form-label>
+          <nz-form-control nzSpan="22">
+            <nz-form-text>{{newsInfo.type | typeReform}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="2">文章摘要</nz-form-label>
+          <nz-form-control nzSpan="22">
+            <nz-form-text>{{newsInfo.intro}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="2">附件</nz-form-label>
+          <nz-form-control nzSpan="22">
+            <nz-upload
+              nzListType="picture-card" class="view-upload"
+              [(nzFileList)]="fileList" [nzShowButton]="fileList.length < 0"
+              [nzPreview]="handlePreview" [nzRemove]="removeFile">
+            </nz-upload>
+            <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent"
+                      [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+              <ng-template #modalContent>
+                <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+              </ng-template>
+            </nz-modal>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="2">浏览量</nz-form-label>
+          <nz-form-control nzSpan="22">
+            <nz-form-text>{{newsInfo.viewCount}}</nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="content-wrap">
+          <nz-form-label nzSpan="2">内容</nz-form-label>
+          <nz-form-control nzSpan="22">
+            <nz-form-text [innerHtml]="newsInfo.content | html"></nz-form-text>
+          </nz-form-control>
+        </nz-form-item>
+        <div nz-row>
+          <div nz-col nzSpan="2"></div>
+          <div nz-col nzSpan="22">
+            <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">返回
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</app-tab-route>

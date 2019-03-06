@@ -1,0 +1,10 @@
+<app-material-curr-comp #currComp [bottomTemplete]="saveOrBack" [id]="id"></app-material-curr-comp>
+
+<ng-template #saveOrBack>
+  <div class="footer-bar" nz-row>
+    <div nz-col nzOffset="6">
+      <button nz-button nzType="primary" (click)="save($event)">保存</button>
+      <button nz-button nzGhost nzType="primary" (click)="back()">返回</button>
+    </div>
+  </div>
+</ng-template>

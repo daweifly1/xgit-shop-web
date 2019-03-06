@@ -1,0 +1,107 @@
+<app-tab-route tabTitle="发货单">
+  <ng-container *ngIf="currentPageType === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="请输入发货单号" (search)="advancedSearch($event)"
+      [(searchText)]="filters.invoiceNo" (advancedSearch)="toggleAdvancedSearch($event)" (refresh)="refresh($event)"
+      [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <ng-template #leftTpl let-invoiceNo="invoiceNo">
+      <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.dispatchBillAdd">新增</button>
+      <button nz-button nzType="info" (click)="batchDelivery()" *appAuthBtu="ActionCode.dispatchBillDeliver">批量发货</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item nz-col nzSpan="6">
+          <nz-form-label nzSpan="8">发货单号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.invoiceNo" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">合同编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.purchaseNo" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">收货方</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.goodsReceivor" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">发货状态</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select nzPlaceHolder="请选择" nzAllowClear [(ngModel)]="filters.deliveryStatus" name="filters.deliveryStatus"
+              style="width: 100%">
+              <nz-option *ngFor="let data of ('deliverGoodsStatus'| mapList)" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">发货日期-开始</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.startDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">发货日期-截止</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.endDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="advancedSearch()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="toggleAdvancedSearch()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="dispathcBillDataList" [getListHandle]="getDispatchBillList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+
+  </ng-container>
+  <ng-template #operationTpl let-status="status" let-invoiceNo="invoiceNo" let-dStatus="deliveryStatus"
+    let-contractType="contractType" let-index="index">
+    <app-action-group [(isShowActionPopover)]="dispathcBillDataList[index].isShowActionPopover">
+      <app-action [enabled]="actionStatus[invoiceNo].edit" (clickAction)="edit(invoiceNo,contractType)" *appAuthBtu="ActionCode.dispatchBillEdit">编辑</app-action>
+
+      <app-action [enabled]="actionStatus[invoiceNo].del" (clickAction)="delete(invoiceNo)" *appAuthBtu="ActionCode.dispatchBillDel">删除</app-action>
+
+      <app-action [enabled]="actionStatus[invoiceNo].delivery" (clickAction)="delivery(invoiceNo)" *appAuthBtu="ActionCode.dispatchBillDeliver">物流发货</app-action>
+
+      <app-action [enabled]="actionStatus[invoiceNo].printBarcode" (clickAction)="printBarcode(invoiceNo, index)" *appAuthBtu="ActionCode.dispatchBillPrintBarcode">打印货物码</app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].print" (clickAction)="printOrder(invoiceNo)" *appAuthBtu="ActionCode.dispatchBillPrint">打印</app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].print" (clickAction)="printBarcodeOrder(invoiceNo)" *appAuthBtu="ActionCode.dispatchBillPrint">打印物流码</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #invoiceNoTpl let-invoiceNo="invoiceNo">
+    <span [appEnable]="true" (click)="detail(invoiceNo)">{{invoiceNo}}</span>
+  </ng-template>
+
+  <ng-container *ngIf="currentPageType === tabPageType.AddPage">
+    <app-contract (finish)="onChildFinish()"></app-contract>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.DetailPage">
+    <app-dispatch-bill-detail (finish)="onChildFinish()" [invoiceNo]="invoiceNo"></app-dispatch-bill-detail>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.EditPage">
+    <app-edit-dispatch-bill (finish)="onChildFinish()" [addOrder]="false" [invoiceNo]="invoiceNo" [contractType]="editContractType"></app-edit-dispatch-bill>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.DeliveryPage">
+    <app-logistics-delivery [invoiceNo]="invoiceNo" (finish)="onChildFinish()"></app-logistics-delivery>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.BatchDeliveryPage">
+    <app-batch-logistics-delivery (finish)="onChildFinish()" [orderList]="batchDeliveryOrderList"></app-batch-logistics-delivery>
+  </ng-container>
+
+</app-tab-route>

@@ -1,0 +1,16 @@
+.clause-content {
+  max-height: calc(100% - 72px);
+  overflow: auto;
+  box-sizing: border-box;
+  .clause-item {
+    margin-bottom: 10px;
+  }
+  .clause-title {
+    //text-align: right;
+    //padding-right: 5px;
+  }
+  .title-clip {
+    max-height: 60px;
+    line-height: 20px;
+  }
+}

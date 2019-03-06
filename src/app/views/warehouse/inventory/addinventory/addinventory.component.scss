@@ -1,0 +1,20 @@
+.radioStyle {
+  position: relative;
+  top: 7px;
+}
+.selectStyle {
+  width: 100%;
+}
+/deep/ .marginBottom {
+  margin-bottom: 10px;
+}
+.marginTop {
+  margin-top: 20px;
+}
+/deep/ .choose-model-box .ant-table-body.ng-star-inserted{
+  max-height: 240px !important;
+}
+
+/deep/ .choose-model-box .ant-modal-body {
+  padding-bottom: 0 !important;
+}

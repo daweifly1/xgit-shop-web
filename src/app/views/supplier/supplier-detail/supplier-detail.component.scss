@@ -1,0 +1,33 @@
+$left-menu-width: 140px;
+.supplier-detail-wrap{
+  height: 100%;
+  header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    height: 40px;
+  }
+  .content-wrap {
+    height: calc(100% - 40px);
+    .left {
+      width: $left-menu-width;
+      float: left;
+      border-right: 1px solid #ccc;
+      height: 100%;
+      .tag-item-wrap{
+        margin: 10px 10px 10px 0;
+        font-size: 12px;
+      }
+    }
+    .right {
+      margin-left: $left-menu-width;
+      padding: 10px 0 10px 10px;
+      height: 100%;
+      box-sizing: border-box;
+
+      & > div {
+        position: relative;
+      }
+    }
+  }
+
+}

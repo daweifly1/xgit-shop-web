@@ -1,0 +1,16 @@
+.selectStyle {
+  width: 100%;
+}
+.upload-error-msg {
+  width: 100%;
+  color: red;
+  max-height: 150px;
+  overflow: auto;
+  & div:first-child {
+    margin-top: 10px;
+  }
+  div {
+    line-height: 20px;
+    word-break: break-all;
+  }
+}

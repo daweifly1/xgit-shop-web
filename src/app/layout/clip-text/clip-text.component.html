@@ -1,0 +1,11 @@
+<div class="clip-wrap">
+  <div class="segment-wrap" #segmentWrapEle>
+    <span>{{_content}}</span>
+    <nz-tooltip *ngIf="showDots">
+        <span nz-tooltip class="dots" [ngStyle]="{background: dotsBgColor}">&hellip;&hellip;</span>
+        <ng-template #nzTemplate >
+            <div style="max-width:200px;word-break: break-all;word-wrap: break-word;">{{_content}}</div>
+          </ng-template>
+    </nz-tooltip>
+  </div>
+</div>

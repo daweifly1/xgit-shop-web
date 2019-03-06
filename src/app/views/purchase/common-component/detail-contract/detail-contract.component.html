@@ -1,0 +1,130 @@
+<div class="contract-main-container">
+  <h1 class="contract-title">{{contractHeaderInfo.contractName}}</h1>
+  <div class="container">
+    <div nz-row>
+      <div nz-col nzSpan="12">
+        <nz-form-label nzSpan="8">买方</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{contractHeaderInfo.buyer}}</nz-form-text>
+        </nz-form-control>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-label nzSpan="8">合同编号</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{contractHeaderInfo.contractCode}}</nz-form-text>
+        </nz-form-control>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="12">
+        <nz-form-label nzSpan="8">卖方</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{contractHeaderInfo.seller}}</nz-form-text>
+        </nz-form-control>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-label nzSpan="8">签约地点</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{contractHeaderInfo.signLocation}}</nz-form-text>
+        </nz-form-control>
+      </div>
+    </div>
+    <div nz-row>
+      <div nz-col nzSpan="12"></div>
+      <div nz-col nzSpan="12">
+        <nz-form-label nzSpan="8">签约时间</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <nz-form-text>{{contractHeaderInfo.signDate | map: 'date: yyyy-MM-dd'}}</nz-form-text>
+        </nz-form-control>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <h3>{{otherInfo.firstTitle}}</h3>
+    <nz-table #nzTable [nzData]="productInfo" [nzShowPagination]="false" nzBordered nzSize="small">
+      <thead>
+      <tr>
+        <th>行号</th>
+        <th>物料编码</th>
+        <th>物料名称</th>
+        <th *ngIf="isDeviceType">生产厂家</th>
+        <th *ngIf="isDeviceType">规格型号</th>
+        <th>计量单位</th>
+        <th>数量</th>
+        <th>含税单价</th>
+        <th>金额</th>
+        <th>交货时间</th>
+        <th>备注</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of productInfo">
+        <td>{{data.lineNo}}</td>
+        <td>{{data.materialCode}}</td>
+        <td>{{data.materialName}}</td>
+        <td *ngIf="isDeviceType">{{data.manufacturer}}</td>
+        <td *ngIf="isDeviceType">{{data.materialModel}}</td>
+        <td>{{data.unit}}</td>
+        <td>{{data.purchaseQuantity}}</td>
+        <td>{{data.unitPrice + contractHeaderInfo.currency}}</td>
+        <td>{{data.lineAmount + contractHeaderInfo.currency}}</td>
+        <td>{{data.deliveryDate | map: 'date: yyyy-MM-dd'}}</td>
+        <td>{{data.remark}}</td>
+      </tr>
+      <tr *ngIf="productInfo.length">
+        <td colspan="2">合计金额（小写）</td>
+        <td colspan="9">{{contractHeaderInfo.totalAmount}}</td>
+      </tr>
+      <tr *ngIf="productInfo.length">
+        <td colspan="2">合计金额（大写）</td>
+        <td colspan="9">{{contractHeaderInfo.totalAmountCapital}}</td>
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="contract-clause container">
+    <div *ngFor="let item of clauseList; let i = index">
+      <h3>{{indexArr[i + 1] + '、' + item.clauseTitle}}</h3>
+      <div class="clause-item">{{item.clauseItem}}</div>
+    </div>
+  </div>
+  <div class="contract-deal container">
+    <h4 class="confirm-info">{{otherInfo.confirmMsg}}</h4>
+    <div class="deal-content">
+      <div class="deal-info border-right">
+        <div class="deal-title">买方</div>
+        <div class="deal-detail">
+          <div>单位名称：{{dealInfo.buyerInfo.companyName}}</div>
+          <div>单位地址：{{dealInfo.buyerInfo.buyerAddress}}</div>
+          <div>法定代表人：{{dealInfo.buyerInfo.legalRepresentative}}</div>
+          <div>电话：{{dealInfo.buyerInfo.mobile}}</div>
+          <div>邮政编码：{{dealInfo.buyerInfo.postalCode}}</div>
+          <div class="deal-title">{{otherInfo.invoiceMsg}}</div>
+          <div>开票单位：{{dealInfo.invoiceInfo.invoiceEntityName}}</div>
+          <div>开票地址：{{dealInfo.invoiceInfo.detailAddress}}</div>
+          <div>开户银行：{{dealInfo.invoiceInfo.depositBank}}</div>
+          <div>银行账户：{{dealInfo.invoiceInfo.bankAccount}}</div>
+          <div>纳税人登记号：{{dealInfo.invoiceInfo.taxpayerRegistration}}</div>
+        </div>
+      </div>
+      <div class="deal-info">
+        <div class="deal-title">卖方</div>
+        <div class="deal-detail">
+          <div>单位名称：{{dealInfo.sellerInfo.companyName}}</div>
+          <div>单位地址：{{dealInfo.sellerInfo.sellerArea + dealInfo.sellerInfo.sellerAddress}}</div>
+          <div>法定代表人：{{dealInfo.sellerInfo.legalRepresentative}}</div>
+          <!--<div>委托代理人：{{dealInfo.sellerInfo.entrustedAgent}}</div>-->
+          <!--<div>电话：{{dealInfo.sellerInfo.mobile}}</div>-->
+          <div>开户银行：{{dealInfo.sellerInfo.depositBank}}</div>
+          <div>银行账户：{{dealInfo.sellerInfo.bankAccount}}</div>
+          <div>纳税人登记号：{{dealInfo.sellerInfo.socialCreditCode}}</div>
+          <div>邮政编码：{{dealInfo.sellerInfo.postalCode}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-footer-bar">
+    <ng-container *ngTemplateOutlet="footerActionTpl"></ng-container>
+    <button nz-button nzType="primary" nzGhost (click)="emitPage()">返回</button>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="wrap">
+  <div class="left-menu">
+    <div class="top-button-wrap">
+      <button nz-button nzType="info" (click)="quitSign()">取消</button>
+      <button nz-button nzType="info" (click)="finishSign()">确定</button>
+    </div>
+    <ul class="action-ul">
+      <li [appEnable]="actionStatus.startSign" (click)="startSign()">触发签章</li>
+      <li [appEnable]="actionStatus.resetCursor" (click)="resetCursor()">重置光标</li>
+    </ul>
+  </div>
+  <div class="right" #signWrapEle>
+  </div>
+</div>
+<nz-modal nzTitle="插件下载" [(nzVisible)]="devMessageModalShow" nzWidth="500px" [nzCancelText]="null" (nzOnOk)="closeDownloadModal()" (nzOnCancel)="closeDownloadModal()">
+  <div class="plugin-msg-wrap">
+    <p>
+      签章控件未安装，<a [href]="pluginDownloadUrl" download="TrustSignPDFPlugin.Standard.exe">[点击下载]</a>,
+      安装成功后，重启IE浏览器并允许插件运行。
+    </p>
+  </div>
+</nz-modal>
+

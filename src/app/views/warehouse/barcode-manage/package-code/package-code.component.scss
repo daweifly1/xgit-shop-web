@@ -1,0 +1,44 @@
+
+.left {
+  float: left;
+  width: 60%;
+  height: 100%;
+}
+.right {
+  float: right;
+  width: 39%;
+  height: 100%;
+  padding-left: 1%;
+  $header-height: 50px;
+  $content-height: 180px;
+  $footer-height: 50px;
+
+  .box-head {
+    padding:0 10px 0 15px;
+    height: $header-height;
+    line-height: $header-height;
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+    .print-param {
+      color: #000;
+    }
+    .print-configuration {
+      float: right;
+    }
+  }
+  .print-content {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    height: $content-height;
+    box-sizing: border-box;
+  }
+  .split-template {
+    height: calc(100% - #{$header-height} - #{$content-height} - #{$footer-height});
+    overflow: auto;
+  }
+  .footer-btu-wrap {
+    height: $footer-height;
+    line-height: $footer-height;
+    text-align: center;
+  }
+}

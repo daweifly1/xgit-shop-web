@@ -1,0 +1,50 @@
+<app-tab-route tabTitle="材设分工">
+  <ng-container *ngIf="selectedPage === PageTypeEnum.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="tableConfig"
+      [searchPlaceholder]="searchPlaceholder" (advancedSearch)="fullSearch()" [(searchText)]="filters.divisionName">
+    </app-ufast-table-nav>
+
+    <!--数据列表上方的操作项-->
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="toAddPage()" *appAuthBtu="ActionCode.divisionManagementAdd">新增</button>
+      <!--<button nz-button nzType="info" [nzGhost]="true" (click)="batchDel()">删除</button>-->
+    </ng-template>
+
+    <!--高级搜索-->
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">分工管理</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.divisionName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearch()">收起</button>
+      </div>
+    </div>
+
+    <!--数据列表组件-->
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="dataList" (selectedChange)="changeSelect($event)"
+      [getListHandle]="getDataList"></app-ufast-table>
+  </ng-container>
+
+  <!--列表的操作栏-->
+  <ng-template #operation let-id="id" let-isDel="isDel" let-childCount="childCount" let-level="level">
+    <span class="operate-text" (click)="update(id)" *appAuthBtu="ActionCode.divisionManagementEdit">编辑</span>
+    <ng-container *ngIf="!isDel">
+      <span class="operate-text" (click)="delItem(id)" *appAuthBtu="ActionCode.divisionManagementDel">删除</span>
+    </ng-container>
+
+  </ng-template>
+
+  <!--详情页组件-->
+  <ng-container *ngIf="selectedPage === PageTypeEnum.AddPage">
+    <app-division-management-add [dataItem]="dataItem" (backToListPage)="backToList()"></app-division-management-add>
+  </ng-container>
+
+</app-tab-route>

@@ -1,0 +1,167 @@
+<app-tab-route tabTitle="用户管理">
+  <ng-container *ngIf="tabPageType === 0">
+    <app-ufast-table-nav [leftTemplate]="navLeftTpl" [tableConfig]="userTableConfig" searchPlaceholder="用户名" [(searchText)]="filterData.name" (refresh)="getUserList()" (search)="getUserList()" (advancedSearch)="onAdvancedSearch()" ></app-ufast-table-nav>
+    <ng-template #navLeftTpl>
+      <button nz-button nzType="info" (click)="addOrEditUserTab(1)" *appAuthBtu="ActionCode.userManageAdd">新增</button>
+      <button nz-button nzType="info" (click)="batchDelUser()" *appAuthBtu="ActionCode.userManageDel">删除</button>
+    </ng-template>
+    <div class="advanced-search clear-fix advanceSearch-form" *ngIf="showAdvancedSearch">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">用户名</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filterData.name">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">昵称</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filterData.nickname">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="10">用户状态</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select [(ngModel)]="filterData.locked" style="width:100%;" nzAllowClear>
+            <nz-option [nzValue]="0" nzLabel="启用"></nz-option>
+            <nz-option [nzValue]="1" nzLabel="锁定"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getUserList()">搜索</button>
+        <button nz-button nzType="info" (click)="resetSearch()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" (selectedChange)="checkTable($event)" [tableConfig]="userTableConfig" [dataList]="userDataList" [getListHandle]="getUserList"></app-ufast-table>
+
+  </ng-container>
+  <ng-template #operationTpl let-userId="userId" let-locked="locked">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[userId].edit" (clickAction)="addOrEditUserTab(2, userId)" *appAuthBtu="ActionCode.userManageEdit">编辑</app-action>
+      <app-action [enabled]="actionStatus[userId].resetPassword" (clickAction)="resetPd(userId)" *appAuthBtu="ActionCode.userManageResetPd">重置密码</app-action>
+      <app-action [enabled]="actionStatus[userId].del" (clickAction)="deleteUsers([userId])" *appAuthBtu="ActionCode.userManageDel">删除</app-action>
+      <app-action [enabled]="actionStatus[userId].lock" (clickAction)="lockUser(userId, locked)" *appAuthBtu="ActionCode.userManageEnable">锁定</app-action>
+      <app-action [enabled]="actionStatus[userId].unlock" (clickAction)="lockUser(userId, locked)" *appAuthBtu="ActionCode.userManageEnable">启用</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-container *ngIf="tabPageType === 1 || tabPageType === 2">
+    <div class="edit-add-page">
+      <form nz-form [formGroup]="userInfoForm" class="edit-add-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>用户账号</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="loginName" nzSize="default" spellcheck="false" maxlength="20" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>用户姓名</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="name" nzSize="default" spellcheck="false" maxlength="20" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>员工编码</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="code" nzSize="default" spellcheck="false" maxlength="20" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>ERP编码</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="erpCode" nzSize="default" spellcheck="false" maxlength="20" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">昵称</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="nickname" nzSize="default" spellcheck="false" maxlength="20" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">性别</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-radio-group formControlName="sex">
+              <label nz-radio [nzValue]="1">男</label>
+              <label nz-radio [nzValue]="0">女</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>所属部门</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-cascader nzPlaceHolder="请选择部门" formControlName="deptId" (nzVisibleChange)="showDepartment($event)"
+              [nzOptions]="departmentOptions" (nzSelect)="selectDepartmentItem($event)">
+            </nz-cascader>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label  nzSpan="6">上级</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+            <input nz-input formControlName="superiorName" (focus)="showSuperiorModal()" readonly>  
+          </nz-input-group>
+            <ng-template #suffixIconButton>
+                <button nz-button nzType="default" nzSearch (click)="clearInnerOrder()"><i class="anticon anticon-close"></i></button>
+              </ng-template> 
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" nzRequired>用户角色</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-select formControlName="roleIds" nzMode="multiple" nzPlaceHolder="请选择角色,可多选">
+              <nz-option *ngFor="let item of roleIdList;" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">联系电话</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="telephone" nzSize="default" spellcheck="false" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">手机号</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="mobile" nzSize="default" spellcheck="false" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">电子邮箱</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <input nz-input formControlName="email" nzSize="default" spellcheck="false" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6">是否锁定</nz-form-label>
+          <nz-form-control nzSpan="18">
+            <nz-radio-group formControlName="locked">
+              <label nz-radio [nzValue]="1">是</label>
+              <label nz-radio [nzValue]="0">否</label>
+            </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="6" class="font-red-color">注</nz-form-label>
+          <nz-form-control nzSpan="18" class="font-red-color">
+            新建用户初始密码为：123456
+          </nz-form-control>
+        </nz-form-item>
+        <div nz-row>
+          <div nz-col nzSpan="6"></div>
+          <div nz-col nzSpan="18">
+            <button nz-button nzType="primary" class="submit-button" (click)="addOrEditSubmit()">保存</button>
+            <button nz-button nzType="primary" class="submit-button" nzGhost (click)="toggleManagePage()">取消</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+
+  <nz-modal [(nzVisible)]="superiorVisible" nzTitle="选择上级" [nzFooter]="null" (nzOnCancel)="superiorVisible = false">
+    <app-ufast-table [tableConfig]="superiorListTableConfig" [dataList]="superiorList" [getListHandle]="getSuperiorList"></app-ufast-table>
+  </nz-modal>
+  <ng-template #chooseSuperiorTpl let-id="userId" let-name="name">
+    <span class="operate-text" (click)="selectSuperior(id, name)">选择</span>
+  </ng-template>
+</app-tab-route>

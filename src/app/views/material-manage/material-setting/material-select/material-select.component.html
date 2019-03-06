@@ -1,0 +1,60 @@
+<ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+  <app-ufast-table-nav [leftTemplate]="leftTpl" (search)="getMaterialModelList()" [tableConfig]="materialModelConfig"
+    searchPlaceholder="物料名称" (advancedSearch)="fullSearch()" [(searchText)]="filters.materialName" (refresh)="getMaterialModelList()">
+  </app-ufast-table-nav>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="goback()">返回上级</button>
+  </ng-template>
+
+  <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">物料名称</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <input nz-input [(ngModel)]="filters.materialName">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">物料分类</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+            [(ngModel)]="materialClass" [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择三级分类">
+          </nz-cascader>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="10">类别</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-select nzPlaceHolder="请选择" class="selectStyle" [(ngModel)]="filters.materialType">
+            <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+            <nz-option [nzValue]="2" nzLabel="专用备件"></nz-option>
+            <nz-option [nzValue]="4" nzLabel="通用备件"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+    <div nz-col nzSpan="24" class="btn-bar">
+      <button nz-button nzType="primary" (click)="getMaterialModelList()">搜索</button>
+      <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+      <button nz-button nzType="default" (click)="fullSearchClose()">收起</button>
+    </div>
+  </div>
+  <app-ufast-table [tableConfig]="materialModelConfig" [dataList]="materialModelList" [getListHandle]="getMaterialModelList"
+    (selectedChange)="onRowSelected($event)"></app-ufast-table>
+
+  <div class="btn">
+    <button nz-button type="submit" nzType="primary" (click)="confirm()">确定</button>
+    <button nz-button nzGhost nzType="primary" (click)="goback()">取消</button>
+  </div>
+</ng-container>
+
+
+<ng-container *ngIf="selectedPage === tabPageType.AddPage">
+  <app-material-setting-add (finish)="onChildPageFinish()" [selectMaterial]="selectData"></app-material-setting-add>
+</ng-container>

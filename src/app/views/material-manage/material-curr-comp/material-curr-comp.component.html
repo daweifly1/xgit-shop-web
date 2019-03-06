@@ -1,0 +1,132 @@
+<form nz-form [formGroup]="form" class="form">
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料类别</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" (ngModelChange)="changeMaterialType($event)" formControlName="materialType">
+        <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+        <nz-option [nzValue]="3" nzLabel="设备"></nz-option>
+        <nz-option [nzValue]="2" nzLabel="专用备件"></nz-option>
+        <nz-option [nzValue]="4" nzLabel="通用备件"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('materialType').dirty && form.get('materialType').errors">必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="form.controls['materialType'].value !== MaterialTemplateTypeEnum.DevicePart">
+    <nz-form-label nzSpan="6" nzRequired>物料分类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)"
+                   (nzSelect)="selectMaterialClassItem($event)"
+                   formControlName="materialClassId"
+                   [(nzOptions)]="materialClassArry" nzPlaceHolder="请选择三级分类"
+                   (ngModelChange)="onChanges($event)">
+      </nz-cascader>
+      <nz-form-explain *ngIf="form.get('materialClassId').dirty && form.get('materialClassId').errors&&!getFormControl('materialClassId').hasError('isSelectedThird')">必填项，请输入
+      </nz-form-explain>
+      <nz-form-explain *ngIf="getFormControl('materialClassId').hasError('isSelectedThird')">请选择含有第三级的物料分类
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!-- <nz-form-item *ngIf="form.controls['materialType'].value===2">
+    <nz-form-label nzSpan="6" nzRequired>选择设备</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="deviceTemplateId">
+        <nz-option *ngFor="let item of choosedEquipmentList;trackBy:trackByNewsId;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item> -->
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料名称</nz-form-label>
+    <nz-form-control nzSpan="14">
+      <input nz-input formControlName="materialName" nzSize="default" [maxlength]="maxLenInputEnum.Default"/>
+      <nz-form-explain *ngIf="form.get('materialName').dirty && form.get('materialName').errors">必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+    <button nz-button nzType="primary" class="seeAbout" (click)="showMaterialName($event)">查询</button>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>计量单位</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input type="text" nz-input formControlName="unit" readonly (focus)="showUnitModal()" />
+      <nz-form-explain *ngIf="form.get('unit').dirty && form.get('unit').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired *ngIf="form.controls['materialType'].value === MaterialTemplateTypeEnum.Material">型号规格规范</nz-form-label>
+    <nz-form-label nzSpan="6" *ngIf="form.controls['materialType'].value !== MaterialTemplateTypeEnum.Material">型号规格规范</nz-form-label>
+    <nz-form-control nzSpan="18">
+        <input nz-input formControlName="modelSpecification" nzSize="default" [maxlength]="maxLenInputEnum.Default"/>
+        <nz-form-explain *ngIf="form.get('modelSpecification').dirty && form.get('modelSpecification').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6">备注</nz-form-label>
+    <nz-form-control nzSpan="18">
+        <input nz-input formControlName="remark" nzSize="default" [maxlength]="maxLenInputEnum.Default"/>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="head-bar"><span>曾用名</span></div>
+
+<button nz-button nzType="info" class="editable-add-btn" (click)="addRow()">新增行</button>
+<nz-table #beforeUseTable nzBordered [nzData]="beforeNameDataSet" nzSize="small">
+  <thead>
+  <tr>
+    <th>序号</th>
+    <th nzWidth="30%">曾用名</th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of beforeUseTable.data;let i=index">
+    <td>{{i+1}}</td>
+    <td>
+      <div class="editable-cell">
+        <div class="editable-cell-text-wrapper">
+          <input type="text" nz-input [(ngModel)]="data.materialTemplateUsedName" [maxlength]="maxLenInputEnum.Default">
+        </div>
+      </div>
+    </td>
+    <td>
+      <nz-popconfirm [nzTitle]="'确定删除吗?'" (nzOnConfirm)="deleteRow(i)">
+        <a nz-popconfirm>删除</a>
+      </nz-popconfirm>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-container *ngTemplateOutlet="bottomTemplete"></ng-container>
+
+<app-right-side-table-box [(show)]="isVisibleMaterialName" title="物料列表" searchPlaceholder="物料名称"
+[tableConfig]="materialNameTableConfig" [dataList]="materialNameDataList"
+[getListHandle]="getMaterialNameList" 
+[selectedChangeEvent]="rightTableEmit" idFiled="materialName" (search)="getMaterialNameList()" [(searchContent)]="materialNameFilter.materialName">
+</app-right-side-table-box>
+
+<nz-modal class="choose-client-box-wrap choose-model-box" [(nzVisible)]="isVisibleUnit" nzTitle="选择单位" nzWidth="630px"
+  (nzOnCancel)="handleCancelUnit()" [nzFooter]="null">
+  <!-- <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="clientSearchButton">
+      <input type="text" nz-input placeholder="单位" [(ngModel)]="unitFilter.name ">
+    </nz-input-group>
+    <ng-template #clientSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="getUnitList()">搜索</button>
+    </ng-template>
+  </div> -->
+  <app-ufast-table [tableConfig]="unitTableConfig" [dataList]="unitList" [getListHandle]="getUnitList"></app-ufast-table>
+  <ng-template #operationTpl let-name="name" let-code="code">
+    <span class="operate-text" (click)="chooseUnitFun(name, code)">选择</span>
+  </ng-template>
+</nz-modal>
+
+
+
+
+
+

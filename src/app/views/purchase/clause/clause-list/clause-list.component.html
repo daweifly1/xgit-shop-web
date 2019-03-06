@@ -1,0 +1,28 @@
+<app-tab-route tabTitle="条款列表">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav searchPlaceholder="条内容" [leftTemplate]="leftTemplate" [showAdvancedSearch]="false" (search)="getClauseList()"
+      [(searchText)]="filters.content" [tableConfig]="clauseTableConfig" (refresh)="getClauseList()"></app-ufast-table-nav>
+    <app-ufast-table class="main-table" [dataList]="clauseList" [tableConfig]="clauseTableConfig" [getListHandle]="getClauseList"></app-ufast-table>
+    <ng-template #leftTemplate>
+      <button nz-button nzType="info" (click)="addClause()" *appAuthBtu="ActionCode.clauseListAdd">新增</button>
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.AddPage">
+    <app-edit-clause [detailId]="detailId" (backToMainPage)="onChildEmit()"></app-edit-clause>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <app-detail-clause [detailId]="detailId" (backToMainPage)="onChildEmit()"></app-detail-clause>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <app-edit-clause [detailId]="detailId" (backToMainPage)="onChildEmit()"></app-edit-clause>
+  </ng-container>
+  <ng-template #operationTpl let-id="id">
+    <app-action-group>
+      <app-action (clickAction)="editClause(id)" *appAuthBtu="ActionCode.clauseListEdit">编辑</app-action>
+      <app-action (clickAction)="delClause(id)" *appAuthBtu="ActionCode.clauseListDel">删除</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #showDetailTpl let-content="content" let-id="id">
+    <span class="operate-text" (click)="showDetail(id)">{{content}}</span>
+  </ng-template>
+</app-tab-route>

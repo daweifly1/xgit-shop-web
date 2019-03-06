@@ -1,0 +1,159 @@
+<app-tab-route tabTitle="档案列表" >
+  <ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+    <app-ufast-table-nav [leftTemplate]="navLeftTemplate" (advancedSearch)="advancedSearchBtn()" searchPlaceholder="公司名称" [(searchText)]="filters.name" (search)="getDataList()" (refresh)="getDataList()" [tableConfig]="dataTableConfig"></app-ufast-table-nav>
+    <ng-template #navLeftTemplate>
+      <button nz-button nzType="info" (click)="doGradeImport()" *appAuthBtu="ActionCode.archivesManageRatingImport">评级导入</button>
+      <button nz-button nzType="info" (click)="importSupplier()" *appAuthBtu="ActionCode.archivesManageQualifiedSupplierImport">合格供应商导入</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">代码</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.supplierERPCode">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">公司名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">类别</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.materialType">
+              <nz-option *ngFor="let item of ('materialType2'|mapList); trackBy: trackByItem" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">限定供应范围</nz-form-label>
+          <nz-form-control nzSpan="14" nzAllowClear>
+            <nz-select style="width:100%;" [(ngModel)]="filters.supplyRangeCode">
+              <nz-option *ngFor="let item of supplyScopeList; trackBy: trackByItem" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">企业性质</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.companyNature">
+              <nz-option *ngFor="let item of companyNatureList; trackBy: trackByItem" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">企业类型</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.companyType">
+              <nz-option *ngFor="let item of companyTypeList; trackBy: trackByItem" [nzLabel]="item.name" [nzValue]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.status">
+              <nz-option *ngFor="let item of supplierStatusList; trackBy: trackByItem" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">等级</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.grade">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">证书过期</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select style="width:100%;" nzAllowClear [(ngModel)]="filters.certStatus">
+              <nz-option nzLabel="是" [nzValue]="1"></nz-option>
+              <nz-option nzLabel="否" [nzValue]="0"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">办公地址</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <app-area-selector [(ngModel)]="filters.workAreaCode"></app-area-selector>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchBtn()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="dataTableConfig" [dataList]="dataList" [getListHandle]="getDataList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operateTpl let-id="id" let-supplierId="supplierId">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="goEditPage(id)" *appAuthBtu="ActionCode.archivesManageEdit">编辑</app-action>
+      <app-action [enabled]="actionStatus[id].creditCodeChange" (clickAction)="goEditUpdateCredit(id)" *appAuthBtu="ActionCode.archivesManageSocialCreditCodeChange">社会信用代码变更</app-action>
+      <app-action [enabled]="actionStatus[id].statusChange" (clickAction)="onChangeStatus(id)" *appAuthBtu="ActionCode.archivesManageStatusChange">状态变更</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #codeTpl let-id="id" let-supplierERPCode="supplierERPCode">
+    <span class="operate-text" (click)="goDetialPage(id)">{{supplierERPCode}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === PageTypeEnum.DetailPage">
+    <app-supplier-detail [supplierBasicInfo]="supplierBasic" (finish)="returnMainPage()"></app-supplier-detail>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.EditPage">
+    <app-supplier-edit (finish)="returnMainPage()" [fixedCreditCode]="fixedCreditCode" [basicInfo]="supplierBasic" (submitEvent)="onSupplierInfoSubmit($event)"></app-supplier-edit>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.ImportPage">
+    <app-archives-import-file [ImportType]="importType" (finish)="returnMainPage()"></app-archives-import-file>
+  </ng-container>
+</app-tab-route>
+<nz-modal [(nzVisible)]="showStatusModal" nzTitle="状态变更" (nzOnCancel)="onCancelStatus()" (nzOnOk)="onStatusOk()">
+  <form nz-form [formGroup]="statusForm">
+    <nz-form-item>
+      <nz-form-label nzSpan="4">状态</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-select formControlName="status" nzPlaceHolder="请选择">
+          <nz-option *ngFor="let item of statusOptional; trackBy: trackByItem;" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="4">时间</nz-form-label>
+     <nz-form-control nzSpan="14">
+       <nz-input-number [nzMin]="0" [nzPrecision]="0" formControlName="time"></nz-input-number>
+       <nz-form-text>月</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+<ng-template #uploadTopTpl>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">模板</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <a [href]="downloadTplUrl" download>点击下载</a>
+    </nz-form-control>
+  </nz-form-item>
+</ng-template>
+<div>
+  <ng-container *ngTemplateOutlet="uploadTopTpl"></ng-container>
+</div>

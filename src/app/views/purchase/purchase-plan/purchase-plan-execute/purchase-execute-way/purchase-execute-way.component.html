@@ -1,0 +1,61 @@
+<ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+  <nz-steps>
+    <nz-step nzTitle="选方式"></nz-step>
+    <nz-step nzTitle="审批表"></nz-step>
+    <nz-step nzTitle="价格预处理"></nz-step>
+    <nz-step nzTitle="审定表"></nz-step>
+    <nz-step nzTitle="合同"></nz-step>
+  </nz-steps>
+  <form nz-form [formGroup]="executeWayForm" class="execute-form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="businessType" nzRequired>业务类型</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-radio-group formControlName="businessType" (ngModelChange)="onBusinessType($event)">
+          <label *ngFor="let data of ('purchaseContractBusiness'|mapList)" nz-radio [nzValue]="data.value">{{data.label}}</label>
+        </nz-radio-group>
+        <nz-form-explain *ngIf="executeWayForm.get('businessType').dirty && executeWayForm.get('businessType').errors">必填项，请选择</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="purchaseType" nzRequired>采购模式</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-select style="width: 100%;" formControlName="purchaseType" nzPlaceHolder="采购模式" (ngModelChange)="onpurchaseType($event)">
+          <nz-option *ngFor="let data of purchaseType;trackBy:trackByItem;" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="executeWayForm.get('purchaseType').dirty && executeWayForm.get('purchaseType').errors">必填项，请选择</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isAgreementPurchase">
+      <nz-form-label [nzSpan]="8" nzFor="agreementCode" nzRequired>协议号</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <input nz-input type="text" formControlName="agreementCode">
+        <nz-form-explain *ngIf="executeWayForm.get('agreementCode').dirty && executeWayForm.get('agreementCode').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isContinuousPurchase">
+      <nz-form-label [nzSpan]="8" nzFor="contractCode" nzRequired>合同编号</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <input nz-input type="text" formControlName="contractCode">
+        <nz-form-explain *ngIf="executeWayForm.get('contractCode').dirty && executeWayForm.get('contractCode').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="purchaseMethod" nzRequired>采购方式</nz-form-label>
+      <nz-form-control [nzSpan]="8">
+        <nz-select style="width: 100%;" formControlName="purchaseMethod" nzAllowClear nzPlaceHolder="采购方式">
+          <nz-option *ngFor="let data of purchaseMethodMap[executeWayForm.value['purchaseType']];trackBy:trackByItem;" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="executeWayForm.get('purchaseMethod').dirty && executeWayForm.get('purchaseMethod').errors">必填项，请选择</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" (click)="selectExecuteWay()">确认</button>
+    <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">取消</button>
+  </div>
+
+</ng-container>
+<ng-container *ngIf="currentPage === PageTypeEnum.NewApproval">
+  <app-new-approval-form [rowData]="selectedPlan" [isNew]="true" (finish)="approvalFormFinish($event)" [purchaseInfo]="purchaseInfo"></app-new-approval-form>
+</ng-container>

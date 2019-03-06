@@ -1,0 +1,31 @@
+
+<div *ngFor="let printInfo of printData;"
+     style="page-break-after:always;width: 100mm; background: #fff; height: 65mm; padding:4mm 3mm 0mm 2mm; box-sizing: border-box;overflow: hidden; font-family: 宋体;">
+  <div style="height:12mm; line-height:11.5mm;font-size: 12pt; box-sizing: border-box;">
+    <div style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis" *ngIf="printInfo.hasShelfDes">
+      描述：{{printInfo.remark}}
+    </div>
+  </div>
+  <div style="height: 36.5mm; font-size: 18pt;border-top: solid 0.5mm #000;border-bottom: solid 0.5mm #000;">
+    <div style="float: left;line-height: 15mm; width: 50mm;">
+      <div style="float:left;width: 48%;">排
+        <span style="font-weight: bold;">{{printInfo.rowNo}}</span>
+      </div>
+      <div style="float:left;width: 48%;">层
+        <span style="font-weight: bold;">{{printInfo.floorNo}}</span>
+      </div>
+      <div style="float:left;width: 48%;">列
+        <span style="font-weight: bold;">{{printInfo.columnNo}}</span>
+      </div>
+      <div style="float:left;width: 48%;" *ngIf="printInfo.hasSeq">位
+        <span style="font-weight: bold;">{{printInfo.seqNo}}</span>
+      </div>
+    </div>
+    <div style="border-left: solid 0.5mm #000;float: right; width: 36.5mm; height: 36.5mm; padding: 1mm; box-sizing: border-box">
+      <qrcode [size]="100" [qrdata]="printInfo.locationCode" level="H" [usesvg]="true"></qrcode>
+    </div>
+  </div>
+  <div style="height: 10mm; line-height:9mm;font-size: 12pt; background: #fff;">
+    储位编号&ensp;<span style="font-weight: bold;">{{printInfo.code}}</span>
+  </div>
+</div>

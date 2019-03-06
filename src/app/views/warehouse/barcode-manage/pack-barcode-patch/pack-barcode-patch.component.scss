@@ -1,0 +1,33 @@
+
+.left {
+    float: left;
+    width: 60%;
+    height: 100%;
+  }
+  .right {
+    float: right;
+    width: 39%;
+    height: 100%;
+    padding-left: 1%;
+    .box-head {
+      padding-left: 15px;
+      height: 50px;
+      line-height: 50px;
+      padding: 0 10px;
+      border-bottom: 1px solid #ccc;
+      .print-param {
+        color: #000;
+      }
+      .print-configuration {
+        float: right;
+      }
+    }
+    .print-content {
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+    }
+    .print-btn {
+      margin-top: 30px;
+    }
+  }
+    

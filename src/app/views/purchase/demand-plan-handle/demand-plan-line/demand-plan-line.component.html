@@ -1,0 +1,116 @@
+<app-tab-route tabTitle="需求行处理" >
+  <ng-container *ngIf="selectedTab === tabPageType.DemandLineListPage">
+
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="需求计划编号" (search)="getDemandLineList()" [(searchText)]="filters.demandId"
+                         [tableConfig]="demandLineTableConfig" (advancedSearch)="advancedSearch()"
+                         (refresh)="getDemandLineList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="createPurchasePlan()" *appAuthBtu="actionCode.demandLinePlanLineCreate">生成采购计划</button>
+      <button nz-button nzType="info" (click)="openModifyPlannerModal()" *appAuthBtu="actionCode.demandLinePlanModifyPlanner">修改计划员</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="isShowAdvancedSearch">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">需求计划编号</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.demandId" placeholder="需求计划编号">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">物料类型</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.lineType" nzAllowClear nzPlaceHolder="物料类型">
+              <nz-option *ngFor="let item of lineTypList" [nzValue]="item.value" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">申请部门</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.applyDepartment" placeholder="申请部门">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">申请人员</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.applicant" placeholder="申请人员">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">申请日期-开始</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.applyStartDate" placeholder="申请日期-开始" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">申请日期-截至</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-date-picker [(ngModel)]="filters.applyEndDate" placeholder="申请日期-截至" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">计划员</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.planner" placeholder="计划员">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">是否有计划员</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.isHasPlanner" nzAllowClear nzPlaceHolder="是否有计划员">
+              <nz-option *ngFor="let item of isHasPlannerList" [nzValue]="item.value" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">状态</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.handleStatus" nzAllowClear nzPlaceHolder="处理状态">
+              <nz-option *ngFor="let item of handleStatusList" [nzValue]="item.value" [nzLabel]="item.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDemandLineList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+      </div>
+    </div>
+    <nz-tabset (nzSelectChange)="handleTabChange($event)" [(nzSelectedIndex)]="selectedTabIndex" [nzAnimated]="false" [nzType]="'card'">
+      <nz-tab *ngFor="let tab of tabList" [nzTitle]="tab">
+        <app-ufast-table class="main-table" [tableConfig]="demandLineTableConfig" [dataList]="demandLineList" [getListHandle]="getDemandLineList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+      </nz-tab>
+    </nz-tabset>
+  </ng-container>
+  <ng-container *ngIf="selectedTab === tabPageType.CreatePurchasePlanPage">
+    <app-create-purchase-plan (backToMainPage)="onChildEmit($event)" [createdPurchasePlanList]="createdPurchasePlan"></app-create-purchase-plan>
+  </ng-container>
+
+  <nz-modal [(nzVisible)]="isShowPlannerListModal" nzTitle="修改计划员" [nzFooter]="plannerModalFooter" (nzOnCancel)="isShowPlannerListModal = false" style="height: 600px;">
+    <app-ufast-table [tableConfig]="plannerListTableConfig" [dataList]="plannerList" [getListHandle]="getPlannerList"></app-ufast-table>
+    <ng-template #plannerModalFooter>
+      <button nz-button nzType="default" (click)="isShowPlannerListModal = false">取消</button>
+    </ng-template>
+  </nz-modal>
+  <ng-template #plannerSelectedTpl let-id="userId" let-name="name">
+    <span class="operate-text" (click)="selectPlanner(id, name)">选择</span>
+  </ng-template>
+
+</app-tab-route>

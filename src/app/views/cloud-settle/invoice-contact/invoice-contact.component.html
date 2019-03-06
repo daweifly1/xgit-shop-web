@@ -1,0 +1,493 @@
+<app-tab-route tabTitle="发票联系单">
+  <ng-container *ngIf="tabPageType === 0">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="ERP发票联系单号"
+                         (search)="getInvoiceList()" [(searchText)]="filters.erpId"
+                         (advancedSearch)="fullSearch($event)" (refresh)="refresh($event)" [tableConfig]="invoiceTableConfig"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addOrEditInvoiceTab(1)" *appAuthBtu="ActionCode.invoiceAdd">新增</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="fullSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">ERP发票联系单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.erpId" nzCompact="true">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">发票联系单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.id" nzCompact="true">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">采购合同编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.purchaseNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">发票编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.invoiceBillId">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">供应商名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.supplierName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">所属公司</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.businessEntity">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select [(ngModel)]="filters.state" class="selectStyle" nzAllowClear>
+              <nz-option *ngFor="let item of invoiceStateList;" nzLabel="{{item | map:'invoiceState'}}" [nzValue]="item"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">创建人</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.creator">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6" nzOffset="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">发票日期-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [nzFormat]="dateFormat" [nzShowTime]="false" [(ngModel)]="filters.startDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">发票日期-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [nzFormat]="dateFormat" [(ngModel)]="filters.endDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getInvoiceList()">搜索</button>
+        <button nz-button nzType="info" (click)="fullSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="fullSearchClose()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [dataList]="invoiceDataList" [tableConfig]="invoiceTableConfig" [getListHandle]="getInvoiceList"></app-ufast-table>
+
+    <nz-modal [(nzVisible)]="isVisible" nzTitle="付款查询" nzWidth="750px"
+              [nzFooter]="null" (nzOnCancel)="handleCancel()">
+      <nz-table #payQueryTable [nzData]="payQueryDataList" [nzShowPagination]='false' [nzBordered]='true'>
+        <thead>
+        <tr>
+          <th [ngStyle]="{'width':'60px'}">行号</th>
+          <th *ngFor="let headItem of payQueryTableConfig.header;trackBy:trackByTableHeader"
+              [ngStyle]="{'width':headItem.width}"><span>{{headItem.name}}</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of payQueryTable.data; trackBy:trackByInvoiceId;let i=index;">
+          <td>{{i+1}}</td>
+          <td *ngFor="let rowFieldName of payQueryTableConfig.header;" [ngStyle]="{'width':rowFieldName.width}">
+            <ng-container [ngSwitch]="rowFieldName.field">
+              <ng-container *ngSwitchCase="'payVoucherTime'">
+                <span>{{row.payVoucherTime | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <span>{{row[rowFieldName.field]}}</span>
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </nz-modal>
+    <nz-modal class="choose-model-box" [(nzVisible)]="printIsVisible" nzTitle="打印" nzWidth="500px"
+              (nzOnCancel)="printHandleCancel()"
+              [nzFooter]="modalFooter" nzMaskClosable="false">
+      <div class="print-dir-wrap">
+        <label>请选择打印方向:</label>
+        <nz-select [(ngModel)]="printDir">
+          <nz-option *ngFor="let item of printDirList" [nzLabel]="item.label" [nzValue]="item.value"></nz-option>
+        </nz-select>
+      </div>
+      <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)="preview('print')">开始打印</button>
+        <button nz-button nzType="default" (click)="preview('preview')">打印预览</button>
+      </ng-template>
+    </nz-modal>
+  </ng-container>
+  <ng-template #operationTpl let-id="id" let-index="_index">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="addOrEditInvoiceTab(2,invoiceDataList[index])">编辑</app-action>
+      <app-action [enabled]="actionStatus[id].del" (clickAction)="deleteInvoice(invoiceDataList[index])">删除</app-action>
+      <app-action [enabled]="actionStatus[id].print" (clickAction)="showPrintModal(invoiceDataList[index])">打印</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #payedAmountTpl let-index="_index" let-payedAmount="payedAmount">
+     <span class="operate-text" (click)="showModal(invoiceDataList[index])">{{payedAmount}}</span>
+  </ng-template>
+  <ng-template #idTpl let-id="id" let-index="_index">
+    <span class="operate-text" (click)="addOrEditInvoiceTab(4, invoiceDataList[index])">{{id}}</span>
+  </ng-template>
+  <ng-container *ngIf="tabPageType === 1 || tabPageType === 2">
+    <form nz-form [formGroup]="inoviceForm" class="header-form">
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9" nzRequired>供应商</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <input nz-input [maxlength]="MaxInputLenEnum.Default" formControlName="supplierName" nzSize="default"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9" nzRequired>发票编号</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <input nz-input [maxlength]="MaxInputLenEnum.Default" formControlName="invoiceBillId" nzSize="default"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">发票张数</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="0" [nzPrecision]="0" [nzMax]="maxInputNumber" formControlName="billNum" nzSize="default"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class="marginBottom">
+        <nz-form-label nzSpan="9" nzRequired>发票金额</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="moneyMin" [nzMax]="moneyMax" [nzStep]="moneyMin" [nzPrecision]="moneyDec" formControlName="billAmount"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9" nzRequired>发票行金额合计</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="moneyMin" [nzMax]="moneyMax" [nzStep]="moneyMin" formControlName="rowAmount" [nzPrecision]="moneyDec"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9" nzRequired>发票税额合计</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="moneyMin" [nzMax]="moneyMax" [nzStep]="moneyMin" formControlName="taxAmount" nzSize="default" [nzPrecision]="moneyDec"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">收款单位账号</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <input nz-input [maxlength]="MaxInputLenEnum.Default" formControlName="billAccountNo" nzSize="default"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">收款单位开户行</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <input nz-input [maxlength]="MaxInputLenEnum.Default" formControlName="billBank" nzSize="default"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">开户行地址</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <input nz-input [maxlength]="MaxInputLenEnum.Default" formControlName="billBankAddress" nzSize="default"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">运杂费</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="0" [nzMax]="moneyMax" [nzStep]="moneyMin" [nzPrecision]="moneyDec" formControlName="transportFees" nzSize="default"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">减：预付款</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="0" [nzMax]="moneyMax" [nzStep]="moneyMin" [nzPrecision]="moneyDec" formControlName="prepayments" nzSize="default" ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">暂扣：质保金</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="0" [nzMax]="moneyMax" [nzStep]="moneyMin" [nzPrecision]="moneyDec" formControlName="warranty" nzSize="default"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">减：扣款项</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-input-number [nzMin]="0" [nzMax]="moneyMax" [nzStep]="moneyMin" [nzPrecision]="moneyDec" formControlName="deduction" nzSize="default"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">发票日期</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-date-picker [nzFormat]="dateFormat" formControlName="billCreateDate" ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="marginBottom">
+        <nz-form-label nzSpan="9">描述</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <input nz-input [maxlength]="MaxInputLenEnum.Default" formControlName="description" nzSize="default"/>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <div nz-col nzSpan="6" class="marginTop">
+      <form nz-form [formGroup]="countForm">
+        <nz-form-item>
+          <nz-form-label nzSpan="9">总金额合计</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="totalMoneyCount" nzSize="default"/>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <div nz-col nzSpan="6" class="marginTop">
+      <form nz-form [formGroup]="countForm">
+        <nz-form-item>
+          <nz-form-label nzSpan="9">行金额合计</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="lineAmountCount" nzSize="default"/>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <div nz-col nzSpan="6" class="marginTop">
+      <form nz-form [formGroup]="countForm">
+        <nz-form-item>
+          <nz-form-label nzSpan="9">税额合计</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="taxCount" nzSize="default"/>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <div nz-col nzSpan="6" class="marginTop">
+      <form nz-form [formGroup]="countForm">
+        <nz-form-item>
+          <nz-form-label nzSpan="9">开票数量合计</nz-form-label>
+          <nz-form-control nzSpan="15">
+            <input nz-input formControlName="invoiceNumCount" nzSize="default"/>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+
+    <div class="footer-btu">
+      <button nz-button nzType="primary" class="submit-button" (click)="saveOrder()">保存</button>
+      <button nz-button nzType="primary" class="submit-button" (click)="submitOrder()">提交</button>
+      <button nz-button nzType="primary" class="submit-button" nzGhost="true" (click)="toggleManagePage()">返回
+      </button>
+    </div>
+    <div class="table-header">
+      <button nz-button nzType="primary" nzGhost class="marginRight" (click)="goToMatchOrder()">匹配交货</button>
+      <span class="batch-tax-wrap">
+        <label>批量赋税</label>
+        <nz-select nzPlaceHolder="请选择" ngModel (ngModelChange)="batchTaxChange($event)">
+                  <nz-option nzValue="" nzLabel="请选择"></nz-option>
+                  <nz-option *ngFor="let taxCode of taxCodeDateList;let i=index" [nzValue]="i" [nzLabel]="taxCode.taxRateCode"></nz-option>
+        </nz-select>
+      </span>
+      <!--<button hidden nz-button nzType="primary" nzGhost class="marginRight" (click)="addOrEditSubmit(5)">提交审批</button>-->
+      <!--<button hidden nz-button nzType="primary" nzGhost>业务审批</button>-->
+    </div>
+
+    <div >
+      <nz-table #childTable nzSize="small" [nzData]="invoiceDataChildList" #invoiceChildTable [nzShowPagination]="true" [nzFrontPagination]="true"
+                [nzBordered]="true" [nzShowQuickJumper]="true" class="user-table" [nzScroll]="{x:'2100px'}" [(nzPageSize)]="invoiceChildTableConfig.pageSize"
+                [nzPageSizeOptions]="invoiceChildTableConfig.pageSizeOptions" [nzShowSizeChanger]="true" [(nzPageIndex)]="invoiceChildTableConfig.pageNum">
+        <thead>
+        <tr>
+          <th [ngStyle]="{'width':'60px'}"><span>操作</span></th>
+          <th *ngFor="let headItem of invoiceChildTableConfig.header;trackBy:trackByTableHeader"
+              [ngStyle]="{'width':headItem.width}"><span>{{headItem.name}}</span></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let row of childTable.data;trackBy:trackByInvoiceId;let rowIndex = index;">
+          <td [ngStyle]="{'width':'60px'}">
+            <span class="operate-text" (click)="deleteInvoiceChild(rowIndex)">删除</span>
+          </td>
+          <td *ngFor="let rowFieldName of invoiceChildTableConfig.header;" [ngStyle]="{'width':rowFieldName.width}">
+            <ng-container [ngSwitch]="rowFieldName.field">
+              <ng-container *ngSwitchCase="'toMatchQuantity'">
+                <nz-input-number [nzMin]="0" [nzPrecision]="invoiceNumDec" [nzStep]="1" nz-input [(ngModel)]="row.quantityRealCalculation"
+                                 (ngModelChange)="getQuantityChange(row, $event)"></nz-input-number>
+              </ng-container>
+              <ng-container *ngSwitchCase="'billWithoutaxPrice'">
+                <nz-input-number [nzMin]="0" nz-input [(ngModel)]="row.billWithoutaxPriceRealCalculation"
+                                 (ngModelChange)="getbillChange(row, $event)"></nz-input-number>
+              </ng-container>
+              <ng-container *ngSwitchCase="'rowAmount'">
+                <nz-input-number [nzMin]="0" [nzMax]="moneyMax" [nzStep]="moneyMin" [nzPrecision]="moneyDec" [(ngModel)]="row.rowAmountRealCalculation"
+                                 (ngModelChange)="getRowChange(row, $event)"></nz-input-number>
+              </ng-container>
+              <ng-container *ngSwitchCase="'taxCode'">
+                <nz-select nzPlaceHolder="请选择" [(ngModel)]="row.taxCodeRealCalculation"
+                           (ngModelChange)="getTaxCodeChange(row, $event)" class="selectStyle">
+                  <nz-option *ngFor="let taxCode of taxCodeDateList;let i=index"
+                             [nzValue]="i" [nzLabel]="taxCode.taxRateCode"></nz-option>
+                </nz-select>
+              </ng-container>
+              <ng-container *ngSwitchCase="'taxAmount'">
+                <nz-input-number [nzMin]="0" [(ngModel)]="row.taxAmountRealCalculation"
+                                 (ngModelChange)="getTaxAmountChange(row, $event)" [nzPrecision]="moneyDec"></nz-input-number>
+              </ng-container>
+              <ng-container *ngSwitchCase="'totalAmount'">
+                <nz-tooltip *ngIf="row.totalAmountInvalid">
+                  <span nz-tooltip class="red-color">{{row[rowFieldName.field] | number:'0.0-2'}}</span>
+                  <ng-template #nzTemplate>
+                    总金额	&ne;开票含税单价&times;开票数量
+                  </ng-template>
+                </nz-tooltip>
+                <span *ngIf="!row.totalAmountInvalid">{{row[rowFieldName.field] | number:'0.0-2'}}</span>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <span>{{row[rowFieldName.field]}}</span>
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div class="footer-btu">
+      <button nz-button nzType="primary" class="submit-button" (click)="saveOrder()">保存</button>
+      <button nz-button nzType="primary" class="submit-button" (click)="submitOrder()">提交</button>
+      <button nz-button nzType="primary" class="submit-button" nzGhost="true" (click)="toggleManagePage()">返回</button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="tabPageType === 3">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="采购合同" (search)="searchMarch()"
+                         [(searchText)]="matchFilters.purchaseNo"  (advancedSearch)="matchAdvancedSearch()"
+                         (refresh)="searchMarch()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addMatchResult()">匹配确认</button>
+      <button nz-button nzType="info" (click)="cancelMatch()">取消</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="showMatchSearch">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">采购合同</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="matchFilters.purchaseNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">供应商</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="matchFilters.supplierName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料编码</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="matchFilters.materialsNo">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">物料描述</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="matchFilters.materialsName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label nzSpan="5">接收时间</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-range-picker [nzFormat]="dateFormat" [(ngModel)]="receiveDateRange"></nz-range-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="searchMarch()">搜索</button>
+        <button nz-button nzType="info" (click)="searchMarchReset()">重置</button>
+        <button nz-button nzType="default" (click)="matchAdvancedSearch($event)">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="invoiceMatchTableConfig" [dataList]="invoiceMatchDataList" [getListHandle]="searchMarch" (selectedChange)="checkMatchTableRow($event)">
+    </app-ufast-table>
+  </ng-container>
+
+  <ng-container *ngIf="tabPageType === 4">
+    <div class="header-form">
+      <nz-form-item *ngFor="let item of detailFieldList; trackBy:trackByTableHeader">
+        <nz-form-label nzSpan="9">{{item.name}}</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <nz-form-text *ngIf="item.pipe">{{detailInvoice[item.field]|map:item.pipe}}</nz-form-text>
+          <nz-form-text *ngIf="!item.pipe">{{detailInvoice[item.field]}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="9">审批记录</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <span class="operate-text" (click)="viewAuditHistory()">查看</span>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <app-ufast-table [tableConfig]="invoiceDetailTableConfig" [dataList]="invoiceDataChildList"></app-ufast-table>
+    <!--<nz-table nzSize="small" [nzData]="invoiceDataChildList" #invoiceChildTable [nzShowPagination]="false"-->
+                <!--[nzBordered]="true" [nzShowQuickJumper]="true" class="user-table" [nzScroll]="{x: '1900px'}">-->
+        <!--<thead>-->
+        <!--<tr>-->
+          <!--<th *ngFor="let headItem of invoiceDetailTableConfig.header;trackBy:trackByTableHeader"-->
+              <!--[ngStyle]="{'width':headItem.width}"><span>{{headItem.name}}</span></th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+
+        <!--<tbody>-->
+        <!--<tr *ngFor="let row of invoiceChildTable.data;trackBy:trackByInvoiceId;let rowIndex = index;">-->
+          <!--<td *ngFor="let rowFieldName of invoiceDetailTableConfig.header;" [ngStyle]="{'width':rowFieldName.width}">-->
+            <!--<ng-container [ngSwitch]="rowFieldName.field">-->
+              <!--<ng-container *ngSwitchCase="'updateDate'">-->
+                <!--<span>{{row.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</span>-->
+              <!--</ng-container>-->
+              <!--<ng-container *ngSwitchDefault>-->
+                <!--<span>{{row[rowFieldName.field]}}</span>-->
+              <!--</ng-container>-->
+            <!--</ng-container>-->
+          <!--</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+      <!--</nz-table>-->
+
+    <div class="table-footer-bar">
+        <button *ngIf="showAuditFlowBtu" nz-button nzType="primary" (click)="auditAgree()">审批通过</button>
+        <button *ngIf="showAuditFlowBtu" nz-button nzType="primary"  (click)="auditReject()">审批拒绝</button>
+        <button nz-button nzType="primary" class="submit-button" nzGhost="true" (click)="detailReturn()">返回</button>
+    </div>
+  </ng-container>
+  <app-purchase-audit-process [(show)]="showAuditHistory" [processId]="detailInvoice.processId"></app-purchase-audit-process>
+  <nz-modal nzTitle="审批意见" nzWidth="500px" [(nzVisible)]="auditModalShow" (nzOnCancel)="cancelAuditModal()" (nzOnOk)="confirmAuditModal()">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" *ngIf="isAuditReject" nzRequired>审批意见</nz-form-label>
+        <nz-form-label nzSpan="4" *ngIf="!isAuditReject">审批意见</nz-form-label>
+        <nz-form-control nzSpan="20">
+          <textarea nz-input placeholder="请输入审批意见" [(ngModel)]="auditSubmitData.comments"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </nz-modal>    
+</app-tab-route>

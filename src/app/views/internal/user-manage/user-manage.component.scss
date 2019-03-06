@@ -1,0 +1,30 @@
+/deep/ .red-color{
+  color:red;
+}
+
+.user-table{
+  th,td{
+    font-size:12px;
+  }
+  width:500px;
+}
+
+.edit-add-page{
+  height:100%;
+  width:100%;
+
+  .edit-add-form{
+    width:550px;
+    padding:20px 0 0 30px;
+
+    nz-form-item{
+      margin-bottom:10px;
+    }
+  }
+}
+.ant-tabs{
+  background: #FFF;
+}
+/deep/ .table-header{
+  margin-bottom: 10px;
+}

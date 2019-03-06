@@ -1,0 +1,25 @@
+.menu-ul {
+  width: 100%;
+  background: #fff;
+  margin: 0;
+  padding: 10px 0;
+  border: 1px solid #ccc;
+  li {
+    padding-left: 10px;
+    list-style-type: none;
+    height: 26px;
+    line-height:26px;
+    color: rgba(0, 0, 0, 0.65);
+    &:hover {
+      background: #dee1e6;
+      cursor: pointer;
+    }
+  }
+  .disabled-li{
+    color: #ccc;
+    &:hover {
+      cursor: auto;
+      background: inherit;
+    }
+  }
+}

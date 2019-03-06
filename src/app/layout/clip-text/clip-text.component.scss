@@ -1,0 +1,21 @@
+.clip-wrap {
+    width: inherit;
+    height: inherit;
+    max-height:inherit;
+    .segment-wrap {
+        height: 100%;
+        width: 100%;
+        max-height:inherit;
+        overflow: hidden;
+        // white-space: nowrap;
+        position: relative;
+        word-break: break-all;
+        word-wrap: break-word;
+
+        .dots {
+            position: absolute;
+            right:0;
+            bottom:0;
+        }
+    }
+}

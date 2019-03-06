@@ -1,0 +1,83 @@
+<app-tab-route tabTitle="设备项目预算" >
+  <ng-container *ngIf="selectedTab === tabPageType.ProjectListPage">
+
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="项目名称" (search)="getEquipmentProjectBudgetList()" [(searchText)]="filters.projectName"
+                         [tableConfig]="tableConfig" (advancedSearch)="advancedSearch()"
+                         (refresh)="getEquipmentProjectBudgetList()"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" class="operate-text" (click)="showEquipmentProjectBudgetEditTab('add')" *appAuthBtu="ActionCode.equipmentProjectBudgetAdd">新增</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="isAdvancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">项目编码</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.projectNo" placeholder="项目编码精确搜索">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">项目名称</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.projectName" placeholder="项目名称">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">所属年份</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <input nz-input [(ngModel)]="filters.belongYear" placeholder="所属年份">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">状态</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.status" nzAllowClear nzPlaceHolder="状态">
+              <nz-option *ngFor="let item of statusList" [nzValue]="item.status" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="8">额度状态</nz-form-label>
+          <nz-form-control nzSpan="16">
+            <nz-select style="width: 100%;" [(ngModel)]="filters.quotaStatus" nzAllowClear nzPlaceHolder="状态">
+              <nz-option *ngFor="let item of quotaStatusList" [nzValue]="item.status" [nzLabel]="item.label"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getEquipmentProjectBudgetList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="equipmentProjectBudgetList" [getListHandle]="getEquipmentProjectBudgetList"></app-ufast-table>
+  </ng-container>
+  <ng-container *ngIf="selectedTab === tabPageType.AddOrEditProjectPage">
+    <app-budget-edit (goBackToMainPage)="onChildEmit($event)" [projectId]="currProjectId"></app-budget-edit>
+  </ng-container>
+  <ng-container *ngIf="selectedTab === tabPageType.ProjectDetailPage">
+    <app-budget-detail (goBackToMainPage)="onChildEmit($event)" [projectId]="currProjectId" [operation]="detailOperation"></app-budget-detail>
+  </ng-container>
+
+  <ng-template #operationTpl let-id="id">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="showEquipmentProjectBudgetEditTab('edit', id)" *appAuthBtu="ActionCode.equipmentProjectBudgetEdit">编辑</app-action>
+      <app-action [enabled]="actionStatus[id].audit" (clickAction)="showEquipmentProjectBudgetDetailTab('audit', id)" *appAuthBtu="ActionCode.equipmentProjectBudgetAudit">审批</app-action>
+      <app-action [enabled]="actionStatus[id].modify" (clickAction)="showEquipmentProjectBudgetDetailTab('modify', id)" *appAuthBtu="ActionCode.equipmentProjectBudgetModify">调额度</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #showDetailTpl let-name="projectName" let-id="id">
+    <span class="operate-text" (click)="showEquipmentProjectBudgetDetailTab('show',id)">{{name}}</span>
+  </ng-template>
+
+
+
+</app-tab-route>

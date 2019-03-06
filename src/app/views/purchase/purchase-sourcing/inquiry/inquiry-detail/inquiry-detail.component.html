@@ -1,0 +1,50 @@
+<div>
+    <app-ufast-form-detail [detailDataConfig]="detailDataConfig" [detailData]="orderInfo"></app-ufast-form-detail>
+  <div class="detail-header-info">
+    <br/>
+    <nz-form-item style="width:66%;margin-bottom: 5px;">
+      <nz-form-label [nzSpan]="4" >询价要求</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <nz-form-text>平台要求，展示默认数据；汇率说明</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <br/>
+    <nz-form-item style="width:66%;margin-bottom: 5px;">
+      <nz-form-label [nzSpan]="4" >具体询价要求</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <nz-form-text>{{orderInfo['inquirySpecificClaim']}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="split-bar">
+    <span>供应商</span>
+  </div>
+  <app-ufast-table [tableConfig]="supplierTableConfig" [dataList]="supplierDataList"></app-ufast-table>
+  <div class="split-bar">
+    <span>询价物料行</span>
+  </div>
+  <app-ufast-table [tableConfig]="materialRowTableConfig" [dataList]="materialRowDataList"></app-ufast-table>
+  <div class="table-footer-bar">
+    <ng-container *ngIf="isAheadGetQuote" >
+        <button nz-button nzType="primary" [disabled]="!actionStatus.getQuoteAhead" (click)="onGetQuote()" *appAuthBtu="ActionCode.inquiryListIsAheadGetQuote">提前获取报价</button>
+    </ng-container>
+   <ng-container *ngIf="!isAheadGetQuote">
+      <button nz-button nzType="primary"  [disabled]="!actionStatus.getQuote" (click)="onGetQuote()" *appAuthBtu="ActionCode.inquiryListIsAheadGetQuote">获取报价</button>
+   </ng-container>
+
+    <button nz-button nzType="primary" [disabled]="!actionStatus.dealBid" (click)="onDealBid()" *appAuthBtu="ActionCode.inquiryListDealBid">中标处理</button>
+    <button nz-button nzType="primary" [disabled]="!actionStatus.switchPurchaseWay" (click)="onSwitchPurchaseWay()" *appAuthBtu="ActionCode.inquiryListConversionPurchaseway">转换采购方式</button>
+    <button nz-button nzType="primary" (click)="cancelApprovalForm()" *appAuthBtu="ActionCode.approvalFormCancellation">作废审批表</button>
+    <button nz-button nzType="primary" [nzGhost]="true" (click)="returnMainPage()">返回</button>
+  </div>
+</div>
+<nz-modal nzTitle="转换采购方式" [(nzVisible)]="switchWayModalShow" (nzOnOk)="onOkSwitchWay()" nzWidth="500px" (nzOnCancel)="cancelSwitchWay()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4">采购方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select [(ngModel)]="selectedPurchaseWay" style="width:100%;" nzPlaceHolder="请选择采购方式">
+        <nz-option *ngFor="let value of purchaseWayList;trackBy:trackByItem;" [nzValue]="value" nzLabel="{{value|map:'purchaseWay'}}"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+</nz-modal>

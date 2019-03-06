@@ -1,0 +1,68 @@
+<div #template>
+  <div *ngFor="let printInfo of printData;let i=index;" style="page-break-after:always;width: 100mm;height: 70mm; background: #fff; margin:0; padding:9mm 4mm 4mm 1mm;overflow: hidden;
+       position: relative;background: #fff; font-family: 宋体; box-sizing: border-box;">
+    <div style="border:1px solid #000;box-sizing:border-box;height:100%;width:100%">
+      <div style="height: 10mm; overflow: hidden;margin:0;padding:0;box-sizing:border-box;font-size: 14px; border-bottom:1px solid #000;">
+        <div style="float:left; margin-left:5mm; margin-top:2mm; font-weight: bold;">
+          {{printInfo.invoiceNo}}
+        </div>
+        <div style="float:right; margin-right:5mm; margin-top:2mm;">
+          {{printInfo.createDate | date:"yyyy-MM-dd HH:mm"}}
+        </div>
+      </div>
+      <div style="font-size: 14px; height: 26mm; overflow: hidden; border-bottom: 1px solid #000;">
+        <div style="float: left; line-height: 6.5mm; width: 60mm; padding: 1mm 1mm 0 3mm; box-sizing: border-box;">
+          <div style="width: 60mm; height: 6.5mm; line-height:normal;">
+            <div style="float:left; width: 20mm;">合同号:</div>
+            <div style="float:left; width: 40mm;word-wrap: break-word;word-break: break-all;">
+              {{printInfo.purchaseNo}}
+            </div>
+          </div>
+          <div style="width: 60mm; height: 6.5mm; line-height:normal;">
+            <div style="float:left; width: 20mm;">收货单位:</div>
+            <div style="float:left; width: 40mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.goodsReceivor}}
+            </div>
+          </div>
+          <div style="width: 60mm; height: 6.5mm; line-height:normal;" *ngIf="printInfo.consignee">
+            <div style="float:left; width: 20mm;">收货人:</div>
+            <div style="float:left; width: 40mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.consignee}}
+            </div>
+          </div>
+          <div style="width: 60mm; height: 6.5mm; line-height:normal;" *ngIf="printInfo.deliveryPhone">
+            <div style="float:left; width: 20mm;">联系电话:</div>
+            <div style="float:left; width: 40mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.deliveryPhone}}
+            </div>
+          </div>
+        </div>
+
+        <div style="float: right; width: 26mm; height: 26mm; padding:2px; box-sizing: border-box;">
+          <qrcode [size]="100" [qrdata]="printInfo.invoiceNo" level="H" [usesvg]="true"></qrcode>
+        </div>
+        <div style="float: right; width: 2mm; height: 26mm; border-right: solid 1px #000;"></div>
+      </div>
+      <div style="font-size: 14px; height: 24mm; overflow: hidden; padding: 1mm 1mm 0 3mm; box-sizing: border-box;">
+        <div style="width: 84mm; height: 6mm; line-height:normal;">
+          <div style="float:left; width: 20mm;">发货单位:</div>
+          <div style="float:left; width: 64mm;word-wrap: break-word;word-break: break-all;">
+            {{printInfo.supplierName}}
+          </div>
+        </div>
+        <div style="width: 80mm; height: 6mm; line-height:normal;" *ngIf="printInfo.logisticsContact">
+          <div style="float:left; width: 20mm;">联系人:</div>
+          <div style="float:left; width: 60mm; word-wrap: break-word; word-break: break-all;">
+            {{printInfo.logisticsContact}}
+          </div>
+        </div>
+        <div style="width: 80mm; height: 6mm; line-height:normal;" *ngIf="printInfo.logisticsPhone">
+          <div style="float:left; width: 20mm;">联系电话:</div>
+          <div style="float:left; width: 60mm; word-wrap: break-word; word-break: break-all;">
+            {{printInfo.logisticsPhone}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

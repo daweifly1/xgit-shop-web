@@ -1,0 +1,156 @@
+<div class="detail-header-info">
+  <div class="split-bar">
+    <span>发货信息</span>
+  </div>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.invoiceNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.deliveryType | map:'deliverGoodsType'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">合同编号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.purchaseNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">供应商</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.supplierName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">收货方</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.goodsReceivor}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">合同类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.contractType|map:'contractType'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">收货人</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.consignee}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">收货人电话</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.deliveryPhone}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">收货地址</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.deliveryAddress}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">是否条码管理</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.ifCodeManage | map:'barcodeManage'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div class="detail-header-info">
+  <div class="split-bar">
+    <span>物流信息</span>
+  </div>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流单号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.logisticsNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流公司</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.logisticsCompany}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货时间</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.deliveryDate | date:'yyyy-MM-dd'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流联系人</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.logisticsContact}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流联系电话</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.logisticsPhone}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">运输方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.transportMode | map: 'transportMode'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">车牌号码</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.licensePlate}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货人身份证号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.logisticsContactIdCard}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发运箱数</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{detailHeaderInfo.containerNumber}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流附件</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div class="clearfix">
+        <nz-upload class="view-upload" nzListType="picture-card" [(nzFileList)]="fileList" [nzPreview]="handlePreview"
+          [nzSize]="100*1024" [nzShowButton]="fileList.length < 0" [nzRemove]="removeFile">
+        </nz-upload>
+        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+          <ng-template #modalContent>
+            <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height': '100%' }" />
+          </ng-template>
+        </nz-modal>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+
+
+
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+<div class="marginTop marginBottom">
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="detailMaterialList"></app-ufast-table>
+</div>
+
+
+
+
+<div class="footer-bar">
+  <button nz-button nzType="primary" class="submit-button" style="margin-top: 30px;" nzGhost (click)="emitFinish()">返回
+  </button>
+</div>

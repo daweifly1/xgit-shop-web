@@ -1,0 +1,54 @@
+<app-tab-route tabTitle="潜在供应商列表">
+  <ng-container *ngIf="currentPage === PageTypeEnum.MainPage">
+    <app-ufast-table-nav (search)="getSupplierList()" [tableConfig]="tableConfig" (advancedSearch)="onAdvancedSearch()" (refresh)="getSupplierList()" searchPlaceholder="公司名称" [(searchText)]="filterData.name">
+    </app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">公司名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filterData.name">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">注册日期-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filterData.startRegistDate" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">注册日期-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filterData.endRegistDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getSupplierList()">搜索</button>
+        <button nz-button nzType="info" (click)="resetSearch()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" (selectedChange)="selectSupplier($event)" [tableConfig]="tableConfig" [getListHandle]="getSupplierList" [dataList]="supplierDataList"></app-ufast-table>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.DetailPage">
+    <app-supplier-detail [supplierId]="detailSupplierId" (finish)="returnMainPage()"></app-supplier-detail>
+  </ng-container>
+  <ng-container *ngIf="currentPage === PageTypeEnum.RecommendPage">
+    <app-recommend-supplierr (finish)="returnMainPage()" [source]="recommendSource" [supplierId]="detailSupplierId" [isManager]="false"></app-recommend-supplierr>
+  </ng-container>
+  <ng-template #operationTpl let-id="id" let-supplierId="supplierId">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].recommend" (clickAction)="recommendSupplier(supplierId)" *appAuthBtu="ActionCode.lurkingSupplierRecommend">推荐</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #supplierNameTpl let-supplierId="supplierId" let-name="name">
+    <span class="operate-text" (click)="goDetailPage(supplierId)">{{name}}</span>
+  </ng-template>
+
+
+</app-tab-route>

@@ -1,0 +1,32 @@
+<div class="upload-modal-wrap">
+  <div class="content-wrap">
+    <ng-container *ngTemplateOutlet="uploadData.topTpl"></ng-container>
+    <nz-form-item>
+      <nz-form-label nzSpan="6" class="choose-file-label" nzRequired>选择文件</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <div class="choose-file-wrap">
+          <nz-upload [nzAction]="uploadData.uploadUrl" [nzFileList]="fileList" [nzShowButton]="fileList.length < uploadData.maxFileNum"
+            [nzRemove]="onRemoveFile" [nzListType]="uploadData.listType" (nzChange)="onFileStatusChange($event)"
+            [nzBeforeUpload]="onBeforeUpload" [nzData]="onUploadData">
+            <button nz-button *ngIf="uploadData.listType !== 'picture-card'">
+              <i class="anticon anticon-plus"></i>
+              <span>{{uploadData.addBtuText}}</span>
+            </button>
+            <ng-container *ngIf="uploadData.listType === 'picture-card'">
+              <i class="anticon anticon-plus"></i>
+              <span>{{uploadData.addBtuText}}</span>
+            </ng-container>
+          </nz-upload>
+          <span class="notice-msg" *ngIf="fileList.length < uploadData.maxFileNum">{{uploadData.placeHolder}}</span>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+    <ng-container *ngTemplateOutlet="uploadData.bottomTpl"></ng-container>
+  </div>
+
+  <div class="footer" *ngIf="uploadData.cancelText !== null || uploadData.okText !== null">
+    <button nz-button nzType="primary" [nzGhost]="true" nzSize="large" *ngIf="uploadData.cancelText!==null" (click)="onModalCancel()">{{uploadData.cancelText}}</button>
+    <button nz-button nzType="primary" nzSize="large" [disabled]="fileList.length === 0" *ngIf="uploadData.okText!==null"
+      (click)="onModalOk()">{{uploadData.okText}}</button>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div *ngIf="_show" class="mask" (click)="onMask()">
+  <div class="right-box-wrap" [ngStyle]="{width: width+'px'}" (click)="onContent($event)">
+    <div class="head-bar">
+      <span class="title-text">{{title}}</span>
+      <span class="close-icon" (click)="onClose()"><i class="anticon anticon-close-circle-o"></i></span>
+    </div>
+    <div class="content-wrap">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

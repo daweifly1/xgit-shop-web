@@ -1,0 +1,21 @@
+<div class="process-mask" *ngIf="_processShow" (click)="closeOnMask()">
+  <div class="audit-process" (click)="clickOnContent($event)">
+    <div class="head-bar">
+      <span class="title-text">{{title}}</span>
+      <span class="close-icon" (click)="onClose()"><i class="anticon anticon-close-circle-o"></i></span>
+    </div>
+    <div class="main-content">
+      <nz-card class="process-item" *ngFor="let data of auditProcessList; trackBy: trackByItem" [nzHoverable]="true">
+        <div><nz-tag *ngIf="!data.isApplyNode" [nzColor]="resultColor[data.result]">{{data.result | map: 'purchaseAuditProcess'}}</nz-tag><span>{{data.auditDept}}: {{data.auditPerson}}</span></div>
+        <ng-container>
+          <div class="audit-date">
+            <ng-container *ngIf="!data.isApplyNode">审批日期:</ng-container>
+            <ng-container *ngIf="data.isApplyNode">申请日期:</ng-container>
+            {{data.auditDate | date: 'yyyy-MM-dd HH:mm'}}
+          </div>
+          <div class="audit-remark" *ngIf="!data.isApplyNode">审批意见:&nbsp;{{data.auditRemark}}</div>
+        </ng-container>
+      </nz-card>
+    </div>
+  </div>
+</div>

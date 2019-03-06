@@ -1,0 +1,79 @@
+.purchase-steps {
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  line-height: 30px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    .step-item {
+      width: 100px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #cccccc;
+      color: #ffffff;
+    }
+    .step-item:hover {
+      cursor: pointer;
+    }
+    .step-line {
+      height: 1px;
+      background-color: #cccccc;
+      margin: 14px 3px;
+    }
+    .line-width-6 {
+      width: calc(100% - 100px);
+    }
+  }
+  .step-width-6 {
+    width: calc(100% / 6);
+  }
+  .step-active {
+    .step-item,.step-line {
+      background-color: #009FE0;
+      color: #ffffff;
+    }
+  }
+}
+.sub-step-wrap {
+  position: absolute;
+}
+.sub-step {
+  width: 480px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  .steps {
+    display: flex;
+    justify-content: space-between;
+  }
+  .step-item {
+    width: 80px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #cccccc;
+    color: #ffffff;
+    font-size: 12px;
+  }
+  .step-item:hover {
+    cursor: pointer;
+  }
+  .step-line {
+    height: 1px;
+    width: 40px;
+    background-color: #cccccc;
+    margin: 12px 3px;
+  }
+  .step-active {
+    .step-item,.step-line {
+      background-color: #009FE0;
+      color: #ffffff;
+    }
+  }
+}

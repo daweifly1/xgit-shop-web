@@ -1,0 +1,40 @@
+<ng-container *ngIf="currentPage === tabPageType.ManagePage">
+  <div class="detail-header-info">
+    <nz-form-item *ngFor="let item of headerFieldList;">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{headerInfo[item.field]}}</nz-form-text>
+
+        <nz-form-text *ngIf="item.pipe">{{headerInfo[item.field] | map: item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="split-bar">
+    <span>物料信息</span>
+  </div>
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="materialDetailList"></app-ufast-table>
+  <div class="table-footer-bar" *ngIf="!isAuditPage">
+    <button nz-button nzType="info" (click)="onCancel()">关闭</button>
+  </div>
+  <div class="table-footer-bar" *ngIf="isAuditPage">
+    <button nz-button nzType="info" (click)="pass()" *ngIf="isAuditPage">通过</button>
+    <button nz-button nzType="info" (click)="reject()">拒绝</button>
+  </div>
+</ng-container>
+<ng-container *ngIf="currentPage === tabPageType.AuditPage">
+  <form nz-form [formGroup]="auditForm">
+    <nz-form-item>
+      <nz-form-label nzSpan="2" nzRequired>审核意见</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <textarea nz-input rows="2" formControlName="auditOpinion" [maxlength]="InputMaxLen.Default"></textarea>
+        <nz-form-explain *ngIf="auditForm.get('auditOpinion').dirty && auditForm.get('auditOpinion').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="table-footer-bar">
+    <button nz-button nzType="info" (click)="rejectSubmit()">提交</button>
+    <button nz-button nzType="info" (click)="onCancel()">取消</button>
+  </div>
+</ng-container>

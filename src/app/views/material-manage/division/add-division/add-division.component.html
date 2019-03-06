@@ -1,0 +1,49 @@
+<form nz-form [formGroup]="form" class="form" (ngSubmit)="submitForm()">
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物资大类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="divisionName" nzShowSearch>
+        <nz-option *ngFor="let item of divisionNameList;trackBy:trackById;" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('divisionName').dirty && form.get('divisionName').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>计划员</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="salesmanName" (focus)="showSalesmanModel()" readonly />
+      <nz-form-explain *ngIf="form.get('salesmanName').dirty && form.get('salesmanName').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>保管员</nz-form-label>
+    <nz-form-control nzSpan="18">
+        <input nz-input formControlName="keeperName" (focus)="showKeeperNameModel()" readonly />
+      <nz-form-explain *ngIf="form.get('keeperName').dirty && form.get('keeperName').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control nzOffset="6" nzSpan="18">
+      <button nz-button type="submit" nzType="primary">保存</button>
+      <button nz-button nzGhost nzType="primary" (click)="back()">取消</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<nz-modal class="set-modal" [(nzVisible)]="salesmanVisible" nzTitle="选择计划员" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelSalesman()">
+  <app-ufast-table [tableConfig]="salesmanTableConfig" [getListHandle]="getSalesmanDataList" [dataList]="salesmanDataList"></app-ufast-table>
+  <ng-template #chooseSalesman let-ctx="_this">
+    <span class="operate-text" (click)="chooseSalesmanFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="set-modal" [(nzVisible)]="keeperNameVisible" nzTitle="选择保管员" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelKeeperName()">
+  <app-ufast-table [tableConfig]="keeperNameTableConfig" [getListHandle]="getKeeperNameDataList" [dataList]="keeperNameDataList"></app-ufast-table>
+  <ng-template #chooseKeeperName let-ctx="_this">
+    <span class="operate-text" (click)="chooseKeeperNameFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>

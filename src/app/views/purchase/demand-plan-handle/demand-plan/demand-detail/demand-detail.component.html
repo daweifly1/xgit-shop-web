@@ -1,0 +1,11 @@
+<app-ufast-form-detail [detailDataConfig]="demandDetailDataConfig" [detailData]="demandDetailData"></app-ufast-form-detail>
+<div class="split-bar">
+  <span>需求计划物料行</span>
+</div>
+<app-ufast-table [tableConfig]="demandDetailTableConfig" [dataList]="demandDetailList"></app-ufast-table>
+<div class="table-footer-bar">
+  <ng-container *ngIf="isShowObsoleteBtn">
+    <button nz-button nzType="primary" (click)="obsoleteDemandPlan()" *appAuthBtu="ActionCode.demandPlanObsolete">作废</button>
+  </ng-container>
+  <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">返回</button>
+</div>

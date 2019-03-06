@@ -1,0 +1,55 @@
+<div class="detail-header-info budget-detail">
+  <nz-form-item *ngFor="let detailItem of budgetDetail; trackBy: trackByItem">
+    <nz-form-label  [nzSpan]="9">{{detailItem.name}}</nz-form-label>
+    <nz-form-control  [nzSpan]="15">
+      <nz-form-text *ngIf="!detailItem.pipe && !detailItem.isEdit">{{budgetItem[detailItem.field]}}</nz-form-text>
+      <nz-form-text *ngIf="detailItem.pipe">{{budgetItem[detailItem.field] | map: detailItem.pipe}}</nz-form-text>
+      <nz-input-number style="width: 200px;" *ngIf="!detailItem.pipe && detailItem.isEdit && detailItem.isNumberInput" [nzMin]="decimals.min" [nzMax]="decimals.max"
+                       [nzPrecision]="decimals.precision" [(ngModel)]="budgetItem[detailItem.field]" [nzPlaceHolder]="detailItem.name"></nz-input-number>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="full-form-item">
+    <nz-form-label  [nzSpan]="3">备注</nz-form-label>
+    <nz-form-control  [nzSpan]="21">
+      <nz-form-text>{{budgetItem.remark}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="full-form-item" *ngIf="isBudgetRefused">
+    <nz-form-label  [nzSpan]="3">拒绝原因</nz-form-label>
+    <nz-form-control  [nzSpan]="21">
+      <nz-form-text>{{budgetItem.rejectReason}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="full-form-item" *ngIf="actionsStatus.modifyQuota">
+    <nz-form-label  [nzSpan]="3" nzRequired>调整原因</nz-form-label>
+    <nz-form-control  [nzSpan]="18">
+      <textarea nz-input style="width: 100%" row="2" [(ngModel)]="modifyReason" [maxlength]="textLength.default"></textarea>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div class="m-t-sm">
+  <div class="split-bar">
+    <span>调额度记录</span>
+  </div>
+  <app-ufast-table [tableConfig]="investTableConfig" [dataList]="investModifyList"></app-ufast-table>
+</div>
+
+<div class="table-footer-bar">
+  <ng-container *ngIf="actionsStatus.agreeAudit">
+      <button nz-button nzType="primary" class="submit-button" *appAuthBtu="ActionCode.equipmentProjectBudgetAudit" (click)="agreeAudit()">通过</button>
+      <button nz-button nzType="primary" class="submit-button" *appAuthBtu="ActionCode.equipmentProjectBudgetAudit" (click)="refuseAudit()">拒绝</button>
+  </ng-container>
+  
+  <!--<button nz-button nzType="primary" class="submit-button" nzGhost="true" *ngIf="actionsStatus.completeBudget" (click)="completeBudget()">完结</button>-->
+  <button nz-button nzType="primary" class="submit-button" *ngIf="actionsStatus.modifyQuota" (click)="modifyQuota()">提交</button>
+  <button nz-button nzType="primary" nzGhost class="submit-button" nzGhost="true" (click)="goBack(false)">返回</button>
+</div>
+
+<nz-modal [(nzVisible)]="isShowRefuseModal" nzTitle="拒绝" (nzOnCancel)="isShowRefuseModal = false" (nzOnOk)="handleRefuseOk()">
+  <p>请填写拒绝原因</p>
+  <input nz-input placeholder="拒绝原因" [(ngModel)]="refuseReason" [maxlength]="textLength.default">
+</nz-modal>
+<nz-modal [(nzVisible)]="isShowCompleteModal" nzTitle="完结" (nzOnCancel)="isShowCompleteModal = false" (nzOnOk)="handleCompleteOk()">
+  <p>备注</p>
+  <input nz-input placeholder="完结备注" [(ngModel)]="completeReason">
+</nz-modal>

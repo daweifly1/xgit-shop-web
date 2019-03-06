@@ -1,0 +1,49 @@
+<app-tab-route tabTitle="员工请假">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="代理人名称" [(searchText)]="filters.agentName" (search)="getUserLeaveList()"
+      (advancedSearch)="onAdvancedSearch()" (refresh)="getUserLeaveList()" [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="addUserLeave()" *appAuthBtu="ActionCode.userLeaveAdd">新增</button>
+    </ng-template>
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <div class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">代理人名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.agentName">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">开始时间</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.startTime" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">结束时间</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.endTime" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getUserLeaveList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="userLeaveList" [getListHandle]="getUserLeaveList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-id="id">
+    <app-action-group>
+      <app-action (clickAction)="editUserLeave(id)" *appAuthBtu="ActionCode.userLeaveEdit">编辑</app-action>
+      <app-action (clickAction)="deleteUserLeave(id)" *appAuthBtu="ActionCode.userLeaveEdit">删除</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-container *ngIf="currentPage === tabPageType.AddPage">
+    <app-add-user-leave (finish)="onChildFinish()" [detailId]="detailId"></app-add-user-leave>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+      <app-add-user-leave (finish)="onChildFinish()" [detailId]="detailId"></app-add-user-leave>
+  </ng-container>
+</app-tab-route>

@@ -1,0 +1,62 @@
+<app-tab-route tabTitle="工作面板" [closedHandle]="onCloseTab" (nzSelect)="getDataList()">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <div class="user-bar">
+      <div>
+        <i class="anticon anticon-smile-o"></i>
+      </div>
+      <div>
+        <p>欢迎您!</p>
+        <p>{{userInfo.name}}|{{userInfo.deptName}}</p>
+      </div>
+    </div>
+    <div class="main-wrap">
+      <div class="left-wrap">
+        <div class="wait-deal-warp">
+          <div class="title-bar">待办事项</div>
+          <div class="wait-deal-content">
+            <app-ufast-table-nav  [showAdvancedSearch]="false" (search)="getDataList()"
+                                  [tableConfig]="tableConfig" (refresh)="getDataList()"></app-ufast-table-nav>
+            <app-ufast-table class="main-table" [dataList]="dataList" [tableConfig]="tableConfig" [getListHandle]="getDataList"></app-ufast-table>
+          </div>
+        </div>
+        <div class="data-wrap">
+          <div class="title-bar">数据动态<span class="operate-text">more</span></div>
+          <div echarts  id="barchart" [options]="barOptions" style="height: 300px;width: 800px;" ></div>
+        </div>
+      </div>
+      <div class="right-wrap">
+        <div class="fast-nav-wrap">
+          <div class="title-bar">快捷导航</div>
+          <div></div>
+        </div>
+        <div class="info-list">
+          <div class="title-bar">信息列表
+            <span class="operate-text">
+              <a href="/web/information/list?type=5" target="_blank">more</a>
+            </span>
+          </div>
+          <ul class="info-title-list scrollbar-style">
+            <li *ngFor="let item of noticeList"><a [href]="'/web/information/item?item=' + item.id" target="_blank">{{item.title}}</a></li>
+          </ul>
+        </div>
+        <div class="notice-list">
+          <div class="title-bar">通知公告
+            <span class="operate-text">
+              <a href="/web/information/list?type=5" target="_blank">more</a>
+            </span>
+          </div>
+          <ul class="info-title-list scrollbar-style">
+            <li *ngFor="let item of noticeList"><a [href]="'/web/information/item?item=' + item.id" target="_blank">{{item.title}}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #operationTpl let-taskId="taskId" let-processInstanceId="processInstanceId" let-pkId="pkId" let-url="url">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[taskId].deal" (clickAction)="transactItem(taskId, processInstanceId, pkId, url)">审核</app-action>
+      <app-action [enabled]="actionStatus[taskId].view" (clickAction)="viewDetail(taskId, processInstanceId, pkId, url)">查看</app-action>
+    </app-action-group>
+  </ng-template>
+</app-tab-route>

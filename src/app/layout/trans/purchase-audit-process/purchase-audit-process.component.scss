@@ -1,0 +1,60 @@
+@import "../../../../global-styles/variable";
+
+$top-height:$top-menu-bar-height;
+$main-color:#009FE0;
+
+.process-mask {
+  width: 100%;
+  position: fixed;
+  height: calc(100% - #{$top-height});
+  right:0;
+  top: $top-height;
+  z-index:99;
+  background: rgba(0, 0, 0, 0.4);
+}
+.audit-process {
+  width: 350px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: white;
+  box-sizing: border-box;
+  border-bottom: 4px solid $main-color;
+  border-left: 4px solid $main-color;
+  border-top: 4px solid $main-color;
+  overflow: auto;
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .process-item {
+    //border-bottom: 1px solid #cccccc;
+    margin-bottom: 10px;
+
+    .audit-date,.audit-remark {
+      margin-top: 5px;
+    }
+  }
+  /deep/.ant-card-body {
+    padding: 10px;
+  }
+
+  .head-bar{
+    background: $main-color;
+    height:45px;
+    line-height:45px;
+    padding:0 10px;
+    font-size:18px;
+
+    .title-text{
+      color:#fff;
+    }
+    .close-icon{
+      float:right;
+      color:#fff;
+      cursor: pointer;
+    }
+  }
+}

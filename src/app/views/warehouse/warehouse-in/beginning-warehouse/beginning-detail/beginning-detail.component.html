@@ -1,0 +1,36 @@
+<div class="detail-header-info">
+  <nz-form-item *ngFor="let item of headerFieldList;trackBy:trackByItem">
+    <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text *ngIf="!item.pipe">{{headerInfo[item.field]}}</nz-form-text>
+      <nz-form-text *ngIf="item.pipe">{{headerInfo[item.field] | map:item.pipe}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+
+<div class="head-bar"><span>物料信息</span></div>
+
+
+<div nz-col nzSpan="24" class="marginTop">
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="detailMaterialList" ></app-ufast-table>
+
+  <ng-template #operation let-materialsNo="materialsNo" let-disabledFinish="disabledFinish">
+    <span *appAuthBtu="ActionCode.beginningInFinish" [appEnable]="!disabledFinish" (click)="statementFinish(disabledFinish, materialsNo)">结单</span>
+  </ng-template>
+  <ng-template #locationCodeTpl let-ctx="_this">
+      <app-location-selector [disabled]="ctx.disabledFinish" [(ngModel)]="ctx.locationCode" placeholder="储位" [filters]="locationFilter"
+                             [singleTab]="true" [singleTabTitle]="'选择储位'"></app-location-selector>
+  </ng-template>
+</div>
+
+<div>
+  <div nz-col nzSpan="10"></div>
+  <div nz-col nzSpan="12" class="marginTop">
+    <ng-container *ngIf="!stockIn">
+      <button nz-button nzType="primary" class="submit-button" (click)="statementFinish(disabledFinish)" [disabled]="disabledFinish"
+        *appAuthBtu="ActionCode.beginningInFinish">结单</button>
+    </ng-container>
+    <button nz-button nzType="primary" class="submit-button" *ngIf="stockIn" (click)="submitStockIn()">入库</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">返回</button>
+  </div>
+</div>

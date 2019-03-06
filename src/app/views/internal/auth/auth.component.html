@@ -1,0 +1,144 @@
+<app-tab-route tabTitle="资源权限管理">
+  <ng-container *ngIf="tabPageType === 0">
+    <div class="table-header">
+      <button nz-button nzType="info" (click)="getTreeList()">刷新</button>
+      <button nz-button nzType="info" (click)="addOrEditAuth(1,topNode)">新增顶级节点</button>
+    </div>
+    <div class="table-wrap">
+      <nz-table nzSize="small" [nzShowPagination]="false" #authTable [nzData]="authDataList" [nzBordered]="true"
+                [nzLoading]="loading">
+        <thead>
+        <tr>
+          <th [nzWidth]="'75%'">资源信息</th>
+          <th [nzWidth]="'25%'">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let oneLevel of authDataList;trackBy:trackById;">
+          <tr>
+            <td>
+              <i class="anticon anticon-plus-square-o" (click)="expandAuth(oneLevel)"
+                 *ngIf="oneLevel.leaf === 0 && !oneLevel.expand"></i>
+              <i class="anticon anticon-minus-square-o" (click)="expandAuth(oneLevel)"
+                 *ngIf="oneLevel.leaf === 0 && oneLevel.expand"></i>
+              <span><b>{{oneLevel.name}}</b></span>
+              <!--<span>类型：{{oneLevel.type| map:'authType'}}</span>-->
+              <span *ngIf="oneLevel.url"><b>URL：</b>{{oneLevel.url}}</span>
+            </td>
+            <td>
+              <span class="operate-text" (click)="addOrEditAuth(2,oneLevel)">编辑</span>
+              <span class="operate-text" (click)="deleteAuth(oneLevel)">删除</span>
+              <span class="operate-text" *ngIf="oneLevel.type===1" (click)="addOrEditAuth(1,oneLevel)">添加下级</span>
+            </td>
+          </tr>
+          <ng-container *ngIf="oneLevel.expand && oneLevel.children">
+            <ng-container *ngFor="let twoLevel of oneLevel.children;trackBy:trackById;">
+              <tr>
+                <td [ngStyle]="{paddingLeft:'30px'}">
+                  <i class="anticon anticon-plus-square-o" (click)="expandAuth(twoLevel)"
+                     *ngIf="twoLevel.leaf === 0 && !twoLevel.expand"></i>
+                  <i class="anticon anticon-minus-square-o" (click)="expandAuth(twoLevel)"
+                     *ngIf="twoLevel.leaf === 0 && twoLevel.expand"></i>
+
+                  <span><b>{{twoLevel.name}}</b></span>
+                  <!--<span>类型：{{twoLevel.type| map:'authType'}}</span>-->
+                  <span *ngIf="twoLevel.url"><b>URL：</b>{{twoLevel.url}}</span>
+                </td>
+                <td>
+                  <span class="operate-text" (click)="addOrEditAuth(2,twoLevel)">编辑</span>
+                  <span class="operate-text" (click)="deleteAuth(twoLevel,oneLevel)">删除</span>
+                  <span class="operate-text" *ngIf="twoLevel.type===1" (click)="addOrEditAuth(1,twoLevel)">添加下级</span>
+                </td>
+              </tr>
+              <ng-container *ngIf="twoLevel.expand && twoLevel.children">
+                <ng-container *ngFor="let threeLevel of twoLevel.children;trackBy:trackById;">
+                  <tr>
+                    <td [ngStyle]="{paddingLeft:'60px'}">
+                      <i class="anticon anticon-plus-square-o" (click)="expandAuth(threeLevel)"
+                         *ngIf="threeLevel.leaf === 0 && !threeLevel.expand"></i>
+                      <i class="anticon anticon-minus-square-o" (click)="expandAuth(threeLevel)"
+                         *ngIf="threeLevel.leaf === 0 && threeLevel.expand"></i>
+
+                      <span><b>{{threeLevel.name}}</b></span>
+                      <!--<span>类型：{{threeLevel.type| map:'authType'}}</span>-->
+                      <span *ngIf="threeLevel.url"><b>URL：</b>{{threeLevel.url}}</span>
+                    </td>
+                    <td>
+                      <span class="operate-text" (click)="addOrEditAuth(2,threeLevel)">编辑</span>
+                      <span class="operate-text" (click)="deleteAuth(threeLevel,twoLevel)">删除</span>
+                      <span class="operate-text" *ngIf="threeLevel.type===1"
+                            (click)="addOrEditAuth(1,threeLevel)">添加下级</span>
+                    </td>
+                  </tr>
+
+                  <ng-container *ngIf="threeLevel.expand && threeLevel.children">
+                    <ng-container *ngFor="let fourLevel of threeLevel.children;trackBy:trackById;">
+                      <tr>
+                        <td [ngStyle]="{paddingLeft:'90px'}">
+                          <span><b>{{fourLevel.name}}</b></span>
+                          <!--<span>类型：{{fourLevel.type| map:'authType'}}</span>-->
+                          <span *ngIf="fourLevel.url"><b>URL：</b>{{fourLevel.url}}</span>
+                        </td>
+                        <td>
+                          <span class="operate-text" (click)="addOrEditAuth(2,fourLevel)">编辑</span>
+                          <span class="operate-text" (click)="deleteAuth(fourLevel,threeLevel)">删除</span>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <tr></tr>
+        </tbody>
+      </nz-table>
+    </div>
+
+  </ng-container>
+
+  <ng-container *ngIf="tabPageType!==0">
+    <form nz-form class="dept-form">
+      <nz-form-item>
+        <nz-form-label nzSpan="6"><span class="font-red-color">*</span>资源名称</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input maxlength="50" [(ngModel)]="targetAuth.name" name="name"/>
+        </nz-form-control>
+
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzSpan="6"><span class="font-red-color">*</span>类型</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <select class="form-control" [(ngModel)]="targetAuth.type" name="type">
+            <option *ngFor="let item of authType" value="{{item.id}}" [selected]="item.selected">{{item.name}}</option>
+          </select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label nzSpan="6"><span class="font-red-color"></span>URL</nz-form-label>
+        <nz-form-control nzSpan="18">
+          <input nz-input maxlength="50" [(ngModel)]="targetAuth.url" name="url"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="auth-button">
+        <div nz-col nzSpan="6"></div>
+        <div nz-col nzSpan="18">
+          <button nz-button nzType="primary" nzSize="large" class="submit-button" (click)="saveSubmit()">保存
+          </button>
+          <button nz-button nzType="primary" nzSize="large" nzGhost class="submit-button" (click)="toggleMainPage()">取消
+          </button>
+        </div>
+      </nz-form-item>
+    </form>
+  </ng-container>
+
+</app-tab-route>
+
+<ng-template #navBreakcrumb>
+  <app-nav-breadcrumb></app-nav-breadcrumb>
+</ng-template>

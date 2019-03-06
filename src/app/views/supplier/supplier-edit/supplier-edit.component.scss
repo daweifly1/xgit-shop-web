@@ -1,0 +1,99 @@
+$left-menu-width: 140px;
+.red-color{
+  color: red;
+}
+.supplier-edit-wrap{
+  height: 100%;
+  header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    height: 40px;
+  }
+  .content-wrap {
+    height: calc(100% - 40px);
+    .left {
+      width: $left-menu-width;
+      float: left;
+      border-right: 1px solid #ccc;
+      height: 100%;
+      .tag-item-wrap{
+        font-size: 12px;
+        margin: 10px 10px 10px 0;
+      }
+    }
+    .right {
+      margin-left: $left-menu-width;
+      padding: 10px 0 0 10px;
+      position: relative;
+      height:100%;
+      box-sizing: border-box;
+      .order-header-form{
+        font-size: 0;
+        nz-form-item {
+          width: 49.5%;
+          .split-right {
+            text-align: right;
+            input {
+              width: 98%;
+            }
+            nz-form-explain {
+              text-align: left;
+              margin-left: 2%;
+            }
+          }
+        }
+        nz-form-item.single-row-item {
+          width: 99%;
+        }
+      }
+      .single-row-item {
+        width: 99%;
+      }
+
+      .supplier-contact-wrap{
+        header {
+          padding: 0 0 10px 0;
+        }
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .edit-add-contact-wrap{
+
+        .contact-form{
+          width: 500px;
+          nz-form-item{
+            height: 40px;
+          }
+        }
+        .footer-bar {
+          button {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  form {
+   td .ng-invalid {
+     &.ant-input{
+       border: 1px solid red;
+     }
+     /deep/ .ant-select-selection{
+        border: 1px solid red;
+      }
+     /deep/ .ant-input{
+        border: 1px solid red;
+      }
+    }
+    /deep/ .ant-checkbox-disabled .ant-checkbox-inner {
+      border-color: #1890ff !important;
+      background-color: #1890ff;
+    }
+    /deep/ .ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner:after {
+      border-color: #fff;
+    }
+  }
+}

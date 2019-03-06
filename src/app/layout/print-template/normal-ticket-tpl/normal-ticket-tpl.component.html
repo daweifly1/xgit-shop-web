@@ -1,0 +1,88 @@
+<style>
+  div {
+    box-sizing: border-box;
+  }
+
+</style>
+<div #template>
+  <div *ngFor="let printInfo of printData;let i=index;" style="page-break-after:always;width: 100mm;height: 70mm; background: #fff; margin:0;position:relative; overflow: hidden;
+       position: relative;background: #fff; font-family: 宋体; box-sizing: border-box;">
+    <div style="border:1px solid #000;box-sizing:border-box;height:57mm;width:96mm;position:absolute;top:8.5mm;left:1.5mm;">
+      <div style="height: 8mm; overflow: hidden;margin:0;padding:0;box-sizing:border-box;font-size: 14px; font-weight: bold;border-bottom:1px solid #000;">
+        <div style="float:right;margin-right:5mm;margin-top:2mm">
+          {{printInfo.orderNo}}
+        </div>
+      </div>
+      <div style="font-size: 14px; height: 28mm; overflow: hidden;">
+        <div style="float: left;line-height: 6.5mm; width: 60mm; padding: 1mm 1mm 0 3mm; box-sizing: border-box;">
+          <div style="width: 60mm; height: 6.5mm; line-height:normal;">
+            <div style="float:left; width: 10mm;">编码</div>
+            <div style="float:left; width: 50mm;word-wrap: break-word;word-break: break-all; font-weight: bold;">
+              {{printInfo.materialsNo}}
+            </div>
+          </div>
+          <div style="width: 60mm; height: 13mm; line-height:normal;">
+            <div style="float:left; width: 10mm;">描述</div>
+            <div style="float:left; width: 50mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.materialsDes}}
+            </div>
+          </div>
+          <!--<div style="width: 60mm; height: 6.5mm;">-->
+          <!--<div style="float:left; width: 10mm;">储位</div>-->
+          <!--<div style="float:left; width: 50mm; word-wrap: break-word; word-break: break-all;">-->
+          <!--{{printInfo.locationDesc}}-->
+          <!--</div>-->
+          <!--</div>-->
+          <div style="width: 60mm; height: 6.5mm;font-size: 12px; line-height:normal;" *ngIf="printInfo.supplierName">
+            <div style="float:left; width: 12mm;">供应商</div>
+            <div style="float:left; width: 48mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.supplierName}}
+            </div>
+          </div>
+        </div>
+
+        <div style="float: right; width: 28mm; height: 28mm; padding:2px; margin-right:0.5mm;box-sizing: border-box; box-sizing: border-box;">
+          <qrcode [size]="100" [qrdata]="printInfo.barcode" level="H" [usesvg]="true"></qrcode>
+        </div>
+        <div style="float: right; width: 2mm; height: 28mm;border-right: solid 1px #000;"></div>
+      </div>
+      <div style="height: 14mm;border-top: solid 1px #000; overflow: hidden; padding: 1mm 2mm; box-sizing: border-box;">
+        <div style="float: left; width: 50mm;font-size: 14px; line-height: 5.5mm;">
+          <div style="width: 50mm; height: 5.5mm;" *ngIf="printInfo.edition">
+            <div style="float:left; width: 10mm;">条码</div>
+            <div style="float:left; width: 40mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.barcode}}
+            </div>
+          </div>
+          <div style="width: 50mm; height: 5.5mm;" *ngIf="printInfo.vin">
+            <div style="float:left; width: 10mm;">VIN</div>
+            <div style="float:left; width: 40mm; word-wrap: break-word; word-break: break-all;">
+              {{printInfo.vinid}}
+            </div>
+          </div>
+        </div>
+        <div style="float: right; margin:1mm 3.5mm 0 5mm; text-align:right;font-size: 12px;" *ngIf="printInfo.hasPackNumber">
+          <div style="position: relative;  height: 5mm; box-sizing: border-box;">
+            <span *ngIf="printInfo.barcodeFlag === 1">{{printInfo.currentQty}}/</span>{{printInfo.totalQty}}
+          </div>
+          <div style="position: relative; height: 5mm; box-sizing: border-box;">
+            <span style="font-size: 12px; vertical-align: middle" *ngIf="printInfo.barcodeFlag === 1">分</span><span
+              style="vertical-align: middle" *ngIf="printInfo.barcodeFlag === 1">{{printInfo.seq}}</span>
+            <span style="font-size: 12px; vertical-align: middle">总</span><span style="vertical-align: middle">{{printInfo.childCount}}</span>
+          </div>
+        </div>
+      </div>
+      <div style="height: 10mm;font-size: 12px; padding: 1mm 2mm 0; overflow: hidden; box-sizing: border-box;">
+        <div style="width: 45mm; height: 8mm;margin: 0.8mm 3mm 0 0;float:left;" *ngIf="printInfo.contractNo">
+          <div style="float:left; width: 15mm;">合同编号</div>
+          <div style="float:left; width: 30mm; word-wrap: break-word; word-break: break-all;">
+            {{printInfo.contractNo}}
+          </div>
+        </div>
+        <div style="margin: 0.8mm 3mm 0 0;">
+          <span style="float: right;">{{printInfo.printDate | date:"yyyy-MM-dd HH:mm"}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

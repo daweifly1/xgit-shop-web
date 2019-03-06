@@ -1,0 +1,31 @@
+<div class="location-selector-wrap">
+  <app-ufast-select [(ngModel)]="_value" [showClear]="showClear" [disabled]="disabled" (ngModelChange)="onValueChange($event)" [downBoxWidth]="downBoxWidth" [showClear]="true" [(expand)]="expandCtl" [expandHandler]="expandCallback" [placeholder]="placeholder" (expandChange)="onExpandChange($event)">
+    <div class="pull-down-wrap">
+      <header>
+        位置：
+        <span *ngFor="let tab of tabList;let tabIndex=index;">
+          <ng-container *ngIf="tabIndex !== 0 && tab.selectedCode">/</ng-container>
+          {{tab.selectedCode}}
+        </span>
+      </header>
+      <div class="tab-wrap">
+        <nz-tabset [nzSize]="'small'" nzType="card" [(nzSelectedIndex)]="selectedTabIndex" >
+          <nz-tab *ngFor="let tab of tabList; trackBy:trackByTitle;let tabIndex=index;" (nzSelect)="onTabSelect(tabIndex)" [nzTitle]="tab.title">
+            <nz-spin [nzSpinning]="tabLoading">
+              <div class="items-wrap">
+                <span *ngFor="let item of tab.contentList;trackBy: trackById;" [ngClass]="{'checked': item.code === tab.selectedCode}" (click)="onContent(tabIndex, item)">{{item.code}}</span>
+                <div *ngIf="!tabLoading && tab.contentList.length === 0">暂无数据,请至仓库管理页面添加数据。</div>
+              </div>
+            </nz-spin>
+          </nz-tab>
+        </nz-tabset>
+      </div>
+      <div class="footer-wrap">
+          <span class="btu-wrap">
+            <button nz-button nzType="info" (click)="onCancel()" [nzGhost]="true" >取消</button>
+            <button nz-button nzType="info" [disabled]="disableOk" (click)="onOk()">确定</button>
+          </span>
+      </div>
+    </div>
+  </app-ufast-select>
+</div>

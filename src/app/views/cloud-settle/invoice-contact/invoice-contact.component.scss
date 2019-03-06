@@ -1,0 +1,89 @@
+.edit-add-page{
+  height:100%;
+  width:100%;
+
+  .edit-add-form{
+    width:550px;
+    padding:20px 0 0 30px;
+
+    nz-form-item{
+      margin-bottom:10px;
+    }
+    .edit-ngx-width {
+      width: 200%;
+    }
+  }
+
+}
+.header-form {
+  width:100%;
+
+  nz-form-item {
+    display:inline-block;
+    width:33%;
+    margin-bottom:10px;
+    font-size: 14px;
+    word-break: break-all;
+
+    nz-form-text {
+      line-height:30px;
+    }
+  }
+}
+.marginTop {
+  margin-top: 20px;
+}
+.marginBottom {
+  margin-bottom: 6px;
+}
+.marginBottom1 {
+  margin-bottom: 20px;
+}
+.ButtonStyle {
+  line-height: 60px;
+  .marginRight {
+    margin-right: 40px;
+  }
+}
+.buttonWidth {
+  width: 80px;
+  height: 36px;
+  margin-right: 20px;
+}
+nz-input-number {
+  width: 100%;
+}
+.selectStyle {
+  width: 100%;
+}
+.choose-model-box {
+  .print-dir-wrap {
+    text-align: center;
+  }
+  nz-select {
+    width: 150px;
+  }
+}
+.detail-footer {
+  text-align:center;
+  margin: 15px 0;
+}
+.red-color {
+  color: red;
+}
+.batch-tax-wrap{
+  margin-left: 20px;
+  label {
+    color: #333;
+  }
+  nz-select{
+    width: 230px;
+  }
+}
+.footer-btu{
+  text-align: center;
+  margin-top: 20px;
+}
+.table-header{
+  margin: 20px 0;
+}

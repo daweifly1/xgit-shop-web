@@ -1,0 +1,185 @@
+<ng-container *ngIf="selectedPage === tabPageType.editConfirmationPage">
+  <app-purchase-steps [mainStep]="purchaseSteps.mainStep" [subStep]="purchaseSteps.subStep"></app-purchase-steps>
+  <form nz-form [formGroup]="editConfirmationForm" class="order-header-form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="confirmationCode">审定表编号</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="confirmationCode">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="approveCode">审批表编号</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="approveCode">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9">附件</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <nz-form-text>
+          <span class="operate-text" (click)="showUploadModal()">上传</span>
+          <a *ngIf="editConfirmationForm.controls['attachmentUrl'].value" [href]="downloadUrl + editConfirmationForm.controls['attachmentUrl'].value" [download]="editConfirmationForm.get('attachment').value">下载</a>
+          <ng-container *ngIf="!editConfirmationForm.controls['attachmentUrl'].value">下载</ng-container>
+        </nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="contractVersion" nzRequired>合同版本</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="contractVersion">
+        <nz-form-explain *ngIf="editConfirmationForm.get('contractVersion').dirty && editConfirmationForm.get('contractVersion').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="contractAmount">金额总计(元)</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="contractAmount">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="payNature" nzRequired>付款性质</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="payNature">
+        <nz-form-explain *ngIf="editConfirmationForm.get('payNature').dirty && editConfirmationForm.get('payNature').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="purchaseWay">采购方式</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <nz-select style="width: 100%;" formControlName="purchaseWay">
+          <nz-option *ngFor="let item of ('purchaseWay' | mapList); trackBy: trackByItem" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="9" nzRequired>采购管理科审批人</nz-form-label>
+      <nz-form-control nzSpan="15">
+        <nz-input-group [nzAddOnAfter]="affixTpl">
+          <input nz-input readonly (focus)="showSelectUser()" formControlName="flowPurchaserName">
+        </nz-input-group>
+        <ng-template #affixTpl>
+          <i class="anticon anticon-close" (click)="clearFlowUser()"></i>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isBuyAgain">
+      <nz-form-label [nzSpan]="9" nzFor="contractOrAgreementNo">续购合同号</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="contractOrAgreementNo">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="isAgreement">
+      <nz-form-label [nzSpan]="9" nzFor="contractOrAgreementNo">年度协议号</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="contractOrAgreementNo">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item class="full-form-item form-text">
+      <nz-form-label [nzSpan]="3" nzFor="clauseTitle" nzRequired>条内容</nz-form-label>
+      <nz-form-control [nzSpan]="21">
+        <textarea nz-input type="text" formControlName="clauseTitle" readonly (focus)="showSelectedClauseModal()"></textarea>
+        <nz-form-explain *ngIf="editConfirmationForm.get('clauseTitle').dirty && editConfirmationForm.get('clauseTitle').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item class="full-form-item form-text">
+      <nz-form-label [nzSpan]="3" nzFor="clauseItem" nzRequired>款内容</nz-form-label>
+      <nz-form-control [nzSpan]="21">
+        <textarea nz-input type="text" formControlName="clauseItem" readonly></textarea>
+        <nz-form-explain *ngIf="editConfirmationForm.get('clauseItem').dirty && editConfirmationForm.get('clauseItem').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item class="full-form-item form-text">
+      <nz-form-label [nzSpan]="3" nzFor="purchaseSummary" nzRequired>采购概况说明</nz-form-label>
+      <nz-form-control [nzSpan]="21">
+        <textarea rows="2" nz-input formControlName="purchaseSummary"></textarea>
+        <nz-form-explain *ngIf="editConfirmationForm.get('purchaseSummary').dirty && editConfirmationForm.get('purchaseSummary').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="creator">创建人</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <input nz-input type="text" formControlName="creator">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="9" nzFor="createDate">创建日期</nz-form-label>
+      <nz-form-control [nzSpan]="15">
+        <nz-date-picker formControlName="createDate"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+  <div>
+    <div class="split-bar">
+      <span>详情行</span>
+    </div>
+    <nz-tabset [(nzSelectedIndex)]="tabIndex"  [nzType]="'card'">
+      <nz-tab nzTitle="物料行">
+        <app-ufast-table [dataList]="materialLineList" [tableConfig]="materialTableConfig" (selectedChange)="changeSelect($event)"></app-ufast-table>
+      </nz-tab>
+      <nz-tab nzTitle="合同维护/预览" (nzSelect)="getContractInfo()">
+        <app-ufast-table [dataList]="contractList" [tableConfig]="contractTableConfig"></app-ufast-table>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+  <div class="table-footer-bar">
+    <ng-container *ngIf="status !== 5">
+      <ng-container *ngIf="status === 0 || status === 4">
+            <button nz-button nzType="primary" (click)="saveConfirmation()">保存</button>
+            <button nz-button nzType="primary" (click)="submitConfirmation()">提交</button>
+            <button nz-button nzType="primary" (click)="returnContract()">退回</button>
+      </ng-container>
+      <ng-container *ngIf="countContract === 0 ">
+          <!-- <ng-container *ngIf="isReturnPass && countContract === 0"> -->
+            <button nz-button nzType="primary" (click)="reNewConfirmation()">重新生成合同</button>
+          </ng-container>
+    </ng-container>
+    <button nz-button nzType="primary" nzGhost (click)="emitPage(false)">返回</button>
+    <!-- <button *ngIf="!isNewOrder" nz-button nzType="primary" nzGhost (click)="emitPage(false)">返回</button> -->
+  </div>
+</ng-container>
+<ng-template #operationTpl let-id="id">
+  <app-action-group>
+    <app-action [enabled]="actionStatus[id].backRow" (clickAction)="onRowBack(id)">退回</app-action>
+  </app-action-group>
+</ng-template>
+<ng-container *ngIf="selectedPage === tabPageType.editContractPage">
+  <app-edit-contract [contractId]="currContractId" (backToMainPage)="onContractEmit($event)"></app-edit-contract>
+</ng-container>
+<ng-container *ngIf="selectedPage === tabPageType.detailContractPage">
+  <app-detail-contract [contractId]="currContractId" (backToMainPage)="onContractEmit($event)"></app-detail-contract>
+</ng-container>
+
+<ng-template #manufacturerTpl let-index="index" let-id="id" let-ctx="_this">
+  <input *ngIf="id" nz-input type="text" [maxlength]="MaxLenInputEnum.Manufacturer" [(ngModel)]="ctx.manufacturer">
+  <span *ngIf="!id"></span>
+</ng-template>
+<ng-template #materialModelTpl let-index="index" let-id="id" let-ctx="_this">
+  <input *ngIf="id" nz-input type="text" [maxlength]="MaxLenInputEnum.MaterialModel" [(ngModel)]="ctx.materialModel">
+  <span *ngIf="!id"></span>
+</ng-template>
+<ng-template #lifeTimeTpl let-index="index" let-id="id" let-ctx="_this">
+  <input *ngIf="id" nz-input type="text" [maxlength]="MaxLenInputEnum.LifeTime" [(ngModel)]="ctx.lifeTime">
+  <span *ngIf="!id"></span>
+</ng-template>
+<ng-template #priceTpl let-index="index" let-id="id" let-ctx="_this">
+  <nz-input-number *ngIf="id" [nzMin]="0" [nzMax]="lengthLimit.priceMax" [nzPrecision]="lengthLimit.pricePrecision"
+                   [(ngModel)]="ctx.unitPrice" (ngModelChange)="unitPriceChange($event, index)"></nz-input-number>
+                   <span *ngIf="!id"></span>
+</ng-template>
+<ng-template #deliveryDateTpl let-index="index" let-id="id" let-ctx="_this">
+    <nz-date-picker *ngIf="id" [(ngModel)]="ctx.deliveryDate" appFixDatepickerBug></nz-date-picker>
+    <span *ngIf="!id"></span>
+  </ng-template>
+<ng-template #contractOperateTpl let-contractId="id">
+  <app-action-group>
+    <app-action (clickAction)="editContract(contractId)">维护</app-action>
+    <app-action (clickAction)="showContractDetail(contractId)">预览</app-action>
+  </app-action-group>
+</ng-template>
+<nz-modal [(nzVisible)]="showSelectUserModal" nzTitle="选择人员" nzWidth="630px" (nzOnCancel)="onCancelUser()" [nzFooter]="null" [nzBodyStyle]="{padding: '10px'}">
+  <app-ufast-table [dataList]="userDataList" [tableConfig]="userTableConfig" [getListHandle]="getUserList"></app-ufast-table>
+</nz-modal>
+<ng-template #userOperationTpl let-name="name" let-userId="userId">
+  <span class="operate-text" (click)="onUserSelect(name, userId)">选择</span>
+</ng-template>

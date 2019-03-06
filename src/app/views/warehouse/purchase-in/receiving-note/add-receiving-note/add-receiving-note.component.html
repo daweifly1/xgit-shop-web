@@ -1,0 +1,134 @@
+<form nz-form class="detail-header-info" [formGroup]="orderForm">
+  <div class="split-bar">
+    <span>收货信息</span>
+  </div>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>系统生成</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.contractType | map: 'deliverGoodsType'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">合同编号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.purchaseNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">供应商</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.vendorName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">收货方</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.shipToName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">合同类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.contractType | map: 'contractType'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">采购员</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.fullName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>是否条码管理</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select style="width: 100%;" formControlName="ifCodeManage" (ngModelChange)="onBarcodeFlag($event)">
+        <nz-option *ngFor="let item of barcodeFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="orderForm.get('ifCodeManage').dirty && orderForm.get('ifCodeManage').errors">
+        请选择条码管理方式
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>
+<div nz-col nzSpan="24" class="material-information">
+  <div class="split-bar">
+    <span>物料信息</span>
+  </div>
+  <div class="detail-table-header">
+    <ng-container *ngIf="contractType === ContractType.Protocol">
+      <button nz-button nzType="info" (click)="showMaterial($event)">选择物料</button>
+      <button nz-button nzType="info" (click)="showToLeadModal()">导入物料</button>
+    </ng-container>
+    <button nz-button nzType="info" (click)="delete()">删除</button>
+  </div>
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="orderMaterialList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+  <ng-template #locationTpl let-ctx="_this">
+    <app-location-selector placeholder="选择储位" [showClear]="false"
+      [(ngModel)]="ctx.locationCode" class="selectStyle" (ok)="location($event)"></app-location-selector>
+  </ng-template>
+  <ng-template #operationTpl let-ctx="_this">
+    <span class="operate-text" (click)="deleteFun(ctx)">删除</span>
+  </ng-template>
+
+  <ng-template #receivingTpl let-ctx="_this">
+    <nz-input-number style="width:100%;" [nzPrecision]="materialNumDec" [nzMin]="materialNumMin" [nzMax]="materialNumMax" [nzStep]="materialNumMin" [(ngModel)]="ctx.receiptCount"></nz-input-number>
+  </ng-template>
+
+
+  <app-right-side-table-box [(show)]="show" title="物料列表" searchPlaceholder="物料名称" (search)="getMaterialList()"
+    [(searchContent)]="filters.keyWords" [tableConfig]="materialTableConfig" [dataList]="materialDataList"
+    [getListHandle]="getMaterialList" (selectedChange)="chooseMaterial($event)" [selectedChangeEvent]="rightTableEmit"
+    [idFiled]="materialField">
+  </app-right-side-table-box>
+
+
+</div>
+
+
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" class="submit-button" style="width:100px;" (click)="submitReceivingNote()">验收
+  </button>
+  <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish(false)">取消
+  </button>
+</div>
+
+<nz-modal class="set-modal inLead" [(nzVisible)]="isToLeadVisible" nzTitle="导入物料" [nzFooter]="modalFooter" nzWidth="630px"
+  (nzOnCancel)="handleToLeadCancel()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4">下载模板</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <a nz-button nzType="primary" nzGhost [href]="href">下载</a>
+      <span class="font-red-color">注：模板格式不正确，则相应的物料数据不能导入</span>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>选择文件</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzShowButton]="fileList.length < 1">
+        <button nz-button>
+          <i class="anticon anticon-upload"></i>
+          <span>添加文件</span>
+        </button>
+      </nz-upload>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="errorMessage.length !== 0">
+    <nz-form-label nzSpan="4">错误信息</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <div *ngFor="let item of errorMessage">第{{item.errorRow}}行:{{item.remark}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)="handleOk()" [nzLoading]="isConfirmLoading">导入</button>
+    <button nz-button nzType="default" (click)="handleToLeadCancel()">取消</button>
+  </ng-template>
+</nz-modal>

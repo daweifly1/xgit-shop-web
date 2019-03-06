@@ -1,0 +1,43 @@
+@import "../../../global-styles/variable";
+
+$top-height:$top-menu-bar-height;
+$head-bar-color:#009FE0;
+$head-bar-height:45px;
+.mask {
+  width: 100%;
+  position: fixed;
+  height: calc(100% - #{$top-height});
+  right:0;
+  top: $top-height;
+  z-index:99;
+  background: rgba(0, 0, 0, 0.4);
+  .right-box-wrap{
+    background: #fff;
+    position: absolute;
+    height: 100%;
+    right:0;
+    top: 0;
+    border-left: 3px solid $head-bar-color;
+    .head-bar{
+      background:$head-bar-color;
+      height:$head-bar-height;
+      line-height:$head-bar-height;
+      padding:0 10px;
+      font-size:18px;
+
+      .title-text{
+        color:#fff;
+      }
+      .close-icon{
+        float:right;
+        color:#fff;
+        cursor: pointer;
+      }
+    }
+    .content-wrap {
+      height: calc(100% - #{$head-bar-height});
+    }
+  }
+}
+
+

@@ -1,0 +1,167 @@
+<div class="detail-header-info">
+
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.invoiceNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.contractType | map: 'deliverGoodsType'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">合同编号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.purchaseNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">供应商</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.supplierName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">收货方</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.goodsReceivor}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">合同类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.contractType | map: 'contractType'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">是否条码管理</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.ifCodeManage | map: 'barcodeManage'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="isAcceptance">
+    <nz-form-label nzSpan="8">采购员</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.fullName}}</div>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div *ngIf="showLogisticsInfo" class="detail-header-info">
+  <div class="split-bar">
+    <span>物流信息</span>
+  </div>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流单号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.logisticsNo}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流公司</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.logisticsCompany}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货时间</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.deliveryDate | date:'yyyy-MM-dd'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流联系人</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.logisticsContact}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流联系电话</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.logisticsPhone}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">运输方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.transportMode | map: 'transportMode'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">车牌号码</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.licensePlate}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发货人身份证号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.logisticsContactIdCard}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">发运箱数</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div>{{headerInfo.containerNumber}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">物流附件</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <div class="clearfix">
+        <nz-upload class="view-upload" nzListType="picture-card" [(nzFileList)]="fileList" [nzPreview]="handlePreview"
+                   [nzSize]="100*1024" [nzShowButton]="fileList.length < 0" [nzRemove]="removeFile">
+        </nz-upload>
+        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent" [nzFooter]="null"
+                  (nzOnCancel)="previewVisible=false">
+          <ng-template #modalContent>
+            <img [src]="previewImage" [ngStyle]="{ 'width': '100%', 'height': '100%' }"/>
+          </ng-template>
+        </nz-modal>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+
+<div class="detail-table-header">
+  <!-- <ng-container *ngIf="contractType === ContractType.Protocol">
+    <button nz-button nzType="info" (click)="showMaterial($event)">选择物料</button>
+    <button nz-button nzType="info">导入物料</button>
+  </ng-container> -->
+  <button nz-button nzType="info" (click)="delete()">删除</button>
+</div>
+
+<app-ufast-table [tableConfig]="tableConfig" [dataList]="orderMaterialList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+<ng-template #locationTpl let-ctx="_this">
+  <app-location-selector placeholder="选择储位" [(ngModel)]="ctx.locationCode" style="width: 100%" (ok)="onOkLocation($event, ctx)"
+    [filters]="locationSelectFilter"></app-location-selector>
+</ng-template>
+<ng-template #operationTpl let-lineId="_lineId">
+  <span class="operate-text" (click)="deleteFun(lineId)">删除</span>
+</ng-template>
+
+<ng-template #receivingTpl let-ctx="_this">
+  <nz-input-number [nzPrecision]="materialNumDec" [nzMin]="materialNumMin" [nzMax]="materialNumMax" [nzStep]="materialNumMin" [(ngModel)]="ctx.storedCount"></nz-input-number>
+</ng-template>
+
+
+<app-right-side-table-box [(show)]="show" title="物料列表" searchPlaceholder="物料名称" [tableConfig]="materialTableConfig"
+  [dataList]="materialDataList" [getListHandle]="getMaterialList" (selectedChange)="chooseMaterial($event)"
+  [selectedChangeEvent]="rightTableEmit" idFiled="materialsNo">
+</app-right-side-table-box>
+
+
+<div class="table-footer-bar">
+
+  <!--<button nz-button nzType="primary" class="submit-button" nzGhost (click)="savePurchaseOrder()">保存-->
+  <!--</button>-->
+  <button nz-button nzType="primary" *ngIf="isAcceptance" (click)="submitAcceptance()">确认验收</button>
+  <button nz-button nzType="primary" *ngIf="!isAcceptance" (click)="submitReceivingNote()">确认入库</button>
+  <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消</button>
+
+</div>

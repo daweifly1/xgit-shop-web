@@ -1,0 +1,118 @@
+<app-tab-route tabTitle="企业信息">
+  <form nz-form [formGroup]="editCompanyForm" class="edit-company-form order-header-form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="orgId">企业编码</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="orgId">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzFor="orgId" nzRequired>组织编码</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="organizationId">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="shortName">单位简称</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="shortName" [maxlength]="lengthLimit.default">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired nzFor="code">企业代码</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="code" [maxlength]="lengthLimit.default">
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="taxpayerRegistrationNumber">统一社会信用代码</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="taxpayerRegistrationNumber" [maxlength]="18">
+        <nz-form-explain *ngIf="editCompanyForm.get('taxpayerRegistrationNumber').dirty && editCompanyForm.get('taxpayerRegistrationNumber').errors">
+          请输入正确的社会信用代码
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="name">单位名称</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="name" [maxlength]="lengthLimit.default">
+        <nz-form-explain *ngIf="editCompanyForm.get('name').dirty && editCompanyForm.get('name').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="invoiceName">开票名称</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="invoiceName" [maxlength]="lengthLimit.default">
+        <nz-form-explain *ngIf="editCompanyForm.get('invoiceName').dirty && editCompanyForm.get('invoiceName').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="legalPerson">法定代表人</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="legalPerson" [maxlength]="lengthLimit.default">
+        <nz-form-explain *ngIf="editCompanyForm.get('legalPerson').dirty && editCompanyForm.get('legalPerson').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="phone">企业电话</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="phone">
+        <nz-form-explain *ngIf="editCompanyForm.get('phone').dirty && editCompanyForm.get('phone').errors">请输入正确的电话</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired nzFor="postcode">邮政编码</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="postcode" [maxlength]="lengthLimit.default">
+          <nz-form-explain *ngIf="editCompanyForm.get('postcode').dirty && editCompanyForm.get('postcode').errors">必填项，请输入</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item class="full-form-item">
+      <nz-form-label [nzSpan]="4" nzRequired nzFor="detailAddress">企业地址</nz-form-label>
+      <nz-form-control [nzSpan]="8" class="address">
+        <app-area-selector formControlName="addressCode" ></app-area-selector>
+        <nz-form-explain *ngIf="editCompanyForm.get('addressCode').dirty && editCompanyForm.get('addressCode').errors">
+          必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+      <nz-form-control  [nzSpan]="12">
+        <input nz-input formControlName="detailAddress" [maxlength]="lengthLimit.default">
+        <nz-form-explain *ngIf="editCompanyForm.get('detailAddress').dirty && editCompanyForm.get('detailAddress').errors">
+          必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="bankOfDeposit">开户银行</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="bankOfDeposit" [maxlength]="lengthLimit.default">
+        <nz-form-explain *ngIf="editCompanyForm.get('bankOfDeposit').dirty && editCompanyForm.get('bankOfDeposit').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="bankOfDepositAccount">银行账号</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="bankOfDepositAccount" [maxlength]="lengthLimit.default">
+        <nz-form-explain *ngIf="editCompanyForm.get('bankOfDepositAccount').dirty && editCompanyForm.get('bankOfDepositAccount').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="8" nzRequired nzFor="bankOfDepositAddress">开户行地址</nz-form-label>
+      <nz-form-control [nzSpan]="16">
+        <input nz-input type="text" formControlName="bankOfDepositAddress">
+        <nz-form-explain *ngIf="editCompanyForm.get('bankOfDepositAddress').dirty && editCompanyForm.get('bankOfDepositAddress').errors">必填项，请输入</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="table-footer-bar">
+    <ng-container *ngIf="!isEditCompany">
+      <button nz-button nzType="primary" *appAuthBtu="actionCode.orgInfoEdit" (click)="beginEditOrgInfo()">编辑</button>
+    </ng-container>
+    <ng-container *ngIf="isEditCompany">
+      <button nz-button nzType="primary" (click)="editOrgInfo()">确定</button>
+      <button nz-button nzType="primary" nzGhost (click)="finishEditOrgInfo()">返回</button>
+    </ng-container>
+  </div>
+</app-tab-route>

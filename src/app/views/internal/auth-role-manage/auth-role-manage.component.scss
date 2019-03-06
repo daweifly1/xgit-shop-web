@@ -1,0 +1,126 @@
+
+@import "../../../../global-styles/variable";
+
+.wrap{
+  height:100%;
+  width:100%;
+  .table-header{
+    height:50px;
+    line-height:50px;
+    padding:0 20px;
+  }
+}
+
+
+
+.add-form{
+  width:40%;
+  padding:30px 0 0 30px;
+
+  .font-red{
+    color:#ff0000;
+  }
+  .form-footer{
+    margin-top:20px;
+    text-align:right;
+    button{
+      margin-left:10px;
+      height:30px;
+    }
+  }
+}
+
+.privilege-wrap{
+  $item-padding:0 20px;
+  $border-bottom:1px solid #ececec;
+  $list-header-height:30px;
+
+  height:100%;
+  padding-top:10px;
+  font-size:14px;
+
+  .main-list{
+    padding:0;
+    & li{
+      list-style: none;
+    }
+    .buttons-wrap{
+      margin:30px 0 0 20px;
+    }
+  }
+
+  label[nz-checkbox]{
+    font-size:14px;
+    vertical-align:middle;
+  }
+
+
+  .role-name{
+    border-bottom:1px solid #ccc;
+    border-left:4px solid #ff6600;
+    line-height:$list-header-height;
+    height:$list-header-height;
+  }
+
+  .top-menu-item > input:checked + div{
+    height:40px;
+  }
+
+  .top-menu-item > input{
+    display:none;
+  }
+
+
+  .menu-main-wrap{
+    overflow:hidden;
+
+    .top-menu-header{
+      height:40px;
+      line-height:40px;
+      padding:$item-padding;
+      border-bottom:$border-bottom;
+
+      & > label{
+        float:right;
+        color:#a85600;
+      }
+    }
+    .menu-content{
+      background:#f8f8f8;
+      padding:$item-padding;
+      border-bottom:$border-bottom;
+
+      .side-menu-item{
+        padding:$item-padding;
+
+        & div:first-child:not(.left){
+          border-bottom:$border-bottom;
+          height:40px;
+          line-height:40px;
+        }
+      }
+    }
+    .most-deep{
+      border-bottom:$border-bottom;
+      .left {
+        width: 110px;
+        float:left;
+        color:#0091f7;
+        padding: $item-padding;
+        line-height: 40px;
+        box-sizing: border-box;
+      }
+      .right{
+        margin-left: 110px;
+        line-height: 40px;
+      }
+    }
+  }
+}
+
+.ant-tabs{
+  background: #FFF;
+}
+/deep/ .table-header{
+  margin-bottom: 10px;
+}

@@ -1,0 +1,49 @@
+<app-tab-route tabTitle="评审资料">
+  <ng-container>
+    <app-ufast-table-nav (refresh)="getList()" (search)="getList()" (advancedSearch)="advancedSearchBtn()" [(searchText)]="filters.importFileName" [tableConfig]="dataTableConfig"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">标题</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.importFileName">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">导入日期-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.importTimeStart" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">导入日期-结束</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.importTimeEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchBtn()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="dataTableConfig" [dataList]="dataList" [getListHandle]="getList"></app-ufast-table>
+  </ng-container>
+</app-tab-route>
+<ng-template #operationTpl let-id="id" let-importFileUrl="importFileUrl" let-name="importFileName">
+  <app-action-group>
+    <app-action [enabled]="actionStatus[id].del" (clickAction)="delFileItem(id)" *appAuthBtu="ActionCode.reviewFileDel">删除</app-action>
+    <app-action [enabled]="actionStatus[id].download">
+      <a [href]="downloadUrl + importFileUrl" [download]="name">下载</a>
+    </app-action>
+  </app-action-group>
+</ng-template>
+<ng-template #affixTpl let-attachment="attachment">
+  <a *ngIf="attachment" [href]="downloadUrl + attachment" download>下载</a>
+  <span *ngIf="!attachment">下载</span>
+</ng-template>

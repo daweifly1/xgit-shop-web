@@ -1,0 +1,251 @@
+<form nz-form [formGroup]="form" class="form">
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料编码</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input formControlName="code" nz-input />
+      <nz-form-explain *ngIf="form.get('code').dirty && form.get('code').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料类别</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <ng-container *ngIf="editId">
+        <nz-select class="selectStyle" formControlName="materialType" (ngModelChange)="changeMaterialType($event)"
+          nzAllowClear>
+          <nz-option [nzValue]="1" nzLabel="材料"></nz-option>
+          <nz-option [nzValue]="2" nzLabel="备件"></nz-option>
+          <nz-option [nzValue]="3" nzLabel="设备"></nz-option>
+        </nz-select>
+      </ng-container>
+      <ng-container *ngIf="!editId">
+        <nz-select class="selectStyle" formControlName="materialType" (ngModelChange)="changeMaterialType($event)"
+          nzAllowClear>
+          <nz-option *ngFor="let item of ('materialTemplateType' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+            [nzValue]="item.value">
+          </nz-option>
+        </nz-select>
+      </ng-container>
+      <nz-form-explain *ngIf="form.get('materialType').dirty && form.get('materialType').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料分类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-cascader class="selectStyle" (nzVisibleChange)="showMaterialClass($event)" (nzSelect)="selectMaterialClassItem($event)"
+        formControlName="materialClassId" [(nzOptions)]="materialClassArry" nzPlaceHolder="物料分类" (ngModelChange)="onChanges($event)">
+      </nz-cascader>
+      <nz-form-explain *ngIf="form.get('materialClassId').dirty && form.get('materialClassId').errors&&!getFormControl('materialClassId').hasError('isSelectedThird')">必填项，请输入
+      </nz-form-explain>
+      <nz-form-explain *ngIf="getFormControl('materialClassId').hasError('isSelectedThird')">请选择含有第三级的物料分类
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>物料名称</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="name" [maxlength]="maxLenInputEnum.Default" />
+      <nz-form-explain *ngIf="form.get('name').dirty && form.get('name').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="form.controls['materialType'].value===2">
+    <nz-form-label nzSpan="6" nzRequired>选择设备</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="deviceId" (ngModelChange)="deviceIdChange($event)">
+        <nz-option *ngFor="let item of choosedEquipmentList;trackBy:trackByNewsId;" [nzValue]="item.id" [nzLabel]="item.materialName"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="form.controls['materialType'].value === 2">
+    <nz-form-label nzSpan="6" nzRequired>设备型号</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input (focus)="showDeviceModelModal()" formControlName="deviceModel" readonly />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">型号规格</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="specificationModel" [maxlength]="maxLenInputEnum.Default" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>计量单位</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="unit" />
+      <nz-form-explain *ngIf="form.get('unit').dirty && form.get('unit').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">零件号/图号</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="drawingNumber" [maxlength]="maxLenInputEnum.Default" />
+      <nz-form-explain *ngIf="form.get('drawingNumber').dirty && form.get('drawingNumber').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">材质</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="material" [maxlength]="maxLenInputEnum.Default" />
+      <nz-form-explain *ngIf="form.get('material').dirty && form.get('material').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">品牌</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="brand" [maxlength]="maxLenInputEnum.Default" />
+      <nz-form-explain *ngIf="form.get('brand').dirty && form.get('brand').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">进口或国产</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="importOrDomestic" nzAllowClear>
+        <nz-option nzValue="进口" nzLabel="进口"></nz-option>
+        <nz-option nzValue="进口国产化" nzLabel="进口国产化"></nz-option>
+        <nz-option nzValue="国产" nzLabel="国产"></nz-option>
+        <nz-option nzValue="转口" nzLabel="转口"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('importOrDomestic').dirty && form.get('importOrDomestic').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">计划价(元)</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-input-number formControlName="planPrice" [nzMin]="moneyMin" [nzMax]="moneyMax" [nzStep]="moneyMin"
+        [nzPrecision]="moneyDec" class="selectStyle"></nz-input-number>
+      <!-- <nz-form-explain *ngIf="form.get('planPrice').dirty && form.get('planPrice').errors">必填项，请输入</nz-form-explain> -->
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">物资分类</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="materialClassification" nzAllowClear>
+        <nz-option nzValue="保险件" nzLabel="保险件"></nz-option>
+        <nz-option nzValue="一般件" nzLabel="一般件"></nz-option>
+        <nz-option nzValue="常耗件" nzLabel="常耗件"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('materialClassification').dirty && form.get('materialClassification').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+
+
+
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>进项税</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="inputTaxRate" nzAllowClear>
+        <nz-option *ngFor="let item of inputTaxRateList;trackBy:trackByNewsId;" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>销项税</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="outputTaxRate" nzAllowClear>
+        <nz-option *ngFor="let item of outputTaxRateList;trackBy:trackByNewsId;" [nzValue]="item.name" [nzLabel]="item.name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>进项税</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-input-number [(ngModel)]="taxRate" [nzMin]="1" [nzMax]="100" [nzStep]="1" [nzFormatter]="formatterPercent"
+        [nzParser]="parserPercent" [ngModelOptions]="{standalone: true}" class="selectStyle"></nz-input-number>
+      <nz-form-explain *ngIf="form.get('taxRate').dirty && form.get('taxRate').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item> -->
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>重要程度</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="importance" nzAllowClear>
+        <nz-option [nzValue]="1" [nzLabel]="1"></nz-option>
+        <nz-option [nzValue]="2" [nzLabel]="2"></nz-option>
+        <nz-option [nzValue]="3" [nzLabel]="3"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('importance').dirty && form.get('importance').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6">总成或部装</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-radio-group [(ngModel)]="assemblyOrPart" nzName="radiogroup" [ngModelOptions]="{standalone: true}">
+        <label nz-radio [nzValue]="0">总成</label>
+        <label nz-radio [nzValue]="1">部装</label>
+      </nz-radio-group>
+      <nz-form-explain *ngIf="form.get('assemblyOrPart').dirty && form.get('assemblyOrPart').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">分工管理</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-input-group nzSearch [nzSuffix]="suffixIconDivideWorkButton">
+        <input type="text" nz-input formControlName="divideWork" (focus)="showDivisionModal()" readonly />
+      </nz-input-group>
+      <ng-template #suffixIconDivideWorkButton>
+        <button nz-button nzSearch (click)="clearDivision()"><i class="anticon anticon-close"></i></button>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">允许溢短装</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-radio-group [(ngModel)]="shortDress" nzName="radiogroup" [ngModelOptions]="{standalone: true}">
+        <label nz-radio [nzValue]="0">是</label>
+        <label nz-radio [nzValue]="1">否</label>
+      </nz-radio-group>
+      <nz-form-explain *ngIf="form.get('shortDress').dirty && form.get('shortDress').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6">所属供应范围</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-input-group nzSearch [nzSuffix]="suffixIconSupplyRangeButton">
+        <input type="text" nz-input formControlName="supplyRange" (focus)="showSupplyRangeModal()" readonly />
+      </nz-input-group>
+      <ng-template #suffixIconSupplyRangeButton>
+        <button nz-button nzSearch (click)="clearSupplyRange()"><i class="anticon anticon-close"></i></button>
+      </ng-template>
+      <!-- <nz-select formControlName="supplyRange" class="selectStyle">
+        <nz-option *ngFor="let type of supplyRangeType; trackBy:trackByNewsId;" nzValue="{{type.id}}" nzLabel="{{type.name}}"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="form.get('supplyRange').dirty && form.get('supplyRange').errors">必填项，请输入</nz-form-explain> -->
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="btn">
+  <div nz-col nzSpan="10"></div>
+  <div nz-col nzSpan="12" style="margin-top: 30px;">
+    <button nz-button nzType="primary" class="submit-button" (click)="save()">保存
+    </button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish($event)">取消
+    </button>
+  </div>
+</div>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="选择设备型号" [nzFooter]="null" nzWidth="630px"
+  (nzOnCancel)="handleCancel()">
+  <app-ufast-table [tableConfig]="deviceModelTableConfig" [dataList]="deviceModelDataList" [getListHandle]="getDeviceModelData"></app-ufast-table>
+  <ng-template #chooseDeviceModel let-modelName="modelName">
+    <span class="operate-text" (click)="chooseDeviceModelFun(modelName)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="divisionVisible" nzTitle="选择分工管理" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelDivision()">
+  <app-ufast-table [tableConfig]="divisionTableConfig" [dataList]="divisionDataList" [getListHandle]="getDivideWorkList"></app-ufast-table>
+  <ng-template #chooseDivision let-ctx="_this">
+    <span class="operate-text" (click)="chooseDivisionFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="supplyRangeVisible" nzTitle="选择所属供应范围" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelSupplyRange()">
+  <app-ufast-table [tableConfig]="supplyRangeTableConfig" [dataList]="supplyRangeList" [getListHandle]="getSupplyRangeList"></app-ufast-table>
+  <ng-template #chooseSupplyRange let-ctx="_this">
+    <span class="operate-text" (click)="chooseSupplyRangeFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,85 @@
+<div class="detail-header-info">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">发货号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.invoiceNo}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">发货类型</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.contractType | map: 'deliverGoodsType'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">合同编号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.purchaseNo}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">供应商</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.supplierName}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">收货方</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.goodsReceivor}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">合同类型</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.contractType | map: 'contractType'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">是否条码管理</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.ifCodeManage | map: 'barcodeManage'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">采购员</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{headerInfo.fullName}}</div>
+      </nz-form-control>
+    </nz-form-item>
+  
+  </div>
+  <div class="split-bar">
+    <span>物料信息</span>
+  </div>
+  
+  <div class="detail-table-header">
+    <button nz-button nzType="info" (click)="delete()">删除</button>
+  </div>
+  
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="orderMaterialList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+  <ng-template #locationTpl let-ctx="_this">
+    <app-location-selector placeholder="选择储位" [(ngModel)]="ctx.locationCode" style="width: 100%" (ok)="onOkLocation($event, ctx)"
+      [filters]="locationSelectFilter"></app-location-selector>
+  </ng-template>
+  <ng-template #operationTpl let-lineId="_lineId">
+    <span class="operate-text" (click)="deleteFun(lineId)">删除</span>
+  </ng-template>
+  
+  <ng-template #receivingTpl let-ctx="_this">
+    <nz-input-number [nzPrecision]="materialNumDec" [nzMin]="materialNumMin" [nzMax]="ctx.billReceiptCount"  [(ngModel)]="ctx.storedCount"></nz-input-number>
+  </ng-template>
+  
+  
+  <app-right-side-table-box [(show)]="show" title="物料列表" searchPlaceholder="物料名称" [tableConfig]="materialTableConfig"
+    [dataList]="materialDataList" [getListHandle]="getMaterialList" (selectedChange)="chooseMaterial($event)"
+    [selectedChangeEvent]="rightTableEmit" idFiled="materialsNo">
+  </app-right-side-table-box>
+  
+  
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" (click)="submitReturnAcceptance()">确认退回</button>
+    <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消</button>
+  
+  </div>
+  

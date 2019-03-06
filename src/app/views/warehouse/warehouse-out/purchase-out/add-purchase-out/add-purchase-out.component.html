@@ -1,0 +1,93 @@
+<form nz-form [formGroup]="purchaseOutForm" class="order-header-form">
+  <nz-form-item>
+    <nz-form-label nzSpan="9">退货单号</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input nz-input formControlName="refundCode" [maxlength]="InputMaxLen.Default" readonly />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="9">合同号</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input nz-input formControlName="contractNo" [maxlength]="InputMaxLen.Default" readonly />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="9" nzRequired>是否按条码管理</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <nz-select class="selectStyle" formControlName="barcodeFlag" nzDisabled>
+        <nz-option *ngFor="let item of barcodeFlagList;trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="9" nzRequired>调出仓库</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input nz-input (focus)="showWarehouseModal()" formControlName="warehouseCode" (ngModelChange)="warehouseChange()" readonly />
+      <nz-form-explain *ngIf="purchaseOutForm.get('warehouseCode').dirty&&purchaseOutForm.get('warehouseCode').errors">
+        <ng-container *ngIf="purchaseOutForm.get('warehouseCode').hasError('required')">
+          必填项
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="9" nzRequired>调出库区</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input nz-input formControlName="areaCode" nzSize="default" readonly (focus)="showAreaModal()" />
+      <nz-form-explain *ngIf="purchaseOutForm.get('areaCode').dirty&&purchaseOutForm.get('warehouseCode').errors">
+        <ng-container *ngIf="purchaseOutForm.get('areaCode').hasError('required')">
+          必填项
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="9" nzRequired>原因备注</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input nz-input nzSize="default" formControlName="reason" [maxlength]="InputMaxLen.Default" />
+      <nz-form-explain *ngIf="purchaseOutForm.get('reason').dirty&&purchaseOutForm.get('reason').errors">
+        <ng-container *ngIf="purchaseOutForm.get('reason').hasError('required')">
+          必填项
+        </ng-container>
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+<div nz-col nzSpan="24" class="marginTop marginBottom">
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="materialList"></app-ufast-table>
+  <ng-template #operationTpl let-id="id">
+    <span class="operate-text" (click)="del(id)">删除</span>
+  </ng-template>
+  <ng-template #planRefundAmountTpl let-ctx="_this">
+    <nz-input-number [nzMin]="materialNumMin"  [nzPrecision]="materialNumDec" [(ngModel)]="ctx.planRefundAmount" [nzMax]="ctx.planRefundAmountMax" [nzStep]="materialNumMin"></nz-input-number>
+  </ng-template>
+  <ng-template #reasonTpl let-ctx="_this">
+    <textarea nz-input rows="1" [(ngModel)]="ctx.reason" [maxlength]="InputMaxLen.Default"></textarea>
+
+  </ng-template>
+</div>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="选择仓库" [nzFooter]="null" nzWidth="630px"
+  (nzOnCancel)="handleCancel()">
+  <app-ufast-table [tableConfig]="warehouseTableConfig" [dataList]="warehouseDataList" [getListHandle]="getWarehouseModalData"></app-ufast-table>
+  <ng-template #chooseWareHouse let-code="code">
+    <span class="operate-text" (click)="chooseWarehouseFun(code)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isVisibleArea" nzTitle="选择库区" [nzFooter]="null" nzWidth="630px" (nzOnCancel)="handleCancelArea()">
+  <app-ufast-table [tableConfig]="areaTableConfig" [dataList]="areaDataList" [getListHandle]="getAreaModalData"></app-ufast-table>
+  <ng-template #chooseArea let-code="code">
+    <span class="operate-text" (click)="chooseAreaFun(code)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" class="submit-button" (click)="savePurchaseOut()">保存</button>
+  <button nz-button nzType="primary" class="submit-button" (click)="submitPurchaseOut()">提交</button>
+  <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish(false)">取消
+  </button>
+</div>

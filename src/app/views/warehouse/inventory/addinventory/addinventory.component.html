@@ -1,0 +1,103 @@
+<nz-form-item class="marginBottom">
+  <nz-form-label nzSpan="3">盘点类型</nz-form-label>
+  <nz-radio-group [(ngModel)]="inventoryType" (ngModelChange)="radioChange()" class="radioStyle">
+    <label nz-radio [nzValue]="0">根据仓库</label>
+    <label nz-radio [nzValue]="1">根据保管员</label>
+    <label nz-radio [nzValue]="2">根据库区</label>
+    <label nz-radio [nzValue]="3">根据物料</label>
+  </nz-radio-group>
+</nz-form-item>
+<div>
+  <form nz-form [formGroup]="inventoryTypeForm" class="order-header-form">
+    <nz-form-item>
+      <nz-form-label nzSpan="10" nzRequired>仓库</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input (focus)="showWarehouseModal()" formControlName="warehouseCode" readonly />
+        <nz-form-explain *ngIf="inventoryTypeForm.get('warehouseCode').dirty && inventoryTypeForm.get('warehouseCode').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="inventoryType === inventoryWay.keeper">
+      <nz-form-label nzSpan="10" nzRequired>保管员</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="keeperName" nzSize="default" readonly (focus)="showKeeperModal()" (ngModelChange)="keeperChange()" />
+        <nz-form-explain *ngIf="inventoryTypeForm.get('keeperName').dirty && inventoryTypeForm.get('keeperName').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="inventoryType === inventoryWay.areas">
+      <nz-form-label nzSpan="10" nzRequired>选择库区</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="areas" nzSize="default" readonly (focus)="showReservoirModal()" (ngModelChange)="areaChange()" />
+        <nz-form-explain *ngIf="inventoryTypeForm.get('areas').dirty && inventoryTypeForm.get('areas').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10" nzRequired>盘点描述</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <input nz-input formControlName="checkOrderDes">
+        <nz-form-explain *ngIf="inventoryTypeForm.get('checkOrderDes').dirty && inventoryTypeForm.get('checkOrderDes').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10" nzRequired>计划盘点日期</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-date-picker [nzFormat]="dateFormat" formControlName="plannedDate" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+        <nz-form-explain *ngIf="inventoryTypeForm.get('plannedDate').dirty && inventoryTypeForm.get('plannedDate').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="10" nzRequired>是否条码管理</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-select style="width: 100%;" formControlName="barcodeFlag" (ngModelChange)="barcodeFlagChange()"
+          nzAllowClear>
+          <nz-option *ngFor="let item of barcodeFlagList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="inventoryTypeForm.get('barcodeFlag').dirty && inventoryTypeForm.get('barcodeFlag').errors">必填项，请输入
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+<nz-divider class="marginBottom"></nz-divider>
+<div class=".detail-table-header">
+
+  <button *ngIf="inventoryType !== inventoryWay.material" nz-button nzType="default"
+    disabled>选择物料</button>
+  <button *ngIf="inventoryType === inventoryWay.material" nz-button nzType="info" (click)="showMaterialList()">选择物料</button>
+</div>
+<div nz-col nzSpan="24" class="marginTop marginBottom">
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="wareHouseDataList" (selectedChange)="materialCheckChange($event)"></app-ufast-table>
+</div>
+<app-right-side-table-box [(show)]="show" title="物料列表" searchPlaceholder="物料编码/物料描述" [tableConfig]="materialTableConfig"
+  [dataList]="materialDataList" [getListHandle]="getMaterialList" (selectedChange)="chooseMaterial($event)"
+  [selectedChangeEvent]="rightTableEmit" idFiled="materialsNo" (search)="getMaterialList()" [(searchContent)]="materialFilter.keyWords">
+</app-right-side-table-box>
+
+<div>
+  <div nz-col nzSpan="10"></div>
+  <div nz-col nzSpan="12" class="marginTop">
+    <button nz-button nzType="primary" class="submit-button" [disabled]="inventoryType === inventoryWay.material" (click)="previewInventoryData()">预览</button>
+    <button nz-button nzType="primary" class="submit-button" (click)="submitInventory()">保存</button>
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">取消
+    </button>
+  </div>
+</div>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisible" nzTitle="选择仓库" nzWidth="630px" (nzOnCancel)="handleCancel()"
+  [nzFooter]="null">
+  <app-ufast-table [tableConfig]="warehouseTableConfig" [dataList]="wareHouseData" [getListHandle]="getWareHouseList"></app-ufast-table>
+  <ng-template #chooseWareHouse let-code="code" let-id="id" let-ctx="_this">
+    <span class="operate-text" (click)="chooseWareHouseFun(code, id, ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisibleReservoir" nzTitle="选择库区" nzWidth="630px" (nzOnCancel)="handleCancelReservoir()"
+  (nzOnOk)="handleOkReservoir()">
+  <app-ufast-table [tableConfig]="warehouseAreaTableConfig" [dataList]="reservoirDataList" [getListHandle]="getAreaList" (selectedChange)="changeSelect($event)"></app-ufast-table>
+</nz-modal>
+<nz-modal [(nzVisible)]="isVisibleKeeper" nzTitle="选择保管员" nzWidth="630px" (nzOnCancel)="handleCancelKeeper()" (nzOnOk)="handleOkKeeper()">
+  <app-ufast-table [tableConfig]="keeperTableConfig" [dataList]="keeperDataList" [getListHandle]="getKeeperList" (selectedChange)="keeperChangeSelect($event)"></app-ufast-table>
+</nz-modal>

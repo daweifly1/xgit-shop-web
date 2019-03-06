@@ -1,0 +1,114 @@
+<app-tab-route tabTitle="收货单">
+  <ng-container *ngIf="currentPageType === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="收货单号" (search)="getReceivingNoteList()"
+      [(searchText)]="filters.invoiceNo" (advancedSearch)="toggleAdvancedSearch($event)" (refresh)="getReceivingNoteList()"
+      [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <ng-template #leftTpl>
+      <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.receivingNoteAdd">新增</button>
+    </ng-template>
+
+    <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">收货单号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.invoiceNo" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">供应商</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.supplierName" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">合同类型</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select nzPlaceHolder="请选择" [(ngModel)]="filters.contractType" name="filters.contractType" class="selectStyle"
+              nzAllowClear>
+              <nz-option *ngFor="let item of contractType" [nzValue]="item.id" [nzLabel]="item.type"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">合同编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.purchaseNo" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">收货方</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.goodsReceivor" [maxlength]="searchInputLen">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <!-- <div nz-col nzSpan="6">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">入库状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select nzPlaceHolder="请选择" [(ngModel)]="filters.deliveryStatus" name="filters.deliveryStatus" class="selectStyle"
+              nzAllowClear>
+              <nz-option *ngFor="let item of deliveryStatus" [nzValue]="item.id" [nzLabel]="item.status"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div> -->
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getReceivingNoteList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="toggleAdvancedSearch()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="receivingNoteDataList" [getListHandle]="getReceivingNoteList"
+      (selectedChange)="changeSelect($event)"></app-ufast-table>
+
+  </ng-container>
+  <ng-template #operationTpl let-invoiceNo="invoiceNo" let-contractType="contractType" let-index="index">
+    <app-action-group [(isShowActionPopover)]="receivingNoteDataList[index].isShowActionPopover">
+      <app-action [enabled]="actionStatus[invoiceNo].acceptance" (clickAction)="acceptancePage(invoiceNo)" *appAuthBtu="ActionCode.receivingNoteReceive">验收</app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].receive" (clickAction)="confirm(invoiceNo,contractType)"
+        *appAuthBtu="ActionCode.receivingNotePutInStorage">入库</app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].manualFinish" (clickAction)="accountStatement(invoiceNo)"
+        *appAuthBtu="ActionCode.receivingNoteFinish">结单</app-action>
+        <app-action [enabled]="actionStatus[invoiceNo].returnAcceptance" (clickAction)="returnAcceptance(invoiceNo)" *appAuthBtu="ActionCode.receivingNoteReceive">验收退回</app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].printBarcode" (clickAction)="printBarcode(invoiceNo, index)" *appAuthBtu="ActionCode.receivingNotePrintBarcode">
+        打印货物码
+      </app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].print" (clickAction)="print(invoiceNo)" *appAuthBtu="ActionCode.receivingNotePrint">打印</app-action>
+      <app-action [enabled]="actionStatus[invoiceNo].print" (clickAction)="printWarehouseWarrant(invoiceNo)" *appAuthBtu="ActionCode.receivingNotePrint">打印入库通知单</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #invoiceNoTpl let-invoiceNo="invoiceNo">
+    <span class="operate-text" (click)="detail(invoiceNo)">{{invoiceNo}}</span>
+  </ng-template>
+
+  <ng-container *ngIf="currentPageType === tabPageType.AddPage">
+    <app-compact (finish)="onChildFinish()"></app-compact>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.DetailPage">
+    <app-receiving-note-detail (finish)="onChildFinish()" [invoiceNo]="invoiceNo"></app-receiving-note-detail>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.EditPage">
+    <app-add-receiving-note (finish)="onChildFinish()" [addOrder]="false" [invoiceNo]="invoiceNo" [contractType]="editContractType"></app-add-receiving-note>
+  </ng-container>
+
+  <ng-container *ngIf="currentPageType === tabPageType.ConfirmPage">
+    <app-receiving-note-confirm (finish)="onChildFinish()" [invoiceNo]="invoiceNo" [contractType]="editContractType" ></app-receiving-note-confirm>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.AcceptancePage">
+    <app-receiving-note-confirm (finish)="onChildFinish()" [invoiceNo]="invoiceNo" [isAcceptance]="isAcceptance" ></app-receiving-note-confirm>
+  </ng-container>
+  <ng-container *ngIf="currentPageType === tabPageType.returnAcceptancePage">
+    <app-return-acceptance (finish)="onChildFinish()" [invoiceNo]="invoiceNo" ></app-return-acceptance>
+  </ng-container>
+</app-tab-route>

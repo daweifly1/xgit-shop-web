@@ -1,0 +1,9 @@
+<app-ufast-form-detail [detailDataConfig]="detailDataConfig" [detailData]="quotationDetail"></app-ufast-form-detail>
+<div class="split-bar">
+  <span>报价物料行</span>
+</div>
+<app-ufast-table [tableConfig]="materialTableConfig" [dataList]="quotationMaterialList"></app-ufast-table>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" nzGhost (click)="emitPage()">取消</button>
+</div>

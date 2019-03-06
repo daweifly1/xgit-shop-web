@@ -1,0 +1,132 @@
+<ng-container *ngIf="locationPageType === locationPageTypeEnum.locationList">
+  <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="储位编码" (search)="getLocationList()" [searchText]="filters.code"
+    [tableConfig]="tableConfig" (searchTextChange)="searchTextChange($event)" (advancedSearch)="advancedSearch($event)"
+    (refresh)="getLocationList()"></app-ufast-table-nav>
+  <ng-template #leftTpl let-keeperId="keeperId" let-keeperName="keeperName">
+    <button nz-button nzType="info" (click)="goback()">返回上级</button>
+    <button nz-button nzType="info" (click)="addLocation(keeperId,keeperName)" *appAuthBtu="ActionCode.locationAdd">新增储位</button>
+    <button nz-button nzType="info" (click)="batchPrint('preview')" *appAuthBtu="ActionCode.warehousePlacePrint">打印预览</button>
+    <button nz-button nzType="info" (click)="batchPrint('print')" *appAuthBtu="ActionCode.warehousePlacePrint">打印</button>
+    <button nz-button nzType="info" (click)="printConfiguration($event)" *appAuthBtu="ActionCode.warehousePlacePrint">打印配置</button>
+  </ng-template>
+
+  <div class="advanced-search clear-fix" *ngIf="advancedSearchShow">
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">储位编码</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input [(ngModel)]="filters.code">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="6">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">储位描述</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <input nz-input [(ngModel)]="filters.remark">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24" class="btn-bar">
+      <button nz-button nzType="primary" (click)="getLocationList()">搜索</button>
+      <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+      <button nz-button nzType="default" (click)="advancedSearchClose($event)">收起</button>
+    </div>
+  </div>
+
+  <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="locationDataList" [getListHandle]="getLocationList"
+    (selectedChange)="changeSelect($event)"></app-ufast-table>
+
+
+  <app-right-side-box [(show)]="show" title="打印配置">
+    <div nz-col nzSpan="24" style="margin-top:20px;">
+      <nz-form-item>
+        <nz-form-label nzSpan="7">打印模板</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <span>模板1</span>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="7">内容显示</nz-form-label>
+        <nz-form-control nzSpan="15">
+          <!-- <label nz-checkbox [(ngModel)]="printConfigurationData.hasWareHouse">仓库</label>
+          <label nz-checkbox [(ngModel)]="printConfigurationData.hasArea">库区</label> -->
+          <label nz-checkbox [(ngModel)]="printConfigurationData.hasShelfDes">储位描述</label>
+          <label nz-checkbox [(ngModel)]="printConfigurationData.hasSeq">位</label>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </app-right-side-box>
+</ng-container>
+<ng-template #operation let-code="code" let-remark="remark" let-areaId="areaId" let-id="id" let-keeperName="keeperName"
+  let-keeperId="keeperId">
+  <app-action-group>
+      <app-action  (clickAction)="print(code, 'preview')" *appAuthBtu="ActionCode.warehousePlacePrint">打印预览</app-action>
+      <app-action  (clickAction)="print(code, 'print')" *appAuthBtu="ActionCode.warehousePlacePrint">打印</app-action>
+      <app-action (clickAction)="editLocation(code,id,remark,areaId,keeperName,keeperId)" *appAuthBtu="ActionCode.locationEdit">编辑</app-action>
+      <app-action (clickAction)="deleteWarehouse(id)" *appAuthBtu="ActionCode.locationDel">删除</app-action>
+    </app-action-group>
+  <!-- <span class="operate-text" (click)="print(code)" *appAuthBtu="ActionCode.warehousePlacePrint">打印预览</span>
+  <span class="operate-text" (click)="editLocation(code,id,remark,areaId,keeperName,keeperId)" *appAuthBtu="ActionCode.locationEdit">编辑</span>
+  <span class="operate-text" (click)="deleteWarehouse(id)" *appAuthBtu="ActionCode.locationDel">删除</span> -->
+</ng-template>
+
+
+<ng-container *ngIf="locationPageType === locationPageTypeEnum.addLocation">
+  <app-add-location (finish)="onChildPageFinish()" [areaCode]="areaCode" [warehouseCode]="selectWarehouseCode" [areaId]="selectWarehouseAreaId"
+    [defaultKeeper]="defaultKeeper"></app-add-location>
+</ng-container>
+
+<ng-container *ngIf="locationPageType === locationPageTypeEnum.editLocation">
+  <form nz-form [formGroup]="locationEditForm">
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4">储位编码</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="code">
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>储位描述</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input formControlName="remark">
+          <nz-form-explain *ngIf="locationEditForm.get('remark').dirty && locationEditForm.get('remark').errors">必填项，请输入
+            </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzSpan="4" nzRequired>保管员</nz-form-label>
+        <nz-form-control nzSpan="8">
+          <input nz-input nzSize="default" formControlName="keeperName" (click)="showVisiblekeeperNameModal()" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+
+    <div nz-col nzSpan="20" nzOffset="4" class="m-t-sm p-b-md">
+      <button nz-button nzType="primary" class="submit-button" type="submit" (click)="updateLocation()">保存</button>
+      <button nz-button nzType="primary" class="submit-button" nzGhost (click)="backToList()">取消</button>
+    </div>
+  </form>
+
+</ng-container>
+<nz-modal class="choose-model-box" [(nzVisible)]="isVisiblekeeperName" nzTitle="选择保管员" nzWidth="630px" (nzOnCancel)="handleCancelKeeperName()">
+  <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="transportSearchButton">
+      <input type="text" nz-input placeholder="请输入保管员名称" [(ngModel)]="keeperNameFilter.name">
+    </nz-input-group>
+    <ng-template #transportSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="searchKeeperName()">搜索</button>
+    </ng-template>
+  </div>
+  <app-ufast-table [tableConfig]="keeperNameTableConfig" [dataList]="keeperNameDataList" [getListHandle]="getKeeperNameModalData"></app-ufast-table>
+  <ng-template #chooseKeeperName let-name="name" let-userId="userId">
+    <span class="operate-text" (click)="chooseKeeperNameFun(name,userId)">选择</span>
+  </ng-template>
+</nz-modal>

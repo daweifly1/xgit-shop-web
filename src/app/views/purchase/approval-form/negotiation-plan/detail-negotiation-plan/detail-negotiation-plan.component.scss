@@ -1,0 +1,19 @@
+/deep/ .detail {
+  width: 100%;
+
+  nz-form-item {
+    width: 66%;
+    margin-bottom: 0px;
+    font-size: 14px;
+    word-break: break-all;
+
+    nz-form-text {
+      line-height: 30px;
+    }
+
+    .ant-form-item-label,
+    .ant-form-item-control {
+      line-height: 30px;
+    }
+  }
+}

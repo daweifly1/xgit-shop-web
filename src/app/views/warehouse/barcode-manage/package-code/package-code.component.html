@@ -1,0 +1,85 @@
+<app-tab-route tabTitle="包装条码">
+  <ng-container>
+    <div class="left">
+      <app-ufast-table-nav [showAdvancedSearch]="false" [tableConfig]="tableConfig" (refresh)="getPackageCodePrintList()" [searchPlaceholder]="searchPlaceholder" (search)="getPackageCodePrintList()" [(searchText)]="orderNo"></app-ufast-table-nav>
+
+      <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="packageCodePrintDataList" (selectedChange)="onRowSelected($event)"></app-ufast-table>
+    </div>
+    <div class="right">
+      <div class="box-head">
+        <span class="print-param">打印参数</span>
+        <span class="operate-text print-configuration" (click)="onClick($event)"  *appAuthBtu="ActionCode.packageBarcodePrint">打印配置</span>
+      </div>
+      <div class="print-content">
+        <div class="vendor-edit p-t-md clear-fix">
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzSpan="10">零件号/图号</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input [(ngModel)]="printConfig.model" [maxlength]="MaxInputLen.Default">
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzSpan="10" nzRequired>包装数量</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <nz-input-number style='width:100%;' readonly [(ngModel)]="printConfig.packageNum" (ngModelChange)="splitPackage()" [nzMin]="1" [nzMax]="maxSplitNum" [nzPrecision]="0"></nz-input-number>
+              </nz-form-control>
+            </nz-form-item>
+
+          </div>
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label nzSpan="10">规格描述</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input [(ngModel)]="printConfig.specDesc" [maxlength]="MaxInputLen.Default">
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzSpan="10">总数量</nz-form-label>
+              <nz-form-control nzSpan="14">
+                <input nz-input [(ngModel)]="printConfig.sumNum" readonly />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="split-template">
+        <div class="form">
+          <div class="form-group form-group-sm" *ngFor="let item of packageList; trackBy: trackByItem">
+            <div nz-col nzSpan="24">
+              <nz-form-item>
+                <nz-form-label nzSpan="5">每包数量</nz-form-label>
+                <nz-form-control nzSpan="6">
+                  <nz-input-number style="width: 100%;" [nzPrecision]="materialNumDec" [(ngModel)]="item.singleNum" [nzMin]="precision"></nz-input-number>
+                </nz-form-control>
+                <nz-form-label nzSpan="6">VIN</nz-form-label>
+                <nz-form-control nzSpan="6">
+                  <input nz-input [(ngModel)]="item.vinId">
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-btu-wrap">
+          <button nz-button nzType="primary" [disabled]="packageList.length === 0" class="submit-button"  (click)="previewBarcode()"  *appAuthBtu="ActionCode.packageBarcodePrint">预览</button>
+          <button nz-button nzType="primary" [disabled]="packageList.length === 0" class="submit-button" (click)="printBarcode()"  *appAuthBtu="ActionCode.packageBarcodePrint">打印</button>
+      </div>
+    </div>
+
+  </ng-container>
+  <app-right-side-box [(show)]="show" [title]="printModelTitle">
+    <div class="print-config-wrap">
+      <div nz-row>
+        <div nz-col nzSpan="8">内容显示:</div>
+        <div nz-col nzSpan="16">
+          <label nz-checkbox [(ngModel)]="printConfig.totalBarcode">打印总条码</label>
+          <label nz-checkbox [(ngModel)]="printConfig.barcode">条码值</label>
+          <label nz-checkbox [(ngModel)]="printConfig.vin">VIN</label>
+          <label nz-checkbox [(ngModel)]="printConfig.printPackNum">包装数量</label>
+        </div>
+      </div>
+    </div>
+  </app-right-side-box>
+</app-tab-route>

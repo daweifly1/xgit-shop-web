@@ -1,0 +1,10 @@
+.remark-area{
+  max-height:60px;
+}
+.supplier-table-wrap {
+  font-size:0;
+  & > div {
+    display: inline-block;
+    width: 50%;
+  }
+}

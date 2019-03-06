@@ -1,0 +1,25 @@
+<div>
+  <div nz-row class="select-clause">
+    <div nz-col [nzSpan]="2">条内容</div>
+    <div nz-col [nzSpan]="20">
+      <nz-select style="width: 100%;" [(ngModel)]="selected.selectedClauseId" (nzScrollToBottom)="getClauseList()"
+                 nzPlaceHolder="请选择条内容" (ngModelChange)="handleClauseSelected($event)" nzAllowClear
+                 nzShowSearch [nzServerSearch]="true" (nzOnSearch)="searchClause($event)">
+        <nz-option *ngFor="let item of clauseList" [nzValue]="item.id" [nzLabel]="item.content"></nz-option>
+        <nz-option *ngIf="isClauseLoading" nzDisabled nzCustomContent>
+          <i class="anticon anticon-loading anticon-spin loading-icon"></i> Loading Data...
+        </nz-option>
+      </nz-select>
+    </div>
+  </div>
+  <div class="select-clause-item">
+    <app-ufast-table [tableConfig]="clauseTableConfig" [dataList]="clauseItemList" [getListHandle]="getClauseItemList"></app-ufast-table>
+  </div>
+</div>
+
+<ng-template #clauseItemTpl let-clauseItem="content">
+  <app-clip-text class="clause-clip" [content]="clauseItem"></app-clip-text>
+</ng-template>
+<ng-template #selectItemTpl let-id="id">
+  <span class="operate-text" (click)="handleItemSelected(id)">选择</span>
+</ng-template>

@@ -1,0 +1,116 @@
+<div>
+  <form nz-form [formGroup]="orderForm">
+    <div class="order-header-form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="inquiryNo">询价单号</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="inquiryNo" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="title" nzRequired>标题</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="title" [maxlength]="MaxLenInputEnum.Title" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="inquireDate" nzRequired>询价日期</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-date-picker formControlName="inquireDate" [nzDisabledDate]="disabledStartDate"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>报价截止时间</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-date-picker formControlName="quoteEndDate" [nzDisabledDate]="disabledEndDate"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="inquireUserName">发件人</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="inquireUserName" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="inquireUserPhone" nzRequired>发件人联系电话</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="inquireUserPhone" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="receiveQuoteAddress">接收报价地址</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="receiveQuoteAddress" [maxlength]="MaxLenInputEnum.Default" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="inquireUserDept">发件人部门</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input type="text" formControlName="inquireUserDept" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="inquiryMethod" nzRequired>询价方式</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-select style="width: 100%;" formControlName="inquiryMethod">
+            <nz-option *ngFor="let data of ('inquiryMethod'|mapList);trackBy:trackByItem;" [nzValue]="data.value" [nzLabel]="data.label"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="receiveQuoteFax" nzRequired>接收报价传真</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input formControlName="receiveQuoteFax" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>付款方式</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-select style="width: 100%;" formControlName="payMethod">
+            <nz-option *ngFor="let data of payMethodList;trackBy:trackByItem;" [nzValue]="data.name" [nzLabel]="data.name"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <br/>
+      <nz-form-item style="width:66%;margin-bottom: 5px;">
+        <nz-form-label [nzSpan]="4" >询价要求</nz-form-label>
+        <nz-form-control [nzSpan]="20">
+          <nz-form-text>{{orderForm.value.inquiryClaim}}</nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+      <br/>
+    </div>
+    <nz-form-item style="width:66%;margin-bottom: 10px;">
+      <nz-form-label [nzSpan]="4" nzFor="inquirySpecificClaim">具体询价要求</nz-form-label>
+      <nz-form-control [nzSpan]="20">
+        <textarea style="min-height: 100px;" nz-input [maxlength]="MaxLenInputEnum.InquireClaim" formControlName="inquirySpecificClaim" ></textarea>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="split-bar">
+    <span>供应商</span>
+  </div>
+  <app-ufast-table [tableConfig]="supplierTableConfig" [dataList]="supplierDataList"></app-ufast-table>
+  <div class="split-bar">
+    <span>询价物料行</span>
+  </div>
+  <app-ufast-table [tableConfig]="materialRowTableConfig" [dataList]="materialRowDataList"></app-ufast-table>
+  <div class="table-footer-bar">
+    <ng-container *ngIf="!isAgainAskPrice">
+      <button nz-button nzType="primary" (click)="saveInfo()">保存</button>
+      <button nz-button nzType="primary" (click)="confirmSend()">确定发送</button>
+    </ng-container>
+    <button *ngIf="isAgainAskPrice" nz-button nzType="primary" (click)="againSend()">再次询价</button>
+    <button nz-button nzType="primary" [nzGhost]="true" (click)="exitPage()">取消</button>
+  </div>
+</div>
+
+<ng-template #transportWayTpl let-ctx="_this" let-transportError="transportError">
+  <nz-select style="width: 100%;" [(ngModel)]="ctx.transportMethod" [ngClass]="{'transport-error': transportError}"
+             (ngModelChange)="onRowTransport($event, ctx)">
+    <nz-option *ngFor="let data of transportList;trackBy:trackByItem;" [nzValue]="data.name" [nzLabel]="data.name"></nz-option>
+  </nz-select>
+</ng-template>
+<ng-template #remarkTpl let-ctx="_this">
+  <input nz-input [(ngModel)]="ctx.remark" type="text"  [maxlength]="MaxLenInputEnum.RowRemark" />
+</ng-template>

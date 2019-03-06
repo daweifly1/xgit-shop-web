@@ -1,0 +1,62 @@
+<app-tab-route tabTitle="数据字典">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="参数类型" (refresh)="getDataDictionaryList()" (search)="getDataDictionaryList()"
+      (advancedSearch)="onAdvancedSearch()" [(searchText)]="filters.name" [tableConfig]="tableConfig"></app-ufast-table-nav>
+
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <form class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">参数类型</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name" name="name">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">类型编码</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.code" name="code">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">所属组</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.groupName" name="groupName">
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getDataDictionaryList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose()">收起</button>
+      </div>
+    </div>
+
+    <app-ufast-table [tableConfig]="tableConfig" [dataList]="dataDictionaryList" [getListHandle]="getDataDictionaryList"></app-ufast-table>
+
+  </ng-container>
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="add()" *appAuthBtu="ActionCode.dictionaryAdd">新增</button>
+  </ng-template>
+  <ng-template #operationTpl let-data="_this">
+      <app-action-group>
+        <app-action  (clickAction)="edit(data)" *appAuthBtu="ActionCode.dictionaryEdit">编辑</app-action>
+        <app-action  (clickAction)="addParam(data)" *appAuthBtu="ActionCode.dictionaryAddParam">新增参数</app-action>
+      </app-action-group>
+  </ng-template>
+  <ng-template #parameterTypeTpl let-data="_this">
+    <span class="operate-text" (click)="detail(data)">{{data.name}}</span>
+  </ng-template>
+  <ng-container *ngIf="currentPage === tabPageType.AddParamTypePage">
+    <app-add-param-type (finish)="onChildFinish()" [editData]="editData"></app-add-param-type>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <app-add-param-type (finish)="onChildFinish()" [editData]="editData"></app-add-param-type>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <app-param (finish)="onChildFinish()" [paramTypeData]="paramTypeData"></app-param>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.AddParamPage">
+    <app-add-param (finish)="onChildFinish()" [editData]="editData" [paramTypeData]="paramTypeData"></app-add-param>
+  </ng-container>
+</app-tab-route>

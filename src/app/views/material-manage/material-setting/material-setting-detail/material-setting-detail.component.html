@@ -1,0 +1,47 @@
+<ng-container *ngIf="selectedPage === tabPageType.ManagePage">
+  <div class="detail-header-info">
+    <nz-form-item *ngFor="let item of headerFieldList;trackBy: trackByNewsId">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{detailData[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{detailData[item.field] | map: item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="split-bar">
+    <span>使用情况</span>
+  </div>
+
+  <nz-table #serviceConditionTable nzBordered [nzData]="serviceConditionData" nzSize="small">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th nzWidth="30%">使用单位</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of serviceConditionTable.data;let i=index">
+        <td>{{i+1}}</td>
+        <td>
+          <div class="editable-cell">
+            <div class="editable-cell-text-wrapper">
+              <span>{{data.orgName}}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="operate-text" (click)="materialDetail(data.id)">查看物料详情</span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" class="submit-button" nzGhost (click)="emitFinish()">关闭
+    </button>
+  </div>
+</ng-container>
+<ng-container *ngIf="selectedPage === tabPageType.DetailPage">
+  <app-industrial-material-detail [detailId]="materialDetailId" (finish)="backToList()"></app-industrial-material-detail>
+</ng-container>

@@ -1,0 +1,53 @@
+<form nz-form [formGroup]="clauseTemplateForm" class="detail-header-info">
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>模板编码</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="templateNo" [maxlength]="InputMaxLen.TemplateNo" />
+      <nz-form-explain *ngIf="clauseTemplateForm.get('templateNo').dirty && clauseTemplateForm.get('templateNo').errors">
+        必填,只能输入数字
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>模板名称</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input nz-input formControlName="templateName" [maxlength]="InputMaxLen.TemplateName" />
+      <nz-form-explain *ngIf="clauseTemplateForm.get('templateName').dirty && clauseTemplateForm.get('templateName').errors">
+          必填
+        </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8" nzRequired>模板类型</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select style="width: 100%;" formControlName="templateType">
+        <nz-option *ngFor="let item of ('templateType' | mapList)" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+      </nz-select>
+      <nz-form-explain *ngIf="clauseTemplateForm.get('templateType').dirty && clauseTemplateForm.get('templateType').errors">
+          必填
+        </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div class="split-bar"><span><i style="color: red;">*  </i>选择条款</span></div>
+<div class="tableStyle">
+  <app-ufast-table class="left-table" [tableConfig]="clauseLeftTableConfig" [dataList]="clauseLeftDataList"
+    [getListHandle]="getClauseLeftDataList" (selectedChange)="changeSelectLeft($event)"></app-ufast-table>
+  <!-- <ng-template #operationTpl let-id="id" let-highLight="highLight">
+    <span class="view" (click)="view(id)" style="color:#009FE0;" *ngIf="highLight">查看款内容</span>
+    <span class="view" (click)="view(id)" *ngIf="!highLight">查看款内容</span>
+  </ng-template> -->
+  <ng-template #contentTpl let-content="content" let-id="id" let-highLight="highLight" class="highLight">
+    <app-clip-text [content]="content" class="clip-text highLight" (click)="view(id)" *ngIf="highLight"></app-clip-text>
+    <app-clip-text [content]="content" class="clip-text view" (click)="view(id)" *ngIf="!highLight"></app-clip-text>
+  </ng-template>
+  <app-ufast-table class="right-table" [tableConfig]="clauseRightTableConfig" [dataList]="clauseRightDataList"
+    [getListHandle]="getClauseRightDataList" (selectedChange)="changeSelectRight($event)"></app-ufast-table>
+    <ng-template #rightContentTpl let-content="content">
+        <app-clip-text [content]="content" class="clip-text"></app-clip-text>
+    </ng-template>
+</div>
+<div class="table-footer-bar">
+  <button nz-button nzType="primary" (click)="saveClauseTemplate()">保存</button>
+  <button nz-button nzType="primary" nzGhost (click)="onCancel()">取消</button>
+</div>

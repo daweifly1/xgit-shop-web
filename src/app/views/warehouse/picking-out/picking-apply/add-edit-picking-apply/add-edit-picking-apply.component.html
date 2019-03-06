@@ -1,0 +1,234 @@
+<div class="page-wrap">
+  <form [formGroup]="formGroup" class="order-header-form">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">领料申请单号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="applyNo" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">业务实体</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="orgName" [maxlength]="InputMaxLen.Default" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">工段</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="section" [maxlength]="InputMaxLen.Default" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>出库类型</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="typeId" (ngModelChange)="typeChange($event)"
+          nzAllowClear>
+          <nz-option *ngFor="let type of storageTypeList; trackBy: trackByItem;" [nzValue]="type.id" [nzLabel]="type.type"></nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="formGroup.get('typeId').dirty && formGroup.get('typeId').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" *ngIf="!isRequired">部门编号</nz-form-label>
+      <nz-form-label nzSpan="8" *ngIf="isRequired" nzRequired>部门编号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+          <input type="text" nz-input formControlName="applyDepartmentCode" (focus)="showApplyDepartmentModal()"
+            readonly />
+        </nz-input-group>
+        <ng-template #suffixIconButton>
+          <button nz-button nzType="default" nzSearch (click)="clearApplyDepartment()"><i class="anticon anticon-close"></i></button>
+        </ng-template>
+        <nz-form-explain *ngIf="formGroup.get('applyDepartmentCode').dirty && formGroup.get('applyDepartmentCode').errors">
+          请选择部门编号
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" *ngIf="!isRequired">部门名称</nz-form-label>
+      <nz-form-label nzSpan="8" *ngIf="isRequired" nzRequired>部门名称</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="applyDepartment" readonly />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired>是否配送</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-select nzPlaceHolder="请选择" class="selectStyle" formControlName="isDistribution" nzAllowClear
+          (ngModelChange)="deliveryMethodChange($event)">
+          <nz-option *ngFor="let item of deliveryMethodList; trackBy: trackByItem;" [nzValue]="item.value" [nzLabel]="item.label">
+          </nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="formGroup.get('isDistribution').dirty && formGroup.get('isDistribution').errors && !getFormControl('isDistribution').hasError('message')">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired *ngIf="deliveryMethod">收货人</nz-form-label>
+      <nz-form-label nzSpan="8" *ngIf="!deliveryMethod">收货人</nz-form-label>
+      <nz-form-control nzSpan="16">
+          <nz-input-group nzSearch [nzSuffix]="receiverNameButton">
+              <input type="text" nz-input formControlName="receiverName" readonly (focus)="showReceiverNameModal()" />
+            </nz-input-group>
+            <ng-template #receiverNameButton>
+              <button nz-button nzType="default" nzSearch (click)="clearReceiverName()"><i class="anticon anticon-close"></i></button>
+            </ng-template>
+        <!-- <input nz-input formControlName="receiverName" [maxlength]="InputMaxLen.Default" readonly (focus)="showReceiverNameModal()" /> -->
+        <nz-form-explain *ngIf="formGroup.get('receiverName').dirty && formGroup.get('receiverName').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired *ngIf="deliveryMethod">收货人电话</nz-form-label>
+      <nz-form-label nzSpan="8" *ngIf="!deliveryMethod">收货人电话</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="receiverNumber" [maxlength]="InputMaxLen.Default" />
+        <nz-form-explain *ngIf="formGroup.get('receiverNumber').dirty && formGroup.get('receiverNumber').errors">
+          请输入正确的手机或电话号码
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired *ngIf="deliveryMethod">收货地址</nz-form-label>
+      <nz-form-label nzSpan="8" *ngIf="!deliveryMethod">收货地址</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="receiverAddress" [maxlength]="InputMaxLen.Default" />
+        <nz-form-explain *ngIf="formGroup.get('receiverAddress').dirty && formGroup.get('receiverAddress').errors && !getFormControl('receiverAddress').hasError('message')">
+          必填
+        </nz-form-explain>
+        <nz-form-explain *ngIf="getFormControl('receiverAddress').hasError('message')">
+          输入空格无效</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">申请人</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <input nz-input formControlName="applyName" [maxlength]="InputMaxLen.Default" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">申请日期</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-date-picker formControlName="applyDate" nzFormat="yyyy-MM-dd"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8" nzRequired *ngIf="clientRequired">客户</nz-form-label>
+      <nz-form-label nzSpan="8" *ngIf="!clientRequired">客户</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-input-group nzSearch [nzSuffix]="clientButton">
+          <input type="text" nz-input formControlName="customerName" readonly (focus)="showClientModal()" />
+        </nz-input-group>
+        <ng-template #clientButton>
+          <button nz-button nzType="default" nzSearch (click)="clearCustomerName()"><i class="anticon anticon-close"></i></button>
+        </ng-template>
+        <nz-form-explain *ngIf="formGroup.get('customerName').dirty && formGroup.get('customerName').errors">
+          必填
+        </nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="split-bar">
+    <span>物料信息</span>
+  </div>
+  <div class="detail-table-header">
+    <button nz-button nzType="info" (click)="onChooseMaterial()">选择物料</button>
+    <button nz-button nzType="info" (click)="deleteMaterial()">删除</button>
+  </div>
+
+  <app-ufast-table [tableConfig]="materialListConfig" [dataList]="materialDetailList" (selectedChange)="onMainChecked($event)"></app-ufast-table>
+  <ng-template #tableOpTpl let-code="materialCode">
+    <span class="operate-text" (click)="deleteMaterialOne(code)">删除</span>
+  </ng-template>
+
+  <ng-template #numTpl let-ctx="_this">
+    <nz-input-number [nzPrecision]="materialNumDec" [(ngModel)]="ctx.amountApply" [nzMin]="materialNumMin" [nzMax]="materialNumMax"></nz-input-number>
+  </ng-template>
+  <ng-template #needDateTpl let-ctx="_this">
+    <nz-date-picker [(ngModel)]="ctx.needDate" class="selectStyle"></nz-date-picker>
+  </ng-template>
+
+  <div class="table-footer-wrap">
+    <button nz-button nzType="primary" (click)="saveOrder()">保存</button>
+    <button nz-button nzType="primary" (click)="submitOrder()">提交</button>
+    <button nz-button nzType="primary" nzGhost (click)="onCancel()">取消</button>
+  </div>
+</div>
+
+<app-right-side-table-box [topTpl]="topTpl" (search)="getFactoryMaterialList()" title="选择物料" [selectedChangeEvent]="materialEmitter"
+  [getListHandle]="getFactoryMaterialList" [dataList]="rightDataList" [(show)]="showMaterialBox" [tableConfig]="rightTableConfig"
+  [idFiled]="materialField" (selectedChange)="chooseMaterial($event)">
+</app-right-side-table-box>
+<ng-template #topTpl>
+  <div class="choose-material-top-wrap">
+    <input class="material-input" nz-input placeholder="物料编码" [(ngModel)]="filterMaterial.code" />
+    <input class="material-input" nz-input placeholder="物料名称" [(ngModel)]="filterMaterial.name" />
+    <nz-input-group class="material-input" nzSearch [nzSuffix]="suffixIconButton">
+      <input nz-input placeholder="保管员" [(ngModel)]="filterMaterial.keeperName" readonly (focus)="showVisiblekeeperNameModal()" />
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="default" nzSearch (click)="clearKeeperName()"><i class="anticon anticon-close"></i></button>
+    </ng-template>
+    <button class="search-button" nzType="primary" nz-button (click)="getFactoryMaterialList()">搜索</button>
+  </div>
+</ng-template>
+<nz-modal class="choose-keeper-box-wrap choose-model-box" [(nzVisible)]="isVisiblekeeperName" nzTitle="选择保管员" nzWidth="630px"
+  (nzOnCancel)="handleCancelKeeperName()">
+  <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="transportSearchButton">
+      <input nz-input placeholder="请输入保管员名称" [(ngModel)]="keeperNameFilter.name">
+    </nz-input-group>
+    <ng-template #transportSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="searchKeeperName()">搜索</button>
+    </ng-template>
+  </div>
+  <app-ufast-table [tableConfig]="keeperNameTableConfig" [dataList]="keeperNameDataList" [getListHandle]="getKeeperNameModalData"></app-ufast-table>
+  <ng-template #chooseKeeperName let-name="name" let-userId="userId">
+    <span class="operate-text" (click)="chooseKeeperNameFun(name,userId)">选择</span>
+  </ng-template>
+</nz-modal>
+<nz-modal class="set-modal choose-model-box" [(nzVisible)]="applyDepartmentVisible" nzTitle="选择部门" nzWidth="630px"
+  [nzFooter]="null" (nzOnCancel)="handleCancelApplyDepartment()">
+  <app-ufast-table [tableConfig]="applyDepartmentTableConfig" [dataList]="applyDepartmentDataList"></app-ufast-table>
+  <ng-template #chooseApplyDepartment let-ctx="_this">
+    <span class="operate-text" (click)="chooseApplyDepartmentFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-receiver-box-wrap choose-model-box" [(nzVisible)]="isVisibleReceiverName" nzTitle="选择收货人"
+  nzWidth="630px" (nzOnCancel)="handleCancelReceiverName()" [nzFooter]="null">
+  <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="receiverNameSearchButton">
+      <input type="text" nz-input placeholder="请输入收货人姓名" [(ngModel)]="receiverNameFilter.receiptContactName ">
+      <!-- <input type="text" nz-input placeholder="请输入供应商" [(ngModel)]="agreementFilter.vendorName"> -->
+    </nz-input-group>
+    <ng-template #receiverNameSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="getReceiverNameList()">搜索</button>
+    </ng-template>
+  </div>
+  <app-ufast-table [tableConfig]="receiverNameTableConfig" [dataList]="receiverNameList" [getListHandle]="getReceiverNameList"></app-ufast-table>
+  <ng-template #chooseReceiverName let-ctx="_this">
+    <span class="operate-text" (click)="chooseReceiverNameFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-client-box-wrap choose-model-box" [(nzVisible)]="isVisibleClient" nzTitle="选择客户" nzWidth="630px"
+  (nzOnCancel)="handleCancelClient()" [nzFooter]="null">
+  <div class="transportSearch clear-fix">
+    <nz-input-group class="search-group" nzSearch [nzSuffix]="clientSearchButton">
+      <input type="text" nz-input placeholder="请输入客户名称" [(ngModel)]="clientFilter.partyName ">
+      <!-- <input type="text" nz-input placeholder="请输入供应商" [(ngModel)]="agreementFilter.vendorName"> -->
+    </nz-input-group>
+    <ng-template #clientSearchButton>
+      <button nz-button nzType="primary" nzSearch (click)="getClientList()">搜索</button>
+    </ng-template>
+  </div>
+  <app-ufast-table [tableConfig]="clientTableConfig" [dataList]="clientList" [getListHandle]="getClientList"></app-ufast-table>
+  <ng-template #chooseClient let-ctx="_this">
+    <span class="operate-text" (click)="chooseClientFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>

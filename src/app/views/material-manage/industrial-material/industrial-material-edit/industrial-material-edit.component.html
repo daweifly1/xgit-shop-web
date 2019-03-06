@@ -1,0 +1,235 @@
+<div nz-col nzSpan="24">
+  <div class="head-bar"><span>物料信息</span></div>
+  <div class="detail-header-info">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料编码</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.code}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料类别</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.materialType | map: 'materialType2'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料分类</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.fullClassName}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物料名称</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.name}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">规格型号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.specificationModel}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">计量单位</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.unit}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">零件号/图号</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.drawingNumber}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">材质</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.material}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">品牌</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.brand}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">进口或国产</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.importOrDomestic}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">重要程度</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.importance}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">物资分类</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.materialClassification}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">进项税</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.inputTaxRate}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label nzSpan="8">销项税</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <div>{{materialInfo.outputTaxRate}}</div>
+        </nz-form-control>
+      </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">计划价</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.planPrice}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">总成或部装</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.assemblyOrPart | map: 'assemblyOrPart'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">允许溢短装</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.shortDress | map: 'shortDress'}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">分工管理</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.divideWork}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">所属供应范围</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <div>{{materialInfo.supplyRange}}</div>
+      </nz-form-control>
+    </nz-form-item>
+    <ng-container *ngIf="materialInfo.materialType === 2">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">设备名称</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <div>{{materialInfo.deviceName}}</div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzSpan="8">设备型号</nz-form-label>
+        <nz-form-control nzSpan="16">
+          <div>{{materialInfo.deviceModel}}</div>
+        </nz-form-control>
+      </nz-form-item>
+    </ng-container>
+  </div>
+</div>
+
+<div class="head-bar" nz-col nzSpan="24"><span>厂矿信息</span></div>
+<form nz-form [formGroup]="form" class="form">
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6">采购组</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="purchasingGroupId" [maxlength]="maxLenInputEnum.Default" />
+
+      <!-- <nz-select class="selectStyle" formControlName="purchasingGroupName" nzAllowClear>
+        <nz-option *ngFor="let item of purchasingGroupList" [nzLabel]="item.label" [nzValue]="item.value">
+        </nz-option>
+      </nz-select> -->
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">计划分解</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-select class="selectStyle" formControlName="planDec" nzAllowClear>
+        <!-- <nz-option *ngFor="let item of materialTypeList" [nzLabel]="item.label" [nzValue]="item.value">
+        </nz-option> -->
+        <nz-option *ngFor="let item of ('materialType2' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+        [nzValue]="item.value">
+      </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6">旧编码</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="oldCode" [maxlength]="maxLenInputEnum.Default" />
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>管理模式</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-radio-group [(ngModel)]="managementModel" nzName="radiogroup" [ngModelOptions]="{standalone: true}">
+        <label nz-radio [nzValue]="1">条码</label>
+        <label nz-radio [nzValue]="0">非条码</label>
+      </nz-radio-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">分工管理</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+        <input type="text" nz-input formControlName="divisionName" (focus)="showDivisionModal()" readonly />
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="default" nzSearch (click)="clearDivision()"><i class="anticon anticon-close"></i></button>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>计划员</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="planner" (focus)="showSalesmanModel()" readonly />
+      <nz-form-explain *ngIf="form.get('planner').dirty && form.get('planner').errors">必填项，请输入
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>保管员</nz-form-label>
+    <nz-form-control nzSpan="18">
+      <input nz-input formControlName="keeperName" (focus)="showKeeperNameModel()" readonly />
+      <nz-form-explain *ngIf="form.get('keeperName').dirty && form.get('keeperName').errors">必填项，请输入</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="table-footer-bar">
+  <button nz-button nzType="primary"  (click)="save()">保存
+  </button>
+  <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消
+  </button>
+</div>
+<nz-modal class="choose-model-box" [(nzVisible)]="salesmanVisible" nzTitle="选择计划员" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelSalesman()">
+  <app-ufast-table [tableConfig]="salesmanTableConfig" [getListHandle]="getSalesmanDataList" [dataList]="salesmanDataList"></app-ufast-table>
+  <ng-template #chooseSalesman let-ctx="_this">
+    <span class="operate-text" (click)="chooseSalesmanFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="keeperNameVisible" nzTitle="选择保管员" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelKeeperName()">
+  <app-ufast-table [tableConfig]="keeperNameTableConfig" [getListHandle]="getKeeperNameDataList" [dataList]="keeperNameDataList"></app-ufast-table>
+  <ng-template #chooseKeeperName let-ctx="_this">
+    <span class="operate-text" (click)="chooseKeeperNameFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>
+
+<nz-modal class="choose-model-box" [(nzVisible)]="divisionVisible" nzTitle="选择分工管理" nzWidth="630px" [nzFooter]="null"
+  (nzOnCancel)="handleCancelDivision()">
+  <app-ufast-table [tableConfig]="divisionTableConfig" [dataList]="factoryManagementList" [getListHandle]="getFactoryManagementList"></app-ufast-table>
+  <ng-template #chooseDivision let-ctx="_this">
+    <span class="operate-text" (click)="chooseDivisionFun(ctx)">选择</span>
+  </ng-template>
+</nz-modal>

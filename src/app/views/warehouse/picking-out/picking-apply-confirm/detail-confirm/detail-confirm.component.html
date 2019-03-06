@@ -1,0 +1,40 @@
+<div class="detail-header-info">
+  <nz-form-item *ngFor="let item of headerFieldList">
+    <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text *ngIf="!item.pipe">{{headerInfo[item.field]}}</nz-form-text>
+      <nz-form-text *ngIf="item.pipe">{{headerInfo[item.field] | map:item.pipe}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+<div class="split-bar">
+  <span>物料信息</span>
+</div>
+<div>
+  <app-ufast-table [tableConfig]="materialTableConfig" [dataList]="materialList"></app-ufast-table>
+  <ng-template #pickingOutNumTpl let-ctx="_this" let-amountConfirm="amountConfirm" let-amountApply="amountApply">
+    <nz-input-number [nzPrecision]="materialNumDec" [(ngModel)]="ctx.amountConfirm" [nzMin]="0" [nzMax]="amountApply" [nzStep]="materialNumMin"></nz-input-number>
+  </ng-template>
+  <ng-template #protocolStockTpl let-agreementNum="agreementNum" let-ctx="_this">
+    <span class="operate-text" (click)="showStockModal(false, ctx)">{{agreementNum}}</span>
+  </ng-template>
+  <ng-template #commonStockTpl let-nomalInvtNum="nomalInvtNum" let-lineId="_lineId" let-ctx="_this">
+    <span class="operate-text" (click)="showStockModal(true, ctx)">{{nomalInvtNum}}</span>
+  </ng-template>
+</div>
+<div class="table-footer-bar">
+    <button nz-button nzType="primary" (click)="submitOrder(false)">保存</button>
+    <button nz-button nzType="primary" (click)="submitOrder(true)">提交</button>
+    <button nz-button nzType="primary" nzGhost (click)="onCancel()">关闭</button>
+  </div>
+
+
+<nz-modal [(nzVisible)]="stockModalShow" [nzTitle]="stockModalTitle" [nzFooter]="null" nzWidth="630px" (nzOnCancel)="onCancelStock()"
+  [nzBodyStyle]="{padding: '10px'}">
+  <div style="padding:10px;">
+    <app-ufast-table [dataList]="stockDataList" [tableConfig]="stockTableConfig" [getListHandle]="getStockList"></app-ufast-table>
+  </div>
+</nz-modal>
+<ng-template #agreeOperateTpl let-ctx="_this">
+  <span class="operate-text" (click)="chooseStock(ctx)">选择</span>
+</ng-template>

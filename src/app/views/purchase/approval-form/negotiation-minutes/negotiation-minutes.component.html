@@ -1,0 +1,84 @@
+<app-tab-route tabTitle="谈判纪要">
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav searchPlaceholder="纪要编号" [(searchText)]="filters.id" (search)="getNegotiationMinutesList()"
+      (advancedSearch)="onAdvancedSearch()" (refresh)="getNegotiationMinutesList()" [tableConfig]="tableConfig"></app-ufast-table-nav>
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <div class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">纪要编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.id">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">审定表编号</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.confirmNo">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">状态</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-select class="selectStyle" [(ngModel)]="filters.status" nzAllowClear>
+              <nz-option *ngFor="let item of ('negotiationMinutesStatus' | mapList); trackBy: trackByItem" [nzLabel]="item.label"
+                [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">创建人</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.createName">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">创建日期-开始</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.createDateStart" [nzDisabledDate]="disabledStart"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">创建日期-截止</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <nz-date-picker [(ngModel)]="filters.createDateEnd" [nzDisabledDate]="disabledEnd"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getNegotiationMinutesList()">搜索</button>
+        <button nz-button nzType="info" (click)="reset()">重置</button>
+        <button nz-button nzType="default" (click)="onAdvancedSearch()">收起</button>
+      </div>
+    </div>
+    <app-ufast-table class="main-table" [tableConfig]="tableConfig" [dataList]="negotiationMinutesList" [getListHandle]="getNegotiationMinutesList"></app-ufast-table>
+  </ng-container>
+  <ng-template #operationTpl let-id="id">
+    <app-action-group>
+      <app-action [enabled]="actionStatus[id].edit" (clickAction)="edit(id)" *appAuthBtu="ActionCode.negotiationMinutesEdit">编辑</app-action>
+      <app-action [enabled]="actionStatus[id].audit" (clickAction)="audit(id)" *appAuthBtu="ActionCode.negotiationMinutesAudit">审批</app-action>
+    </app-action-group>
+  </ng-template>
+  <ng-template #orderNoTpl let-id="id">
+    <span class="operate-text" (click)="detail(id)">{{id}}</span>
+  </ng-template>
+  <ng-template #negotiationTopicTpl let-negotiationTopic="negotiationTopic">
+      <app-clip-text [content]="negotiationTopic" class="clip-text"></app-clip-text>
+  </ng-template>
+  <ng-template #negotiationAddressTpl let-negotiationAddress="negotiationAddress">
+      <app-clip-text [content]="negotiationAddress" class="clip-text"></app-clip-text>
+  </ng-template>
+
+  <ng-container *ngIf="currentPage === tabPageType.AddPage">
+    <app-add-negotiation-minutes (finish)="childPageFinish()" [detailId]="detailId" [confirmNo]="confirmNo"></app-add-negotiation-minutes>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <app-add-negotiation-minutes (finish)="childPageFinish()" [detailId]="detailId" [confirmNo]="confirmNo"></app-add-negotiation-minutes>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.DetailPage">
+    <app-detail-negotiation-minutes (finish)="childPageFinish()" [detailId]="detailId" [isDetailPage]="isDetailPage"></app-detail-negotiation-minutes>
+  </ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.AuditPage">
+      <app-detail-negotiation-minutes (finish)="childPageFinish()" [detailId]="detailId" [isDetailPage]="isDetailPage"></app-detail-negotiation-minutes>
+  </ng-container>
+</app-tab-route>

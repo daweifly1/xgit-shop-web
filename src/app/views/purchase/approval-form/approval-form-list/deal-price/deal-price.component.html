@@ -1,0 +1,103 @@
+<div>
+  <div class="detail-header-info">
+    <nz-form-item *ngFor="let item of fieldList;trackBy:trackByItem">
+      <nz-form-label nzSpan="8">{{item.name}}</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text *ngIf="!item.pipe">{{purchaseInfo[item.field]}}</nz-form-text>
+        <nz-form-text *ngIf="item.pipe">{{purchaseInfo[item.field] | map:item.pipe}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="split-bar">
+    <span>计划行</span>
+  </div>
+  <nz-tabset nzType="card" [(nzSelectedIndex)]="tabIndex" (nzSelectedIndexChange)="changeTab($event)">
+    <nz-tab nzTitle="待处理:{{purchaseInfo.resolvingList.length}}">
+      <div class="tab-header">
+        <button nz-button nzType="info" (click)="createApprovalOk()">生成审定表</button>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="可转换采购方式:{{purchaseInfo.changeMethodList.length}}">
+      <div class="tab-header"></div>
+    </nz-tab>
+    <nz-tab nzTitle="待退回:{{purchaseInfo.backList.length}}">
+      <div class="tab-header">
+        <button nz-button nzType="info" (click)="backRow()">退回计划行</button>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="已生成审定表:{{purchaseInfo.confirmList.length}}"></nz-tab>
+  </nz-tabset>
+  <nz-table #rowTable [nzData]="tableDataList" [nzBordered]="true" [nzSize]="'small'" [nzLoading]="tableConfig.loading" [(nzPageIndex)]="tableConfig.pageNum" [(nzPageSize)]="tableConfig.pageSize"
+            [nzFrontPagination]="true" [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzShowQuickJumper]="true"  [nzPageSizeOptions]="tableConfig.pageSizeOptions" [nzScroll]="{x: tableConfig.xScroll}">
+    <thead>
+    <tr>
+      <th nzShowCheckbox nzWidth="30px" nzLeft="0" rowspan="2" [(nzChecked)]="tableConfig.checkAll" (nzCheckedChange)="checkedAllRow($event)"></th>
+      <th rowspan="2" nzLeft="30px" [nzWidth]="tabIndex === TabIndexType.SwitchWay ? '150px':'100px'">操作</th>
+      <th rowspan="2" *ngFor="let item of tableConfig.headers;trackBy:trackByItem" [nzWidth]="item.width + 'px'">{{item.title}}</th>
+      <ng-container *ngIf="tableDataList.length > 0">
+        <th colspan="2" *ngFor="let supplier of tableDataList[0].priceRecordVOList;trackBy:trackByItem;">{{supplier.supplierName}}</th>
+      </ng-container>
+    </tr>
+    <tr>
+      <ng-container *ngIf="tableDataList.length > 0">
+        <ng-container *ngFor="let supplier of tableDataList[0].priceRecordVOList ;trackBy:trackByItem;">
+          <th nzWidth="100px">报价数量</th>
+          <th nzWidth="100px">单价(元)</th>
+        </ng-container>
+      </ng-container>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of rowTable.data;trackBy:trackByItem;let i='index'" [ngClass]="{'tr-bg-mark': row['purchaseApproveFullDetailVO']['originQuantity'] !== row['purchaseApproveFullDetailVO']['quantity']}">
+      <td nzLeft="0" nzShowCheckbox [(nzChecked)]="row['purchaseApproveFullDetailVO'][tableConfig.checkRowField]" (nzCheckedChange)="checkedSingleRow($event)"></td>
+      <td nzLeft="30px">
+        <app-action-group>
+          <app-action [enabled]="row.status !== RowDealStatus.Back && tabIndex === TabIndexType.WaitDeal" (clickAction)="dealRow(row)">处理</app-action>
+          <app-action [enabled]="true" *ngIf="tabIndex === TabIndexType.SwitchWay" (clickAction)="switchWay(row)">转采购方式</app-action>
+        </app-action-group>
+      </td>
+      <ng-container *ngFor="let header of tableConfig.headers;trackByItem">
+        <td [ngClass]="{'td-bg-mark': row['purchaseApproveFullDetailVO']['originQuantity'] !== row['purchaseApproveFullDetailVO']['quantity']}" *ngIf="header.pipe">{{row['purchaseApproveFullDetailVO'][header.field]|map:header.pipe}}</td>
+        <td [ngClass]="{'td-bg-mark': row['purchaseApproveFullDetailVO']['originQuantity'] !== row['purchaseApproveFullDetailVO']['quantity']}" *ngIf="!header.pipe">{{row['purchaseApproveFullDetailVO'][header.field]}}</td>
+      </ng-container>
+      <ng-container  *ngFor="let supplierNum of row.priceRecordVOList;trackBy:trackByItem;let supIndex=index;">
+        <td>{{supplierNum.supplierCount ? supplierNum.supplierCount : ''}}</td>
+        <td>{{supplierNum.supplierPrice ? supplierNum.supplierPrice : ''}}</td>
+      </ng-container>
+    </tr>
+    </tbody>
+  </nz-table>
+  <div class="split-bar">
+    <span>报价汇总</span>
+  </div>
+  <app-ufast-table [dataList]="supplierPriceDataList" [tableConfig]="supplierPriceSumConfig"></app-ufast-table>
+  <div class="table-footer-bar">
+    <!--<button nz-button nzType="primary" (click)="onOkApprovalForm()">确定</button>-->
+    <button nz-button nzType="primary" [nzGhost]="true" (click)="exitPage()">取消</button>
+  </div>
+</div>
+<ng-template #numberTpl let-ctx="_ctx">
+  <nz-input-number [(ngModel)]="ctx._dealNumber" [nzPrecision]="materialNumDec" [nzMin]="0" [nzMax]="dealRowData.purchaseNum" (ngModelChange)="onDealNumChange()"></nz-input-number>
+</ng-template>
+<nz-modal [(nzVisible)]="dealRowModalShow" nzTitle="行处理" (nzOnOk)="onOkRowNum()" nzWidth="630px" (nzOnCancel)="cancelDealRow()">
+  <div class="deal-number-wrap">
+    <header>
+      <!--<span>序号：{{dealRowData.index}}</span>-->
+      <span>采购数量：{{dealRowData.purchaseNum}}</span>
+      <span>处理数量：<span [ngClass]="{'font-red-color':dealRowData.dealNum > dealRowData.purchaseNum}">{{dealRowData.dealNum}}</span></span>
+      <span>剩余退回数量：<span [ngClass]="{'font-red-color':dealRowData.remainBackNum < 0}">{{dealRowData.remainBackNum}}</span></span>
+    </header>
+    <app-ufast-table [dataList]="supplierDataList" [tableConfig]="supplierTableConfig"></app-ufast-table>
+
+  </div>
+</nz-modal>
+<nz-modal nzTitle="转换采购方式" [(nzVisible)]="switchWayModalShow" (nzOnOk)="onOkSwitchWay()" nzWidth="500px" (nzOnCancel)="cancelSwitchWay()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4">采购方式</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-select [(ngModel)]="selectedPurchaseWay" style="width:100%;">
+        <nz-option *ngFor="let value of purchaseWayList;trackBy:trackByItem;" [nzValue]="value" nzLabel="{{value|map:'purchaseWay'}}"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+</nz-modal>
