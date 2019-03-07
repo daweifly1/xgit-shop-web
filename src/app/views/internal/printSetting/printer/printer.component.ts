@@ -65,17 +65,17 @@ export class PrinterComponent implements OnInit {
     });
   }
   ngOnInit() {
-    if (this.lodopService.isInitSuccess()) {
-      this.getPrintDevList();
-      this.initSelected();
-    } else {
-      this.lodopService.initPrinter().then(() => {
-        this.getPrintDevList();
-        this.initSelected();
-      }, () => {
-        this.printErrorService.showInitError();
-      });
-    }
+    // if (this.lodopService.isInitSuccess()) {
+    //   this.getPrintDevList();
+    //   this.initSelected();
+    // } else {
+    //   this.lodopService.initPrinter().then(() => {
+    //     this.getPrintDevList();
+    //     this.initSelected();
+    //   }, () => {
+    //     this.printErrorService.showInitError();
+    //   });
+    // }
 
   }
 }

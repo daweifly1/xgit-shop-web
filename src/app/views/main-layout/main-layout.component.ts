@@ -90,9 +90,9 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     }, (error: any) => {
       this.messageService.showAlertMessage('', error.message, 'error');
     });
-    this.lodopService.initPrinter().then(() => { }, () => {
-      console.log('lodop初始化失败');
-    });
+    // this.lodopService.initPrinter().then(() => { }, () => {
+    //   console.log('lodop初始化失败');
+    // });
   }
   private getMenu() {
     this.messageService.showLoading('');

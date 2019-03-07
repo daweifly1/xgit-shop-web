@@ -206,7 +206,7 @@ export class WorkBoardComponent implements OnInit {
         { title: '创建时间', field: 'startTime', width: 120, pipe: 'date:yyyy-MM-dd HH:mm' },
       ]
     };
-    this.getDataList();
+    // this.getDataList();
     this.userService.getLogin().subscribe((resData) => {
       if (resData.code !== 0) {
         return;

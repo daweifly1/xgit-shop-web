@@ -1,4 +1,5 @@
-<app-tab-route tabTitle="工作面板" [closedHandle]="onCloseTab" (nzSelect)="getDataList()">
+<app-tab-route tabTitle="工作面板" [closedHandle]="onCloseTab" >
+  <!--//(nzSelect)="getDataList()"-->
   <ng-container *ngIf="currentPage === tabPageType.ManagePage">
     <div class="user-bar">
       <div>
@@ -14,9 +15,12 @@
         <div class="wait-deal-warp">
           <div class="title-bar">待办事项</div>
           <div class="wait-deal-content">
-            <app-ufast-table-nav  [showAdvancedSearch]="false" (search)="getDataList()"
-                                  [tableConfig]="tableConfig" (refresh)="getDataList()"></app-ufast-table-nav>
-            <app-ufast-table class="main-table" [dataList]="dataList" [tableConfig]="tableConfig" [getListHandle]="getDataList"></app-ufast-table>
+            <app-ufast-table-nav  [showAdvancedSearch]="false"
+
+                                  [tableConfig]="tableConfig" ></app-ufast-table-nav>
+            <!--(search)="getDataList()" (refresh)="getDataList()"-->
+            <app-ufast-table class="main-table" [dataList]="dataList" [tableConfig]="tableConfig" ></app-ufast-table>
+            <!--[getListHandle]="getDataList"-->
           </div>
         </div>
         <div class="data-wrap">
