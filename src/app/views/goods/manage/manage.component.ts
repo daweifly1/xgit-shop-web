@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ShowMessageService} from '../../../widget/show-message/show-message';
-import {Observable} from 'rxjs/Observable';
+import {Component, OnInit} from '@angular/core';
+
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
@@ -9,7 +7,9 @@ import {Observable} from 'rxjs/Observable';
 })
 export class ManageComponent implements OnInit {
 
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit() {
   }

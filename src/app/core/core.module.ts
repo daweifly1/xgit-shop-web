@@ -67,6 +67,7 @@ import {PlanToReturnService} from './trans/purchase/plan-to-return.service';
 import {UserLeaveService} from './trans/internal/user-leave.service';
 import {CoreIndexService} from './trans/purchase/core-index.service';
 import {RoleService} from './common-services/role.service';
+import {GoodsCategoryService} from './common-services/goods-category.service';
 
 /**
  * 定义拦截器顺序，
@@ -143,7 +144,8 @@ const httpInterceptorProvider = [
     UserLeaveService,
     CoreIndexService,
     AuthService,
-    RoleService
+    RoleService,
+    GoodsCategoryService
 
   ]
 })

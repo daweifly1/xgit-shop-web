@@ -680,3 +680,10 @@ export const authType = {
   2: '按钮'
 };
 
+export const goodsCatLevelType = {
+  0: '一级',
+  1: '耳机',
+  2: '三级'
+};
+
+

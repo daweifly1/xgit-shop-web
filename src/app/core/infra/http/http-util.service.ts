@@ -91,7 +91,7 @@ export namespace HttpUtilNs {
 
 
 
-    public Get<T>(path: string, params?: { [param: string]: string } | undefined, config?: UfastHttpConfig | undefined): Observable<any> {
+    public Get<T>(path: string, params?: { [param: string]: any } | undefined, config?: UfastHttpConfig | undefined): Observable<any> {
       let baseUrlName = GatewayKey.Ss;
       let headers = null;
       if (!!config) {

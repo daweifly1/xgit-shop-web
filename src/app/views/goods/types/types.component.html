@@ -1,11 +1,44 @@
 <app-tab-route tabTitle="类目管理">
-  <ng-container>
+  <ng-container *ngIf="currentPage === tabPageType.ManagePage">
+    <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="类目名称" (refresh)="getPageList()"
+                         (search)="getPageList()"
+                         (advancedSearch)="onAdvancedSearch()" [(searchText)]="filters.name"
+                         [tableConfig]="tableConfig"></app-ufast-table-nav>
 
-    <ng-template #leftTpl>
+    <div class="advanced-search clear-fix" *ngIf="showAdvancedSearch">
+      <form class="advanceSearch-form">
+        <nz-form-item>
+          <nz-form-label nzSpan="10">类目名称</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.name" name="name">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzSpan="10">单位</nz-form-label>
+          <nz-form-control nzSpan="14">
+            <input nz-input [(ngModel)]="filters.productUnit" name="productUnit">
+          </nz-form-control>
+        </nz-form-item>
 
-    </ng-template>
-
-    <div class="table-wrap">
+      </form>
+      <div nz-col nzSpan="24" class="btn-bar">
+        <button nz-button nzType="primary" (click)="getPageList()">搜索</button>
+        <button nz-button nzType="info" (click)="advancedSearchReset()">重置</button>
+        <button nz-button nzType="default" (click)="advancedSearchClose()">收起</button>
+      </div>
     </div>
+
+    <app-ufast-table [tableConfig]="tableConfig" [dataList]="getPageList"
+                     [getListHandle]="getPageList"></app-ufast-table>
+
+
+  </ng-container>
+
+  <ng-template #leftTpl>
+    <button nz-button nzType="info" (click)="add()">新增</button>
+  </ng-template>
+
+  <ng-container *ngIf="currentPage === tabPageType.EditPage">
+    <!--<app-add-param-type (finish)="onChildFinish()" [editData]="editData"></app-add-param-type>-->
   </ng-container>
 </app-tab-route>

@@ -29,7 +29,11 @@ export const gatewayKey = {
   /**
    * 审批流
    * */
-  Flow: 'flow'
+  Flow: 'flow',
+  /**
+   * 审批流
+   * */
+  Shop: 'shop'
 };
 
 export const environment = {
@@ -40,7 +44,8 @@ export const environment = {
     bs: `${webServerUrl}/bs`,
     ps: `${webServerUrl}/ps`,
     ss: `${webServerUrl}/ss`,
-    flow: `${webServerUrl}/flow`
+    flow: `${webServerUrl}/flow`,
+    shop: `${webServerUrl}/shop`
   },
   otherData: {
     sysRole: 0,
