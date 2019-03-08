@@ -10,6 +10,7 @@ export const usableStatus = {
   0: '禁用',
   1: '启用'
 };
+
 export const businessType = {
   1: '生产商',
   2: '贸易商',
@@ -682,8 +683,12 @@ export const authType = {
 
 export const goodsCatLevelType = {
   0: '一级',
-  1: '耳机',
+  1: '二级',
   2: '三级'
 };
-
+// 通用布尔量
+export const commonBoolean = {
+  0: '否',
+  1: '是'
+};
 

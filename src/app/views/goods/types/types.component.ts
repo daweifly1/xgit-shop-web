@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {UfastTableNs} from '../../../layout/ufast-table/ufast-table.component';
 import {DictionaryServiceNs} from '../../../core/common-services/dictionary.service';
 import {ShowMessageService} from '../../../widget/show-message/show-message';
@@ -33,13 +33,20 @@ export class TypesComponent implements OnInit {
   // 编辑的记录
   editData: any;
 
+  // 过滤参数历史
+  filtersParentHis: any;
+
+
+  @ViewChild('operationTpl') operationTpl: TemplateRef<any>;
+
   constructor(private goodsCategoryService: GoodsCategoryService, private messageService: ShowMessageService,
               private formBuilder: FormBuilder) {
     this.currentPage = this.tabPageType.ManagePage;
     this.showAdvancedSearch = false;
-    this.filters = {};
+    this.filters = {level: 0};
     this.pageDataList = [];
     this.editData = '';
+    this.filtersParentHis = {};
   }
 
   ngOnInit() {
@@ -54,6 +61,11 @@ export class TypesComponent implements OnInit {
       loading: false,
       headers: [
         {
+          title: '分类编号',
+          field: 'id',
+          width: 150,
+        },
+        {
           title: '分类名称',
           field: 'name',
           width: 200,
@@ -66,6 +78,16 @@ export class TypesComponent implements OnInit {
           title: '单位',
           field: 'productUnit',
           width: 150,
+        }, {
+          title: '是否显示',
+          field: 'showStatus',
+          width: 150,
+          pipe: 'commonBoolean',
+        },
+        {
+          title: '操作',
+          tdTemplate: this.operationTpl,
+          width: 200,
         }
       ]
     };
@@ -93,10 +115,11 @@ export class TypesComponent implements OnInit {
       resData.value.list.forEach((item) => {
         let temp = <any>{};
         temp = item;
-        temp['_this'] = temp;
+        temp['_this'] = item;
         this.pageDataList.push(temp);
       });
       this.tableConfig.total = resData.value.total;
+      // console.log(this.pageDataList);
     }, (error: any) => {
       this.tableConfig.loading = false;
       this.messageService.showAlertMessage('', error.message, 'error');
@@ -112,16 +135,48 @@ export class TypesComponent implements OnInit {
   }
 
   public advancedSearchReset() {
-    this.filters = {};
+    let level: number;
+    level = this.filters.level;
+    this.filters = {level: level};
     this.getPageList();
   }
 
-  add() {
-    this.editData = '';
+  add(level: number, parentId: number, parentName: string) {
+    this.editData = {level: level + 1, parentId: parentId, parentName: parentName};
     this.currentPage = this.tabPageType.EditPage;
   }
 
   onChildFinish() {
-    return;
+    this.currentPage = this.tabPageType.ManagePage;
+    this.getPageList();
+  }
+
+  edit(data: any, parentName: string) {
+    // console.log(data);
+    this.editData = data;
+    this.editData.parentName = parentName;
+    this.editData._this = null;
+    // console.log(this.editData);
+    this.currentPage = this.tabPageType.EditPage;
+  }
+
+  queryChildrenList(id: number, level: number, parentId: number) {
+    this.filters = {parentId: id, level: level + 1};
+    this.filtersParentHis[level + 1] = parentId;
+    console.log('queryChildrenList============');
+    console.log(this.filters);
+    console.log(this.filtersParentHis);
+    this.getPageList();
+  }
+
+  // 返回级查询
+  backParent() {
+    this.filters.parentId = this.filtersParentHis[this.filters.level];
+    if (this.filters && this.filters.level > 0) {
+      this.filters.level = this.filters.level - 1;
+    }
+    console.log('backParent============');
+    console.log(this.filters);
+    this.getPageList();
   }
 }

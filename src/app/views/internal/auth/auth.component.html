@@ -112,9 +112,10 @@
       <nz-form-item>
         <nz-form-label nzSpan="6"><span class="font-red-color">*</span>类型</nz-form-label>
         <nz-form-control nzSpan="18">
-          <select class="form-control" [(ngModel)]="targetAuth.type" name="type">
-            <option *ngFor="let item of authType" value="{{item.id}}" [selected]="item.selected">{{item.name}}</option>
-          </select>
+          <nz-select style="width: 100%;"  [(ngModel)]="targetAuth.type" name="type">
+            <<nz-option *ngFor="let item of authType" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+          </nz-select>
+
         </nz-form-control>
       </nz-form-item>
 

@@ -4,9 +4,10 @@ import {ShowMessageService} from '../../../widget/show-message/show-message';
 import {Observable} from 'rxjs/Observable';
 import {NewsService, NewsServiceNs} from '../../../core/common-services/news.service';
 import {UploadFile} from 'ng-zorro-antd';
-import {UeditorUploadConfig, UeditorConfig} from '../../../../environments/ueditorConfig';
+import {UeditorConfig, UeditorUploadConfig} from '../../../../environments/ueditorConfig';
 import {environment} from '../../../../environments/environment';
 import {ActionCode} from '../../../../environments/actionCode';
+
 enum TabPageType {
   ManagePage = 0,
   AddPage,
@@ -49,7 +50,7 @@ export class NewsMaterialComponent implements OnInit {
   uploadImgUrl: string;
   ActionCode = ActionCode;
   attachRequired: boolean;
-  imgTypeIdObj: {[index: string]: boolean};       // 必须要上传图片的资讯id对象
+  imgTypeIdObj: { [index: string]: boolean };       // 必须要上传图片的资讯id对象
   constructor(private newsService: NewsService,
               private messageService: ShowMessageService,
               private formBuilder: FormBuilder
@@ -103,6 +104,7 @@ export class NewsMaterialComponent implements OnInit {
       fileName: ''
     };
   }
+
   public trackByTableHeader(index: number, item: any) {
     return item.field;
   }
@@ -114,16 +116,18 @@ export class NewsMaterialComponent implements OnInit {
   handlePreview = (file: UploadFile) => {
     this.previewImage = file.url || file.thumbUrl;
     this.previewVisible = true;
-  }
+  };
 
   // 监听移除图片时触发的函数，让附件数量同步减一
   removeFile = (file: UploadFile) => {
 
     return false;
-  }
+  };
+
   public editOrAddTypeChange(type) {
     this.attachRequired = !!this.imgTypeIdObj[type];
   }
+
   // 查看、修改时填充表单数据并切换对应的标签的内容
   public addOrEditNewsTab(type: number, item?: NewsServiceNs.NewsInfoModel) {
     this.tabPageType = type;
@@ -297,7 +301,7 @@ export class NewsMaterialComponent implements OnInit {
     this.filters.title = '';
     this.getNewsList();
     this.newsTableConfig.allChecked = false;
-    this.newsTableConfig.header =  [
+    this.newsTableConfig.header = [
       {name: '标题', field: 'title', width: '285px'},
       {name: '图片', field: 'attachment', width: '150px'},
       {name: '分类', field: 'type', width: '80px', pipe: 'type'},
@@ -427,7 +431,7 @@ export class NewsMaterialComponent implements OnInit {
     }
     let observer: any = null;
     // 当附件数量小于等于1时方能进行新增和修改
-    if (this.fileList.length > 1) {
+    if (!filePath && this.fileList.length > 1) {
       this.messageService.showToastMessage('附件数量不能大于1', 'error');
       return;
     }
@@ -454,10 +458,10 @@ export class NewsMaterialComponent implements OnInit {
         this.messageService.showToastMessage(resData.value, 'warning');
         return;
       }
-        this.typeId = (data.type  || this.typeId) + '';
-        this.getNewsTypeChange(this.typeId);
-        this.toggleManagePage();
-        this.messageService.showToastMessage('操作成功', 'success');
+      this.typeId = (data.type || this.typeId) + '';
+      this.getNewsTypeChange(this.typeId);
+      this.toggleManagePage();
+      this.messageService.showToastMessage('操作成功', 'success');
     }, (error: any) => {
       this.messageService.showAlertMessage('', error.message, 'error');
     });

@@ -51,7 +51,7 @@ export const environment = {
     sysRole: 0,
     sysSite: '0',
     fileUrl: `${webServerUrl}/fileService`,
-    fileServiceUrl: `${webServerUrl}/img/`,    // 文件服务器
+    fileServiceUrl: `http://10.100.2.109:8099/`,    // 文件服务器
     signPluginDownloadUrl: `${webServerUrl}/img/jxtyPublicFile/TrustSignPDFPlugin.Standard.exe`,     // 签章控件下载地址
     defaultPath: '/main/workBoard',                  // 门户地址
     searchInputMaxLen: 200,

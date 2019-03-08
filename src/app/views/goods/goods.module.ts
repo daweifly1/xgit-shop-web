@@ -7,6 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {LayoutModule} from '../../layout/layout.module';
 import {DirectivesModule} from '../../directives/directives.module';
+import { EditComponent } from './types/edit/edit.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,7 @@ import {DirectivesModule} from '../../directives/directives.module';
     DirectivesModule,
     GoodsRoutingModule
   ],
-  declarations: [TypesComponent, ManageComponent]
+  declarations: [TypesComponent, ManageComponent, EditComponent]
 })
 export class GoodsModule {
 }
