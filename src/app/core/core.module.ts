@@ -69,6 +69,7 @@ import {CoreIndexService} from './trans/purchase/core-index.service';
 import {RoleService} from './common-services/role.service';
 import {GoodsCategoryService} from './common-services/goods-category.service';
 import {GoodsAttributeService} from './common-services/goods-attribute.service';
+import {GoodsService} from './common-services/goods.service';
 
 /**
  * 定义拦截器顺序，
@@ -147,7 +148,8 @@ const httpInterceptorProvider = [
     AuthService,
     RoleService,
     GoodsCategoryService,
-    GoodsAttributeService
+    GoodsAttributeService,
+    GoodsService
 
   ]
 })

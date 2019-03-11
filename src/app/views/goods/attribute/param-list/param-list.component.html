@@ -34,9 +34,9 @@
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>分类筛选样式：1->普通；1->颜色</nz-form-label>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>分类筛选样式：0->普通；1->颜色</nz-form-label>
     <nz-form-control nzSpan="8">
-      <nz-radio-group formControlName="filterType" [(ngModel)]="editData.filterType" >
+      <nz-radio-group name="filterType" [(ngModel)]="editData.filterType" >
         <label nz-radio [nzValue]="0">普通</label>
         <label nz-radio [nzValue]="1">颜色</label>
       </nz-radio-group>
