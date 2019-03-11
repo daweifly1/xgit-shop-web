@@ -626,9 +626,9 @@ export const purchaseQuotationStatus = {
   4: '全部报价',
   5: '报价结束',
   6: '已放弃',
-/*  7: '未中标',
-  8: '部分中标',
-  9: '全部中标'*/
+  /*  7: '未中标',
+    8: '部分中标',
+    9: '全部中标'*/
 };
 export const agreementSettlementStatus = {
   0: '新建',
@@ -691,4 +691,16 @@ export const commonBoolean = {
   0: '否',
   1: '是'
 };
+
+export const attrSelectType = {
+  0: '唯一',
+  1: '单选',
+  2: '多选'
+};
+
+export const attrInputType = {
+  0: '手工录入',
+  1: '从列表中选取'
+};
+
 

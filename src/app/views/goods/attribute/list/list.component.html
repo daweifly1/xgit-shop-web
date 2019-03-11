@@ -1,0 +1,104 @@
+
+<ng-container *ngIf="currentPage === tabPageType.ManagePage">
+  <app-ufast-table-nav [leftTemplate]="leftTpl" searchPlaceholder="属性名称" (refresh)="getPageList()"
+                       (search)="getPageList()"
+                       [(searchText)]="filters.name"
+                       [tableConfig]="tableConfig"></app-ufast-table-nav>
+
+  <app-ufast-table [tableConfig]="tableConfig" [dataList]="pageDataList"
+                   [getListHandle]="getPageList"></app-ufast-table>
+
+
+</ng-container>
+
+<ng-template #leftTpl>
+  <button nz-button nzType="info" (click)="back()">返回</button>
+  <button nz-button nzType="info" (click)="add()">新增</button>
+</ng-template>
+
+<ng-template #operationTpl let-data="_this">
+  <app-action-group>
+    <app-action (clickAction)="edit(data)">编辑</app-action>
+    <app-action (clickAction)="del(data.id)">删除</app-action>
+  </app-action-group>
+</ng-template>
+
+
+<ng-container *ngIf="currentPage === tabPageType.EditPage">
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>类型名称</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.name" name="name" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>属性选择类型：0->唯一；1->单选；2->多选</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.selectType" name="selectType" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>属性录入方式：0->手工录入；1->从列表中选取</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.inputType" name="inputType" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>可选值列表，以逗号隔开</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.inputList" name="inputList" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>排序字段：最高的可以单独上传图片</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.sort" name="sort" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>分类筛选样式：1->普通；1->颜色</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.filterType" name="filterType" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>检索类型；0->不需要进行检索；1->关键字检索；2->范围检索</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.searchType" name="searchType" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>相同属性产品是否关联；0->不关联；1->关联</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.relatedStatus" name="relatedStatus" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>是否支持手动新增；0->不支持；1->支持</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.handAddStatus" name="handAddStatus" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>属性的类型；0->规格；1->参数</nz-form-label>
+    <nz-form-control nzSpan="8">
+      <input nz-input [(ngModel)]="editData.type" name="type" [maxlength]="100"/>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" (click)="submit()">保存</button>
+    <button nz-button nzType="primary" nzGhost (click)="cancel()">取消</button>
+  </div>
+</ng-container>

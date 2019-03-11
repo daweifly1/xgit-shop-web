@@ -8,6 +8,9 @@ import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {LayoutModule} from '../../layout/layout.module';
 import {DirectivesModule} from '../../directives/directives.module';
 import { EditComponent } from './types/edit/edit.component';
+import { AttributeComponent } from './attribute/attribute.component';
+import { ListComponent } from './attribute/list/list.component';
+import { ParamListComponent } from './attribute/param-list/param-list.component';
 
 @NgModule({
   imports: [
@@ -19,7 +22,7 @@ import { EditComponent } from './types/edit/edit.component';
     DirectivesModule,
     GoodsRoutingModule
   ],
-  declarations: [TypesComponent, ManageComponent, EditComponent]
+  declarations: [TypesComponent, ManageComponent, EditComponent, AttributeComponent, ListComponent, ParamListComponent]
 })
 export class GoodsModule {
 }
