@@ -1,0 +1,296 @@
+<form nz-form [formGroup]="paramTypeForm" class="form">
+  <div *ngIf="tabPageType===pageTypeEnum.Step1Page">
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>名称</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.name" [maxlength]="100" formControlName="name">
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>类目id</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.productCategoryId" formControlName="productCategoryId" [maxlength]="20"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>副标题</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.subTitle" formControlName="subTitle" [maxlength]="100">
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>品牌ID</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.brandId" [maxlength]="100" formControlName="brandId">
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>商品描述</nz-form-label>
+      <nz-form-control nzSpan="8">
+      <textarea nz-input [(ngModel)]="editData.description" formControlName="description" [maxlength]="200">
+      </textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>货号</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.productSn" formControlName="productSn" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>价格</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.price" formControlName="price" [maxlength]="20"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>市场价</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.originalPrice" formControlName="originalPrice" [maxlength]="20"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>库存</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.stock" formControlName="stock" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>单位</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.unit" formControlName="unit" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>商品重量，默认为克</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.weight" formControlName="weight" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>排序</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.sort" formControlName="sort" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+    <div class="table-footer-bar">
+      <button nz-button nzType="primary" (click)="saveStep1()">下一步，填写商品促销</button>
+      <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消</button>
+    </div>
+  </div>
+
+  <div *ngIf="tabPageType===pageTypeEnum.Step2Page">
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>赠送的积分</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.giftPoint" formControlName="giftPoint" [maxlength]="10"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>赠送的成长值</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.giftGrowth" formControlName="giftGrowth" [maxlength]="10"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>限制使用的积分数</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.usePointLimit" formControlName="usePointLimit" [maxlength]="10"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>是否为预告商品：0->不是；1->是</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.previewStatus" formControlName="previewStatus" [maxlength]="1"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>上架状态：0->下架；1->上架</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.publishStatus" formControlName="publishStatus" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>新品状态:0->不是新品；1->新品</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.newStatus" formControlName="newStatus" [maxlength]="1"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>推荐状态；0->不推荐；1->推荐</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.recommandStatus" formControlName="recommandStatus" [maxlength]="1"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>以逗号分割的产品服务：1->无忧退货；2->快速退款；3->免费包邮</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.serviceIds" formControlName="serviceIds" [maxlength]="10"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>详细标题</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.detailTitle" formControlName="detailTitle" [maxlength]="50"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>详情描述</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.detailDesc" formControlName="detailDesc" [maxlength]="100"/>
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>关键词</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <input nz-input [(ngModel)]="editData.keywords" formControlName="keywords" [maxlength]="50"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label nzSpan="6"><span class="font-red-color">*</span>备注</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <textarea nz-input [(ngModel)]="editData.note" formControlName="note" [maxlength]="200"></textarea>
+      </nz-form-control>
+    </nz-form-item>
+
+
+    <div class="table-footer-bar">
+      <button nz-button nzType="primary" (click)="backStep1()">上一步，填写商品信息</button>
+      <button nz-button nzType="primary" (click)="saveStep2()">下一步，填写商品属性</button>
+      <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消</button>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="tabPageType===pageTypeEnum.Step3Page">
+  <nz-form-item>
+    <nz-form-label nzSpan="4"><span class="font-red-color">*</span>属性分类id</nz-form-label>
+    <nz-form-control nzSpan="12">
+      <nz-select nzPlaceHolder="请选择" [(ngModel)]="editData.productAttributeCategoryId"
+                 name="productAttributeCategoryId"
+                 (ngModelChange)="handleGoodsAttrChange()"
+                 class="selectStyle">
+        <nz-option *ngFor="let item of attrCatlist;let i=index" [nzValue]="item.id"
+                   [nzLabel]="item.name">{{item.id}}</nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="4">商品规格</nz-form-label>
+    <nz-form-control nzSpan="12">
+
+      <div *ngFor="let productAttr of selectGoodsAttr;let i=index">
+        {{productAttr.name}}：
+        <label nz-checkbox-group *ngIf="productAttr.handAddStatus===0">
+            <span *ngFor="let item of productAttr.inputList;let in=index">
+               <label nz-checkbox [(ngModel)]="item.checked" name="checkBox">{{item.id}}</label>
+            </span>
+        </label>
+        <label nz-checkbox-group *ngIf="productAttr.handAddStatus===1">
+             <span *ngFor="let item of productAttr.inputList;">
+               <label nz-checkbox [(ngModel)]="item.checked" name="checkBox">{{item.id}}</label>
+            </span>
+
+          <input nz-input [(ngModel)]="productAttr.tmpAdd" name="tmpAdd" [maxlength]="10"/>
+          <button nz-button nzType="primary" nzGhost
+                  (click)="addInputListArr(i)">增加
+          </button>
+        </label>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="16">
+      <button nz-button nzType="primary" (click)="refreshSkuList()">刷新SKU列表</button>
+      <button nz-button nzType="primary" (click)="shareGoodsPriceStocke()">同步价格&均分库存</button>
+    </nz-form-label>
+  </nz-form-item>
+
+  <nz-form-item *ngIf="selectGoodsAttr&&selectGoodsAttr.length>0">
+
+    <div class="table-wrap">
+      <nz-table nzSize="small">
+        <thead>
+        <tr>
+          <th [nzWidth]="'10%'" *ngFor="let productAttr of selectGoodsAttr;let i=index">{{productAttr.name}}</th>
+          <th [nzWidth]="'20%'">SKU编号</th>
+          <th [nzWidth]="'15%'">销售价格</th>
+          <th [nzWidth]="'15%'">商品库存</th>
+          <th [nzWidth]="'15%'">库存预警值</th>
+          <th [nzWidth]="'5%'">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let sku of this.editData.skuStockList;let i=index">
+          <tr>
+            <td>
+              {{sku.sp1}}
+            </td>
+            <td *ngIf="selectGoodsAttr&&selectGoodsAttr.length>1">
+              {{sku.sp2}}
+            </td>
+            <td *ngIf="selectGoodsAttr&&selectGoodsAttr.length>2">
+              {{sku.sp3}}
+            </td>
+            <td>
+              <input nz-input [(ngModel)]="sku.skuCode" name="skuCode" [maxlength]="10"/>
+            </td>
+            <td>
+              <input nz-input [(ngModel)]="sku.price" name="skuPrice" [maxlength]="10"/>
+            </td>
+            <td>
+              <input nz-input [(ngModel)]="sku.stock" name="skuStock" [maxlength]="10"/>
+            </td>
+            <td>
+              <input nz-input [(ngModel)]="sku.lowStock" name="skuStock" [maxlength]="10"/>
+            </td>
+            <td>
+              <span class="operate-text" (click)="delSku(i)">删除</span>
+            </td>
+
+          </tr>
+        </ng-container>
+        </tbody>
+      </nz-table>
+    </div>
+
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label nzSpan="4">属性图片</nz-form-label>
+    <nz-form-control nzSpan="12">
+
+
+    </nz-form-control>
+  </nz-form-item>
+
+
+
+  <div class="table-footer-bar">
+    <button nz-button nzType="primary" (click)="backStep2()">上一步，填写商品促销</button>
+    <button nz-button nzType="primary" (click)="submit()">保存</button>
+    <button nz-button nzType="primary" nzGhost (click)="emitFinish()">取消</button>
+  </div>
+</div>
+
