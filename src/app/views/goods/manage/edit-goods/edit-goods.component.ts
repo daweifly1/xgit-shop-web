@@ -5,6 +5,8 @@ import {GoodsService} from '../../../../core/common-services/goods.service';
 import {environment} from '../../../../../environments/environment';
 import {GoodsAttributeService} from '../../../../core/common-services/goods-attribute.service';
 import {DictionaryServiceNs} from '../../../../core/common-services/dictionary.service';
+import {UploadFile} from 'ng-zorro-antd';
+import {UeditorConfig, UeditorUploadConfig} from '../../../../../environments/ueditorConfig';
 
 enum PageTypeEnum {
   Step1Page,
@@ -49,6 +51,9 @@ export class EditGoodsComponent implements OnInit {
   // 选中的商品属性
   selectedProductAttr: any[];
 
+  uEditorConfig: any;
+  uEditorUploadConfig: any;
+
 
   constructor(private goodsService: GoodsService, private goodsAttributeService: GoodsAttributeService,
               private messageService: ShowMessageService, private formBuilder: FormBuilder) {
@@ -56,6 +61,9 @@ export class EditGoodsComponent implements OnInit {
     this.uploadImgUrl = environment.baseUrl.bs + '/uploading/file';
     this.pageTypeEnum = PageTypeEnum;
     this.selectedProductAttr = [];
+
+    this.uEditorConfig = Object.assign({}, UeditorConfig);
+    this.uEditorUploadConfig = Object.assign({}, UeditorUploadConfig);
   }
 
   ngOnInit() {
@@ -162,10 +170,13 @@ export class EditGoodsComponent implements OnInit {
     this.finish.emit();
   }
 
-  // handlePreview = (file: UploadFile) => {
-  //   this.previewImage = file.url || file.thumbUrl;
-  //   this.previewVisible = true;
-  // };
+
+  handlePreview = (file: UploadFile) => {
+    console.log(this.selectGoodsAttrPics);
+    this.previewImage = file.url || file.thumbUrl;
+    this.previewVisible = true;
+    console.log(this.selectGoodsAttrPics);
+  };
 
   saveStep1() {
     this.tabPageType = PageTypeEnum.Step2Page;
@@ -212,6 +223,7 @@ export class EditGoodsComponent implements OnInit {
           for (let i = 0; i < list.length; i++) {
             let options = [];
             let values = [];
+            const color = list[i].filterType;
             if (list[i].handAddStatus === 1) {
               // 编辑状态下获取手动添加编辑属性
               options = this.getEditAttrOptions(list[i].id);
@@ -220,11 +232,20 @@ export class EditGoodsComponent implements OnInit {
             values = this.getEditAttrValues(i);
             const inputList = [];
             const inputListTmp = list[i].inputList.split(',');
+            if (options && options.length > 0) {
+              for (let ii = 0; ii < options.length; ii++) {
+                inputListTmp.push(options[ii]);
+              }
+            }
             for (let ii = 0; ii < inputListTmp.length; ii++) {
+              let check = false;
+              if (values.indexOf(inputListTmp[ii]) > -1) {
+                check = true;
+              }
               inputList.push(
                 {
                   id: inputListTmp[ii],
-                  checked: true
+                  checked: check
                 }
               );
             }
@@ -236,6 +257,7 @@ export class EditGoodsComponent implements OnInit {
               inputList: inputList,
               values: values,
               options: options,
+              color: color,
               tmpAdd: ''
             });
           }
@@ -322,16 +344,26 @@ export class EditGoodsComponent implements OnInit {
 
   private refreshProductAttrPics() {
     this.selectGoodsAttrPics = [];
+    // 所有颜色属性都可以传图片，sku保存时候根据颜色属性给pic赋值
     if (this.selectGoodsAttr.length >= 1) {
-      const values = this.selectGoodsAttr[0].values;
-      for (let i = 0; i < values.length; i++) {
-        let pic = null;
-        // 编辑状态下获取图片
-        pic = this.getProductSkuPic(values[i]);
-
-        this.selectGoodsAttrPics.push({name: values[i], pic: pic});
+      console.log(this.selectGoodsAttr);
+      for (let i = 0; i < this.selectGoodsAttr.length; i++) {
+        if (this.selectGoodsAttr[i].color === 1) {
+          const values = this.selectGoodsAttr[i].inputList;
+          for (let ii = 0; ii < values.length; ii++) {
+            let pic = null;
+            // 编辑状态下获取图片
+            pic = this.getProductSkuPic(values[ii].id);
+            const fileList = [];
+            if (pic) {
+              fileList.push(pic);
+            }
+            this.selectGoodsAttrPics.push({name: values[ii].id, pic: pic, fileList: fileList});
+          }
+        }
       }
     }
+    console.log(this.selectGoodsAttrPics);
   }
 
   getProductSkuPic(name) {
@@ -362,7 +394,7 @@ export class EditGoodsComponent implements OnInit {
     if (this.selectGoodsAttr[index].tmpAdd) {
       const add = this.selectGoodsAttr[index].tmpAdd.trim();
       for (let i = 0; i < this.selectGoodsAttr[index].inputList.length; i++) {
-        if (this.selectGoodsAttr[index].inputList[i].id == add) {
+        if (this.selectGoodsAttr[index].inputList[i].id === add) {
           return;
         }
       }
@@ -380,13 +412,26 @@ export class EditGoodsComponent implements OnInit {
   }
 
   refreshSkuList() {
-    console.log(this.selectGoodsAttr);
     if (this.selectGoodsAttr.length > 3) {
       this.messageService.showAlertMessage('', '不支持3层以上规格', 'error');
     }
     const skuList = [];
     let c = 0;
-    if (this.selectGoodsAttr.length === 2) {
+    if (this.selectGoodsAttr.length === 1) {
+      for (let j = 0; j < this.selectGoodsAttr[0].inputList.length; j++) {
+        if (this.selectGoodsAttr[0].inputList[j].checked) {
+          const skuCode = c;
+          skuList.push({
+            sp1: this.selectGoodsAttr[0].inputList[j].id,
+            skuCode: skuCode,
+            price: 0,
+            stock: 0,
+            lowStock: 0
+          });
+          c++;
+        }
+      }
+    } else if (this.selectGoodsAttr.length === 2) {
       for (let j = 0; j < this.selectGoodsAttr[0].inputList.length; j++) {
         for (let k = 0; k < this.selectGoodsAttr[1].inputList.length; k++) {
           if (this.selectGoodsAttr[0].inputList[j].checked && this.selectGoodsAttr[1].inputList[k].checked) {
@@ -426,6 +471,7 @@ export class EditGoodsComponent implements OnInit {
       }
     }
     this.editData.skuStockList = skuList;
+    this.refreshProductAttrPics();
   }
 
   shareGoodsPriceStocke() {

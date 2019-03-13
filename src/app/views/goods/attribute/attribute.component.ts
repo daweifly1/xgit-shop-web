@@ -55,6 +55,11 @@ export class AttributeComponent implements OnInit {
       loading: false,
       headers: [
         {
+          title: '操作',
+          tdTemplate: this.operationTpl,
+          width: 200,
+        },
+        {
           title: '编号',
           field: 'id',
           width: 150,
@@ -74,11 +79,6 @@ export class AttributeComponent implements OnInit {
         }, {
           title: '设置',
           tdTemplate: this.settingTpl,
-          width: 200,
-        },
-        {
-          title: '操作',
-          tdTemplate: this.operationTpl,
           width: 200,
         }
       ]

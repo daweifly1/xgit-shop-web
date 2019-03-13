@@ -56,18 +56,23 @@ export class ParamListComponent implements OnInit {
       loading: false,
       headers: [
         {
+          title: '操作',
+          tdTemplate: this.operationTpl,
+          width: 100,
+        },
+        {
           title: '编号',
           field: 'id',
-          width: 150,
+          width: 100,
         },
         {
           title: '属性名称',
           field: 'name',
-          width: 200,
+          width: 100,
         }, {
           title: '商品类型',
           field: 'productAttributeCategoryName',
-          width: 200,
+          width: 100,
         }, {
           title: '属性是否可选',
           field: 'selectType',
@@ -76,7 +81,7 @@ export class ParamListComponent implements OnInit {
         }, {
           title: '属性值的录入方式',
           field: 'inputType',
-          width: 200,
+          width: 150,
           pipe: 'attrInputType',
         }, {
           title: '可选值列表',
@@ -85,12 +90,7 @@ export class ParamListComponent implements OnInit {
         }, {
           title: '排序',
           field: 'sort',
-          width: 150,
-        },
-        {
-          title: '操作',
-          tdTemplate: this.operationTpl,
-          width: 200,
+          width: 50,
         }
       ]
     };

@@ -218,7 +218,7 @@ export const UeditorConfig = {
 
   // wordCount
   // wordCount:true,          //是否开启字数统计
-  maximumWords: 30000,       // 允许的最大字符数
+  maximumWords: 10000,       // 允许的最大字符数
   // 字数统计提示，{#count}代表当前字数，{#leave}代表还可以输入多少字符数,留空支持多语言自动切换，否则按此配置显示
   // wordCountMsg:'',   //当前已输入 {#count} 个字符，您还可以输入{#leave} 个字符
   // 超出字数限制提示  留空支持多语言自动切换，否则按此配置显示
@@ -400,7 +400,7 @@ export const UeditorConfig = {
 export const UeditorUploadConfig = {
   /* 上传图片配置项 */
   'imageActionName': 'uploadimage', /* 执行上传图片的action名称 */
-  'imageUploadUrl': '/cos/uploading/img',
+  'imageUploadUrl': '/bs/uploading/img',
   'imageFieldName': 'upfile', /* 提交的图片表单名称 */
   'imageMaxSize': 2048000, /* 上传大小限制，单位B */
   'imageAllowFiles': ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], /* 上传图片格式显示 */

@@ -184,8 +184,8 @@
 
 <div *ngIf="tabPageType===pageTypeEnum.Step3Page">
   <nz-form-item>
-    <nz-form-label nzSpan="4"><span class="font-red-color">*</span>属性分类id</nz-form-label>
-    <nz-form-control nzSpan="12">
+    <nz-form-label nzSpan="2"><span class="font-red-color">*</span>属性分类id</nz-form-label>
+    <nz-form-control nzSpan="22">
       <nz-select nzPlaceHolder="请选择" [(ngModel)]="editData.productAttributeCategoryId"
                  name="productAttributeCategoryId"
                  (ngModelChange)="handleGoodsAttrChange()"
@@ -197,8 +197,8 @@
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-label nzSpan="4">商品规格</nz-form-label>
-    <nz-form-control nzSpan="12">
+    <nz-form-label nzSpan="2">商品规格</nz-form-label>
+    <nz-form-control nzSpan="22">
 
       <div *ngFor="let productAttr of selectGoodsAttr;let i=index">
         {{productAttr.name}}：
@@ -221,7 +221,7 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label nzSpan="16">
+    <nz-form-label nzSpan="24">
       <button nz-button nzType="primary" (click)="refreshSkuList()">刷新SKU列表</button>
       <button nz-button nzType="primary" (click)="shareGoodsPriceStocke()">同步价格&均分库存</button>
     </nz-form-label>
@@ -277,15 +277,43 @@
 
   </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label nzSpan="4">属性图片</nz-form-label>
-    <nz-form-control nzSpan="12">
-
-
+  <nz-form-item *ngIf="this.selectGoodsAttrPics&&this.selectGoodsAttrPics.length>0">
+    <nz-form-label nzSpan="2">属性图片</nz-form-label>
+    <nz-form-control nzSpan="22">
+      <div *ngFor="let item of this.selectGoodsAttrPics;let i=index">
+        <nz-form-label nzSpan="1">{{item.name}}:</nz-form-label>
+        <nz-form-control nzSpan="3">
+        <nz-upload
+          [nzAction]="uploadImgUrl"
+          nzListType="picture-card"
+          [(nzFileList)]="this.selectGoodsAttrPics[i].fileList" [nzSize]="10*1024"
+          [nzShowButton]="this.selectGoodsAttrPics[i].fileList.length < 1" [nzPreview]="handlePreview" >
+          <i class="anticon anticon-plus"></i>
+          <div class="ant-upload-text">上传</div>
+        </nz-upload>
+        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent"
+                  [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+          <ng-template #modalContent>
+            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
+          </ng-template>
+        </nz-modal>
+        </nz-form-control>
+      </div>
     </nz-form-control>
   </nz-form-item>
 
-
+  <nz-form-item>
+      <div class="table-wrap">
+      <nz-tabset>
+        <nz-tab nzTitle="电脑端详情">
+          <ueditor [config]="uEditorConfig" [(ngModel)]="this.editData.detailHtml" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+        </nz-tab>
+        <nz-tab nzTitle="移动端详情">
+          <ueditor [config]="uEditorConfig" [(ngModel)]="this.editData.detailMobileHtml" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+        </nz-tab>
+      </nz-tabset>`
+      </div>
+  </nz-form-item>
 
   <div class="table-footer-bar">
     <button nz-button nzType="primary" (click)="backStep2()">上一步，填写商品促销</button>

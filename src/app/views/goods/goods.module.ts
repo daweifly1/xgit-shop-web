@@ -12,6 +12,7 @@ import {ListComponent} from './attribute/list/list.component';
 import {ParamListComponent} from './attribute/param-list/param-list.component';
 import {EditGoodsComponent} from './manage/edit-goods/edit-goods.component';
 import {EditTypeComponent} from './types/edit-type/edit-type.component';
+import {UEditorModule} from 'ngx-ueditor';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {EditTypeComponent} from './types/edit-type/edit-type.component';
     NgZorroAntdModule,
     LayoutModule,
     DirectivesModule,
+    UEditorModule,
     GoodsRoutingModule
   ],
   declarations: [TypesComponent, ManageComponent, EditTypeComponent, AttributeComponent,
