@@ -142,11 +142,9 @@ export class EditGoodsComponent implements OnInit {
 
 
   handlePreview = (file: UploadFile) => {
-    console.log(this.selectGoodsAttrPics);
     this.previewImage = file.url || file.thumbUrl;
     this.previewVisible = true;
-    console.log(this.selectGoodsAttrPics);
-  };
+  }
 
   saveStep1() {
     this.tabPageType = PageTypeEnum.Step2Page;
@@ -316,20 +314,35 @@ export class EditGoodsComponent implements OnInit {
     this.selectGoodsAttrPics = [];
     // 所有颜色属性都可以传图片，sku保存时候根据颜色属性给pic赋值
     if (this.selectGoodsAttr.length >= 1) {
-      console.log(this.selectGoodsAttr);
       for (let i = 0; i < this.selectGoodsAttr.length; i++) {
         if (this.selectGoodsAttr[i].color === 1) {
           const values = this.selectGoodsAttr[i].inputList;
           for (let ii = 0; ii < values.length; ii++) {
-            let pic = null;
-            // 编辑状态下获取图片
-            pic = this.getProductSkuPic(values[ii].id);
             const fileList = [];
-            if (pic) {
-              fileList.push(pic);
+            let f = true;
+            if (this.editData.goodsAttributeImgs) {
+              for (let j = 0; j < this.editData.goodsAttributeImgs.length; j++) {
+                const color = this.editData.goodsAttributeImgs[j].color;
+                if (values[ii].id === color && this.editData.goodsAttributeImgs[j].pic) {
+                  fileList.push(
+                    {
+                      uid: this.editData.goodsAttributeImgs[j].id,
+                      name: this.editData.goodsAttributeImgs[j].pic,
+                      url: this.fileServiceUrl + this.editData.goodsAttributeImgs[j].pic,
+                      thumbUrl: this.fileServiceUrl + this.editData.goodsAttributeImgs[j].pic,
+                    }
+                  );
+                  f = false;
+                  this.selectGoodsAttrPics.push({color: values[ii].id, pic: this.editData.goodsAttributeImgs[j].pic, fileList: fileList});
+                  break;
+                }
+              }
             }
-            this.selectGoodsAttrPics.push({name: values[ii].id, pic: pic, fileList: fileList});
+            if (f) {
+              this.selectGoodsAttrPics.push({color: values[ii].id, pic: null, fileList: []});
+            }
           }
+          break;
         }
       }
     }
@@ -477,6 +490,16 @@ export class EditGoodsComponent implements OnInit {
     if (this.paramTypeForm.invalid) {
       return;
     }
+    this.editData.goodsAttributeImgs = this.selectGoodsAttrPics;
+    for (let j = 0; j < this.editData.goodsAttributeImgs.length; j++) {
+      const filePath = this.editData.goodsAttributeImgs[j].fileList.length ? (this.editData.goodsAttributeImgs[j].fileList[0].response ?
+        this.editData.goodsAttributeImgs[j].fileList[0].response.value : this.editData.goodsAttributeImgs[j].fileList[0].name) : '';
+      if (this.editData.goodsAttributeImgs[j].fileList.length > 0) {
+        this.editData.goodsAttributeImgs[j].pic = filePath;
+        this.editData.goodsAttributeImgs[j].fileList = null;
+      }
+    }
+    this.editData._this = null;
     console.log(this.editData);
     let submit = null;
     if (this.paramTypeForm.value) {

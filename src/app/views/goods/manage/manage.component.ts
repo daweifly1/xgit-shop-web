@@ -173,11 +173,18 @@ export class ManageComponent implements OnInit {
   }
 
   edit(data) {
-    this.editData = data;
-
-
-
-    this.currentPage = this.tabPageType.EditPage;
+    this.goodsService.getItem(data.id).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
+      this.tableConfig.loading = false;
+      if (resData.code !== 0) {
+        this.messageService.showAlertMessage('', resData.message, 'warning');
+        return;
+      }
+      this.editData = resData.value;
+      this.currentPage = this.tabPageType.EditPage;
+    }, (error: any) => {
+      this.tableConfig.loading = false;
+      this.messageService.showAlertMessage('', error.message, 'error');
+    });
   }
 
   add() {
