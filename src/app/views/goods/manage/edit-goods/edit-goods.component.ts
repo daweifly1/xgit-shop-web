@@ -70,10 +70,10 @@ export class EditGoodsComponent implements OnInit {
     this.paramTypeForm = this.formBuilder.group({
       name: [null, [Validators.required, Validators.maxLength(50)]],
       brandId: [null, [Validators.maxLength(10)]],
-      productCategoryId: [null, [Validators.maxLength(20)]],
+      goodsCategoryId: [null, [Validators.maxLength(20)]],
       description: [null, [Validators.maxLength(300)]],
       subTitle: [null, [Validators.maxLength(10)]],
-      productSn: [null, [Validators.maxLength(50)]],
+      goodsSn: [null, [Validators.maxLength(50)]],
       price: [null, [Validators.maxLength(10)]],
       originalPrice: [null, [Validators.maxLength(10)]],
       stock: [null, [Validators.maxLength(10)]],
@@ -92,7 +92,7 @@ export class EditGoodsComponent implements OnInit {
       detailDesc: [null, [Validators.maxLength(100)]],
       keywords: [null, [Validators.maxLength(50)]],
       note: [null, [Validators.maxLength(200)]],
-      productAttributeCategoryId: [null, [Validators.maxLength(10)]],
+      goodsAttributeCategoryId: [null, [Validators.maxLength(10)]],
       tmpAdd: [null, [Validators.maxLength(10)]],
       skuCode: [null, [Validators.maxLength(10)]],
       skuPrice: [null, [Validators.maxLength(10)]],
@@ -135,36 +135,6 @@ export class EditGoodsComponent implements OnInit {
     }
   }
 
-  submit() {
-    this.paramTypeForm.addControl('id', this.formBuilder.control(this.editData.id));
-    Object.keys(this.paramTypeForm.controls).forEach((key: string) => {
-      this.paramTypeForm.controls[key].markAsDirty();
-      this.paramTypeForm.controls[key].updateValueAndValidity();
-    });
-    if (this.paramTypeForm.invalid) {
-      return;
-    }
-
-    console.log(this.editData);
-//     let submit = null;
-//     if (this.paramTypeForm.value) {
-//       submit = this.goodsService.save(this.editData);
-//     }
-//     this.messageService.showLoading();
-//     submit.subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
-//       this.messageService.closeLoading();
-//       if (resData.code !== 0) {
-//         this.messageService.showAlertMessage('', resData.message, 'warning');
-//         return;
-//       }
-//       this.messageService.showToastMessage('操作成功', 'success');
-//       this.emitFinish();
-//     }, (error: any) => {
-//       this.messageService.closeLoading();
-//       this.messageService.showAlertMessage('', error.message, 'error');
-//     });
-  }
-
   emitFinish() {
     this.paramTypeForm.reset();
     this.finish.emit();
@@ -205,12 +175,12 @@ export class EditGoodsComponent implements OnInit {
   }
 
   handleGoodsAttrChange() {
-    this.getGoodsAttrList(0, this.editData.productAttributeCategoryId);
-    this.getGoodsAttrList(1, this.editData.productAttributeCategoryId);
+    this.getGoodsAttrList(0, this.editData.goodsAttributeCategoryId);
+    this.getGoodsAttrList(1, this.editData.goodsAttributeCategoryId);
   }
 
   private getGoodsAttrList(type: number, value: any) {
-    const param = {pageNum: 1, pageSize: 100, filters: {type: type, productAttributeCategoryId: value}};
+    const param = {pageNum: 1, pageSize: 100, filters: {type: type, goodsAttributeCategoryId: value}};
     if (0 === type) {
       this.goodsAttributeService.getAttrPageList(param).subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
           if (resData.code !== 0) {
@@ -301,7 +271,7 @@ export class EditGoodsComponent implements OnInit {
     const options = [];
     for (let i = 0; i < this.editData.goodsAttributeValueVOList.length; i++) {
       const attrValue = this.editData.goodsAttributeValueVOList[i];
-      if (attrValue.productAttributeId === id) {
+      if (attrValue.goodsAttributeId === id) {
         const strArr = attrValue.value.split(',');
         for (let j = 0; j < strArr.length; j++) {
           options.push(strArr[j]);
@@ -383,7 +353,7 @@ export class EditGoodsComponent implements OnInit {
       return null;
     }
     for (let i = 0; i < this.editData.goodsAttributeValueVOList.length; i++) {
-      if (id === this.editData.goodsAttributeValueVOList[i].productAttributeId) {
+      if (id === this.editData.goodsAttributeValueVOList[i].goodsAttributeId) {
         return this.editData.goodsAttributeValueVOList[i].value;
       }
     }
@@ -496,5 +466,34 @@ export class EditGoodsComponent implements OnInit {
       }
     }
     console.log(this.editData.skuStockList);
+  }
+
+  submit() {
+    this.paramTypeForm.addControl('id', this.formBuilder.control(this.editData.id));
+    Object.keys(this.paramTypeForm.controls).forEach((key: string) => {
+      this.paramTypeForm.controls[key].markAsDirty();
+      this.paramTypeForm.controls[key].updateValueAndValidity();
+    });
+    if (this.paramTypeForm.invalid) {
+      return;
+    }
+    console.log(this.editData);
+    let submit = null;
+    if (this.paramTypeForm.value) {
+      submit = this.goodsService.save(this.editData);
+    }
+    this.messageService.showLoading();
+    submit.subscribe((resData: DictionaryServiceNs.UfastHttpAnyResModel) => {
+      this.messageService.closeLoading();
+      if (resData.code !== 0) {
+        this.messageService.showAlertMessage('', resData.message, 'warning');
+        return;
+      }
+      this.messageService.showToastMessage('操作成功', 'success');
+      this.emitFinish();
+    }, (error: any) => {
+      this.messageService.closeLoading();
+      this.messageService.showAlertMessage('', error.message, 'error');
+    });
   }
 }

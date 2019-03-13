@@ -16,7 +16,7 @@ enum PageTypeEnum {
   styleUrls: ['./param-list.component.scss']
 })
 export class ParamListComponent implements OnInit {
-  @Input() productAttributeCategory: any;
+  @Input() goodsAttributeCategory: any;
   @Output() finish: EventEmitter<any>;
 
   tableConfig: UfastTableNs.TableConfig;
@@ -42,8 +42,8 @@ export class ParamListComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.productAttributeCategory && this.productAttributeCategory.id) {
-      this.filters = {productAttributeCategoryId: this.productAttributeCategory.id};
+    if (this.goodsAttributeCategory && this.goodsAttributeCategory.id) {
+      this.filters = {goodsAttributeCategoryId: this.goodsAttributeCategory.id};
     }
     this.tableConfig = {
       id: 'shops-attr-param',
@@ -71,7 +71,7 @@ export class ParamListComponent implements OnInit {
           width: 100,
         }, {
           title: '商品类型',
-          field: 'productAttributeCategoryName',
+          field: 'goodsAttributeCategoryName',
           width: 100,
         }, {
           title: '属性是否可选',
@@ -121,8 +121,8 @@ export class ParamListComponent implements OnInit {
       resData.value.list.forEach((item) => {
         let temp = <any>{};
         temp = item;
-        if (this.productAttributeCategory) {
-          temp.productAttributeCategoryName = this.productAttributeCategory.name;
+        if (this.goodsAttributeCategory) {
+          temp.goodsAttributeCategoryName = this.goodsAttributeCategory.name;
         }
         temp['_this'] = item;
         this.pageDataList.push(temp);
@@ -140,7 +140,7 @@ export class ParamListComponent implements OnInit {
   }
 
   add() {
-    this.editData = {productAttributeCategoryId: this.productAttributeCategory.id};
+    this.editData = {goodsAttributeCategoryId: this.goodsAttributeCategory.id};
     this.currentPage = this.tabPageType.EditPage;
   }
 
@@ -193,7 +193,7 @@ export class ParamListComponent implements OnInit {
   }
 
   cancel() {
-    this.editData = {productAttributeCategoryId: this.productAttributeCategory.id};
+    this.editData = {goodsAttributeCategoryId: this.goodsAttributeCategory.id};
     this.currentPage = this.tabPageType.ManagePage;
   }
 }

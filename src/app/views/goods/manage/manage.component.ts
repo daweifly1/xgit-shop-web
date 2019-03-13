@@ -76,7 +76,7 @@ export class ManageComponent implements OnInit {
           width: 250,
         }, {
           title: '货号',
-          field: 'productSn',
+          field: 'goodsSn',
           width: 150,
         }, {
           title: '价格',

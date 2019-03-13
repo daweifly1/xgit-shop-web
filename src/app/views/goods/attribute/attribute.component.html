@@ -46,11 +46,11 @@
   </ng-container>
 
   <ng-container *ngIf="currentPage === tabPageType.ChildAttrListPage" l>
-    <app-list (finish)="onChildFinish()" [productAttributeCategory]="editData"></app-list>
+    <app-list (finish)="onChildFinish()" [goodsAttributeCategory]="editData"></app-list>
   </ng-container>
 
   <ng-container *ngIf="currentPage === tabPageType.ChildParamListPage">
-    <app-param-list (finish)="onChildFinish()" [productAttributeCategory]="editData"></app-param-list>
+    <app-param-list (finish)="onChildFinish()" [goodsAttributeCategory]="editData"></app-param-list>
   </ng-container>
 
 </app-tab-route>

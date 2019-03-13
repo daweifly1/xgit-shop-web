@@ -32,8 +32,8 @@ export class EditTypeComponent implements OnInit {
     this.paramTypeForm = this.formBuilder.group({
       name: [null, [Validators.required, Validators.maxLength(50)]],
       level: [null, [Validators.maxLength(2)]],
-      productCount: [null, [Validators.maxLength(10)]],
-      productUnit: [null, [Validators.maxLength(10)]],
+      goodsCount: [null, [Validators.maxLength(10)]],
+      goodsUnit: [null, [Validators.maxLength(10)]],
       navStatus: [null, [Validators.required, Validators.maxLength(2)]],
       showStatus: [null, [Validators.required, Validators.maxLength(2)]],
       sort: [null, [Validators.maxLength(50)]],

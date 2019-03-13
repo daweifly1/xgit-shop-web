@@ -10,7 +10,7 @@
     <nz-form-item>
       <nz-form-label nzSpan="6"><span class="font-red-color">*</span>类目id</nz-form-label>
       <nz-form-control nzSpan="8">
-        <input nz-input [(ngModel)]="editData.productCategoryId" formControlName="productCategoryId" [maxlength]="20"/>
+        <input nz-input [(ngModel)]="editData.goodsCategoryId" formControlName="goodsCategoryId" [maxlength]="20"/>
       </nz-form-control>
     </nz-form-item>
 
@@ -39,7 +39,7 @@
     <nz-form-item>
       <nz-form-label nzSpan="6"><span class="font-red-color">*</span>货号</nz-form-label>
       <nz-form-control nzSpan="8">
-        <input nz-input [(ngModel)]="editData.productSn" formControlName="productSn" [maxlength]="100"/>
+        <input nz-input [(ngModel)]="editData.goodsSn" formControlName="goodsSn" [maxlength]="100"/>
       </nz-form-control>
     </nz-form-item>
 
@@ -186,8 +186,8 @@
   <nz-form-item>
     <nz-form-label nzSpan="2"><span class="font-red-color">*</span>属性分类id</nz-form-label>
     <nz-form-control nzSpan="22">
-      <nz-select nzPlaceHolder="请选择" [(ngModel)]="editData.productAttributeCategoryId"
-                 name="productAttributeCategoryId"
+      <nz-select nzPlaceHolder="请选择" [(ngModel)]="editData.goodsAttributeCategoryId"
+                 name="goodsAttributeCategoryId"
                  (ngModelChange)="handleGoodsAttrChange()"
                  class="selectStyle">
         <nz-option *ngFor="let item of attrCatlist;let i=index" [nzValue]="item.id"
@@ -200,19 +200,19 @@
     <nz-form-label nzSpan="2">商品规格</nz-form-label>
     <nz-form-control nzSpan="22">
 
-      <div *ngFor="let productAttr of selectGoodsAttr;let i=index">
-        {{productAttr.name}}：
-        <label nz-checkbox-group *ngIf="productAttr.handAddStatus===0">
-            <span *ngFor="let item of productAttr.inputList;let in=index">
+      <div *ngFor="let goodsAttr of selectGoodsAttr;let i=index">
+        {{goodsAttr.name}}：
+        <label nz-checkbox-group *ngIf="goodsAttr.handAddStatus===0">
+            <span *ngFor="let item of goodsAttr.inputList;let in=index">
                <label nz-checkbox [(ngModel)]="item.checked" name="checkBox">{{item.id}}</label>
             </span>
         </label>
-        <label nz-checkbox-group *ngIf="productAttr.handAddStatus===1">
-             <span *ngFor="let item of productAttr.inputList;">
+        <label nz-checkbox-group *ngIf="goodsAttr.handAddStatus===1">
+             <span *ngFor="let item of goodsAttr.inputList;">
                <label nz-checkbox [(ngModel)]="item.checked" name="checkBox">{{item.id}}</label>
             </span>
 
-          <input nz-input [(ngModel)]="productAttr.tmpAdd" name="tmpAdd" [maxlength]="10"/>
+          <input nz-input [(ngModel)]="goodsAttr.tmpAdd" name="tmpAdd" [maxlength]="10"/>
           <button nz-button nzType="primary" nzGhost
                   (click)="addInputListArr(i)">增加
           </button>
@@ -233,7 +233,7 @@
       <nz-table nzSize="small">
         <thead>
         <tr>
-          <th [nzWidth]="'10%'" *ngFor="let productAttr of selectGoodsAttr;let i=index">{{productAttr.name}}</th>
+          <th [nzWidth]="'10%'" *ngFor="let goodsAttr of selectGoodsAttr;let i=index">{{goodsAttr.name}}</th>
           <th [nzWidth]="'20%'">SKU编号</th>
           <th [nzWidth]="'15%'">销售价格</th>
           <th [nzWidth]="'15%'">商品库存</th>

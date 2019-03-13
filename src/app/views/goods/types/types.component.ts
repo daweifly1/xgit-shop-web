@@ -75,7 +75,7 @@ export class TypesComponent implements OnInit {
           pipe: 'goodsCatLevelType'
         }, {
           title: '单位',
-          field: 'productUnit',
+          field: 'goodsUnit',
           width: 150,
         }, {
           title: '是否显示',
@@ -144,7 +144,7 @@ export class TypesComponent implements OnInit {
   }
 
   add(level: number, parentId: number, parentName: string) {
-    this.editData = {level: level + 1, parentId: parentId, parentName: parentName};
+    this.editData = {level: level, parentId: parentId, parentName: parentName};
     this.currentPage = this.tabPageType.EditPage;
   }
 

@@ -16,7 +16,7 @@ enum PageTypeEnum {
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-  @Input() productAttributeCategory: any;
+  @Input() goodsAttributeCategory: any;
   @Output() finish: EventEmitter<any>;
 
   tableConfig: UfastTableNs.TableConfig;
@@ -44,8 +44,8 @@ export class ListComponent implements OnInit {
 
 
   ngOnInit() {
-    if (this.productAttributeCategory && this.productAttributeCategory.id) {
-      this.filters = {productAttributeCategoryId: this.productAttributeCategory.id};
+    if (this.goodsAttributeCategory && this.goodsAttributeCategory.id) {
+      this.filters = {goodsAttributeCategoryId: this.goodsAttributeCategory.id};
     }
 
     this.tableConfig = {
@@ -61,12 +61,12 @@ export class ListComponent implements OnInit {
         {
           title: '操作',
           tdTemplate: this.operationTpl,
-          width: 100,
+          width: 80,
         },
         {
           title: '编号',
           field: 'id',
-          width: 100,
+          width: 80,
         },
         {
           title: '属性名称',
@@ -74,12 +74,12 @@ export class ListComponent implements OnInit {
           width: 100,
         }, {
           title: '商品类型',
-          field: 'productAttributeCategoryName',
-          width: 100,
+          field: 'goodsAttributeCategoryName',
+          width: 80,
         }, {
           title: '属性是否可选',
           field: 'selectType',
-          width: 150,
+          width: 100,
           pipe: 'attrSelectType',
         }, {
           title: '属性值的录入方式',
@@ -89,11 +89,11 @@ export class ListComponent implements OnInit {
         }, {
           title: '可选值列表',
           field: 'inputList',
-          width: 150,
+          width: 200,
         }, {
           title: '排序',
           field: 'sort',
-          width: 50,
+          width: 80,
         }
       ]
     };
@@ -124,8 +124,8 @@ export class ListComponent implements OnInit {
       resData.value.list.forEach((item) => {
         let temp = <any>{};
         temp = item;
-        if (this.productAttributeCategory) {
-          temp.productAttributeCategoryName = this.productAttributeCategory.name;
+        if (this.goodsAttributeCategory) {
+          temp.goodsAttributeCategoryName = this.goodsAttributeCategory.name;
         }
         temp['_this'] = item;
         this.pageDataList.push(temp);
@@ -143,7 +143,7 @@ export class ListComponent implements OnInit {
   }
 
   add() {
-    this.editData = {productAttributeCategoryId: this.productAttributeCategory.id};
+    this.editData = {goodsAttributeCategoryId: this.goodsAttributeCategory.id};
     this.currentPage = this.tabPageType.EditPage;
   }
 
@@ -196,7 +196,7 @@ export class ListComponent implements OnInit {
   }
 
   cancel() {
-    this.editData = {productAttributeCategoryId: this.productAttributeCategory.id};
+    this.editData = {goodsAttributeCategoryId: this.goodsAttributeCategory.id};
     this.currentPage = this.tabPageType.ManagePage;
   }
 }

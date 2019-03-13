@@ -22,7 +22,7 @@
         <nz-form-item>
           <nz-form-label nzSpan="10">单位</nz-form-label>
           <nz-form-control nzSpan="14">
-            <input nz-input [(ngModel)]="filters.productUnit" name="productUnit">
+            <input nz-input [(ngModel)]="filters.goodsUnit" name="goodsUnit">
           </nz-form-control>
         </nz-form-item>
 
@@ -48,7 +48,7 @@
   <ng-template #operationTpl let-data="_this">
     <app-action-group>
       <app-action (clickAction)="edit(data,'顶级节点')">编辑</app-action>
-      <app-action (clickAction)="add(data.level,data.id,data.name)">新增下级</app-action>
+      <app-action (clickAction)="add(data.level+1,data.id,data.name)">新增下级</app-action>
       <app-action (clickAction)="queryChildrenList(data.id,data.level,data.parentId)">查看下级</app-action>
     </app-action-group>
   </ng-template>

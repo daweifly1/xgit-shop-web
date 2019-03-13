@@ -62,14 +62,14 @@
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>分类筛选样式：1->普通；1->颜色</nz-form-label>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>分类筛选样式：0->普通；1->颜色</nz-form-label>
     <nz-form-control nzSpan="8">
       <input nz-input [(ngModel)]="editData.filterType" name="filterType" [maxlength]="100"/>
     </nz-form-control>
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>检索类型；0->不需要进行检索；1->关键字检索；2->范围检索</nz-form-label>
+    <nz-form-label nzSpan="6"><span class="font-red-color">*</span>检索类型，0不需检索,1关键字检索,2范围检索</nz-form-label>
     <nz-form-control nzSpan="8">
       <input nz-input [(ngModel)]="editData.searchType" name="searchType" [maxlength]="100"/>
     </nz-form-control>
