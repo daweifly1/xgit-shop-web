@@ -7,11 +7,11 @@ import {environment} from '../../../../../environments/environment';
 import {UploadFile} from 'ng-zorro-antd';
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  selector: 'app-edit-type',
+  templateUrl: './edit-type.component.html',
+  styleUrls: ['./edit-type.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditTypeComponent implements OnInit {
   @Output() finish: EventEmitter<any>;
   @Input() editData: any;
   paramTypeForm: FormGroup;
@@ -39,7 +39,7 @@ export class EditComponent implements OnInit {
       sort: [null, [Validators.maxLength(50)]],
       icon: [null, [Validators.maxLength(100)]],
       keywords: [null, [Validators.maxLength(200)]],
-      description: [null, []]
+      description: [null, [Validators.maxLength(500)]]
     });
     this.fileServiceUrl = environment.otherData.fileServiceUrl; // 文件服务器url
     this.fileList = null;
@@ -82,7 +82,7 @@ export class EditComponent implements OnInit {
     if (this.fileList.length > 0) {
       this.editData.icon = filePath;
     }
-// console.log(this.editData);
+
     let submit = null;
     if (this.editData) {
       submit = this.goodsCategoryService.save(this.editData);

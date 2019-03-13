@@ -7,10 +7,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {LayoutModule} from '../../layout/layout.module';
 import {DirectivesModule} from '../../directives/directives.module';
-import { EditComponent } from './types/edit/edit.component';
-import { AttributeComponent } from './attribute/attribute.component';
-import { ListComponent } from './attribute/list/list.component';
-import { ParamListComponent } from './attribute/param-list/param-list.component';
+import {AttributeComponent} from './attribute/attribute.component';
+import {ListComponent} from './attribute/list/list.component';
+import {ParamListComponent} from './attribute/param-list/param-list.component';
+import {EditGoodsComponent} from './manage/edit-goods/edit-goods.component';
+import {EditTypeComponent} from './types/edit-type/edit-type.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { ParamListComponent } from './attribute/param-list/param-list.component'
     DirectivesModule,
     GoodsRoutingModule
   ],
-  declarations: [TypesComponent, ManageComponent, EditComponent, AttributeComponent, ListComponent, ParamListComponent]
+  declarations: [TypesComponent, ManageComponent, EditTypeComponent, AttributeComponent,
+    ListComponent, ParamListComponent, EditGoodsComponent]
 })
 export class GoodsModule {
 }

@@ -54,6 +54,6 @@
   </ng-template>
 
   <ng-container *ngIf="currentPage === tabPageType.EditPage">
-    <app-edit (finish)="onChildFinish()" [editData]="editData"></app-edit>
+    <app-edit-type (finish)="onChildFinish()" [editData]="editData"></app-edit-type>
   </ng-container>
 </app-tab-route>

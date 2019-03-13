@@ -31,7 +31,8 @@
           <nz-form-label nzSpan="10">上架状态</nz-form-label>
           <nz-form-control nzSpan="14">
             <nz-select class="selectStyle" name="publishStatus" [(ngModel)]="filters.publishStatus">
-              <nz-option *ngFor="let item of commonBooleanList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+              <nz-option *ngFor="let item of commonBooleanList;" [nzValue]="item.value"
+                         [nzLabel]="item.label"></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -40,7 +41,8 @@
           <nz-form-label nzSpan="10">审核状态</nz-form-label>
           <nz-form-control nzSpan="14">
             <nz-select class="selectStyle" name="publishStatus" [(ngModel)]="filters.verifyStatus">
-              <nz-option *ngFor="let item of commonBooleanList;" [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+              <nz-option *ngFor="let item of commonBooleanList;" [nzValue]="item.value"
+                         [nzLabel]="item.label"></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -74,6 +76,6 @@
   </ng-template>
 
   <ng-container *ngIf="currentPage === tabPageType.EditPage">
-    <app-edit (finish)="onChildFinish()" [editData]="editData"></app-edit>
+    <app-edit-goods (finish)="onChildFinish()" [editData]="editData"></app-edit-goods>
   </ng-container>
 </app-tab-route>

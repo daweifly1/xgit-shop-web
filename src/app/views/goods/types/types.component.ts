@@ -165,9 +165,6 @@ export class TypesComponent implements OnInit {
   queryChildrenList(id: number, level: number, parentId: number) {
     this.filters = {parentId: id, level: level + 1};
     this.filtersParentHis[level + 1] = parentId;
-    console.log('queryChildrenList============');
-    console.log(this.filters);
-    console.log(this.filtersParentHis);
     this.getPageList();
   }
 
@@ -177,8 +174,6 @@ export class TypesComponent implements OnInit {
     if (this.filters && this.filters.level > 0) {
       this.filters.level = this.filters.level - 1;
     }
-    console.log('backParent============');
-    console.log(this.filters);
     this.getPageList();
   }
 }

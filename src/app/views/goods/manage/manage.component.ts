@@ -173,6 +173,15 @@ export class ManageComponent implements OnInit {
   }
 
   edit(data) {
+    this.editData = data;
 
+
+
+    this.currentPage = this.tabPageType.EditPage;
+  }
+
+  add() {
+    this.editData = {};
+    this.currentPage = this.tabPageType.EditPage;
   }
 }
