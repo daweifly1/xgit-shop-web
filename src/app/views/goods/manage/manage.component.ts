@@ -4,6 +4,7 @@ import {ShowMessageService} from '../../../widget/show-message/show-message';
 import {FormBuilder} from '@angular/forms';
 import {GoodsService} from '../../../core/common-services/goods.service';
 import {DictionaryServiceNs} from '../../../core/common-services/dictionary.service';
+import {environment} from '../../../../environments/environment';
 
 enum PageTypeEnum {
   ManagePage,
@@ -32,8 +33,11 @@ export class ManageComponent implements OnInit {
   editData: any;
 
   commonBooleanList: any[];
+  // 文件服务地址
+  fileServiceUrl: string;
 
   @ViewChild('operationTpl') operationTpl: TemplateRef<any>;
+  @ViewChild('picTpl') picTpl: TemplateRef<any>;
 
   constructor(private goodsService: GoodsService, private messageService: ShowMessageService,
               private formBuilder: FormBuilder) {
@@ -43,6 +47,7 @@ export class ManageComponent implements OnInit {
     this.pageDataList = [];
     this.editData = '';
     this.commonBooleanList = [{label: '否', value: 0}, {label: '是', value: 1}];
+    this.fileServiceUrl = environment.otherData.fileServiceUrl; // 文件服务器url
   }
 
   ngOnInit() {
@@ -60,20 +65,24 @@ export class ManageComponent implements OnInit {
           title: '操作',
           tdTemplate: this.operationTpl,
           width: 200,
+          fixed: true
         },
         {
           title: '编号',
           field: 'id',
           width: 150,
+          fixed: true
         },
         {
           title: '商品名称',
           field: 'name',
           width: 200,
+          fixed: true
         }, {
           title: '图片',
-          field: 'pic',
+          tdTemplate: this.picTpl,
           width: 250,
+          fixed: true
         }, {
           title: '货号',
           field: 'goodsSn',
@@ -81,7 +90,8 @@ export class ManageComponent implements OnInit {
         }, {
           title: '价格',
           field: 'price',
-          width: 150
+          width: 150,
+          pipe: 'currency:CNY'
         }, {
           title: '上架',
           field: 'publishStatus',

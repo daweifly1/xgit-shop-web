@@ -2,7 +2,7 @@
  * 表格组件使用的公共管道
  * */
 import {Pipe, PipeTransform} from '@angular/core';
-import {DatePipe} from '@angular/common';
+import {CurrencyPipe, DatePipe} from '@angular/common';
 import * as mapDataSets from '../../../environments/map-data';
 
 @Pipe({
@@ -10,6 +10,7 @@ import * as mapDataSets from '../../../environments/map-data';
 })
 export class MapPipe implements PipeTransform {
   private datePipe: DatePipe = new DatePipe('en-US');
+  private currencyPipe: CurrencyPipe = new CurrencyPipe('zh-Hans');
   private mapObj = mapDataSets;
 
   transform(value: any, arg?: any): any {
@@ -27,6 +28,8 @@ export class MapPipe implements PipeTransform {
     switch (type) {
       case 'date':
         return this.datePipe.transform(value, param);
+      case 'currency':
+        return this.currencyPipe.transform(value, param);
       default:
         return this.mapObj[type][value];
     }

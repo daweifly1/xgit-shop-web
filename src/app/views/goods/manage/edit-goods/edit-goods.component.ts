@@ -313,14 +313,14 @@ export class EditGoodsComponent implements OnInit {
   private refreshProductAttrPics() {
     this.selectGoodsAttrPics = [];
     // 所有颜色属性都可以传图片，sku保存时候根据颜色属性给pic赋值
-    if (this.selectGoodsAttr.length >= 1) {
+    if (this.selectGoodsAttr && this.selectGoodsAttr.length >= 1) {
       for (let i = 0; i < this.selectGoodsAttr.length; i++) {
         if (this.selectGoodsAttr[i].color === 1) {
           const values = this.selectGoodsAttr[i].inputList;
           for (let ii = 0; ii < values.length; ii++) {
             const fileList = [];
             let f = true;
-            if (this.editData.goodsAttributeImgs) {
+            if (this.editData.goodsAttributeImgs && this.editData.goodsAttributeImgs.length) {
               for (let j = 0; j < this.editData.goodsAttributeImgs.length; j++) {
                 const color = this.editData.goodsAttributeImgs[j].color;
                 if (values[ii].id === color && this.editData.goodsAttributeImgs[j].pic) {
@@ -346,20 +346,8 @@ export class EditGoodsComponent implements OnInit {
         }
       }
     }
-    console.log(this.selectGoodsAttrPics);
   }
 
-  getProductSkuPic(name) {
-    if (!this.editData.skuStockList) {
-      return null;
-    }
-    for (let i = 0; i < this.editData.skuStockList.length; i++) {
-      if (name === this.editData.skuStockList[i].sp1) {
-        return this.editData.skuStockList[i].pic;
-      }
-    }
-    return null;
-  }
 
   getEditParamValue(id: any) {
     if (!this.editData.goodsAttributeValueVOList) {
@@ -468,7 +456,7 @@ export class EditGoodsComponent implements OnInit {
       const len = Math.floor(this.editData.skuStockList.length);
       const stock = Math.floor(this.editData.stock / len);
       const m = this.editData.stock % len;
-      console.log('============' + stock + '--------------' + m + '========' + len);
+
       for (let j = 0; j < this.editData.skuStockList.length; j++) {
         this.editData.skuStockList[j].price = this.editData.price;
         if (j === 0) {
@@ -478,7 +466,6 @@ export class EditGoodsComponent implements OnInit {
         }
       }
     }
-    console.log(this.editData.skuStockList);
   }
 
   submit() {
@@ -492,15 +479,17 @@ export class EditGoodsComponent implements OnInit {
     }
     this.editData.goodsAttributeImgs = this.selectGoodsAttrPics;
     for (let j = 0; j < this.editData.goodsAttributeImgs.length; j++) {
-      const filePath = this.editData.goodsAttributeImgs[j].fileList.length ? (this.editData.goodsAttributeImgs[j].fileList[0].response ?
-        this.editData.goodsAttributeImgs[j].fileList[0].response.value : this.editData.goodsAttributeImgs[j].fileList[0].name) : '';
-      if (this.editData.goodsAttributeImgs[j].fileList.length > 0) {
-        this.editData.goodsAttributeImgs[j].pic = filePath;
-        this.editData.goodsAttributeImgs[j].fileList = null;
+      if (!this.editData.goodsAttributeImgs[j].pic) {
+        if (this.editData.goodsAttributeImgs[j].fileList && this.editData.goodsAttributeImgs[j].fileList.length
+          && this.editData.goodsAttributeImgs[j].fileList.length > 0) {
+          if (this.editData.goodsAttributeImgs[j].fileList[0].response) {
+            this.editData.goodsAttributeImgs[j].pic = this.editData.goodsAttributeImgs[j].fileList[0].response.value;
+          }
+        }
       }
+      this.editData.goodsAttributeImgs[j].fileList = null;
     }
     this.editData._this = null;
-    console.log(this.editData);
     let submit = null;
     if (this.paramTypeForm.value) {
       submit = this.goodsService.save(this.editData);

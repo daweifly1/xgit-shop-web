@@ -283,36 +283,40 @@
       <div *ngFor="let item of this.selectGoodsAttrPics;let i=index">
         <nz-form-label nzSpan="1">{{item.color}}:</nz-form-label>
         <nz-form-control nzSpan="3">
-        <nz-upload
-          [nzAction]="uploadImgUrl"
-          nzListType="picture-card"
-          [(nzFileList)]="this.selectGoodsAttrPics[i].fileList" [nzSize]="10*1024"
-          [nzShowButton]="this.selectGoodsAttrPics[i].fileList.length < 1" [nzPreview]="handlePreview" >
-          <i class="anticon anticon-plus"></i>
-          <div class="ant-upload-text">上传</div>
-        </nz-upload>
-        <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent"
-                  [nzFooter]="null" (nzOnCancel)="previewVisible=false">
-          <ng-template #modalContent>
-            <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }" />
-          </ng-template>
-        </nz-modal>
+          <nz-upload
+            [nzAction]="uploadImgUrl"
+            nzListType="picture-card"
+            [(nzFileList)]="this.selectGoodsAttrPics[i].fileList" [nzSize]="10*1024"
+            [nzShowButton]="null===this.selectGoodsAttrPics[i].fileList||this.selectGoodsAttrPics[i].fileList.length < 1"
+            [nzPreview]="handlePreview">
+            <i class="anticon anticon-plus"></i>
+            <div class="ant-upload-text">上传</div>
+          </nz-upload>
+          <nz-modal [nzVisible]="previewVisible" [nzContent]="modalContent"
+                    [nzFooter]="null" (nzOnCancel)="previewVisible=false">
+            <ng-template #modalContent>
+              <img [src]="previewImage" [ngStyle]="{ 'width': '100%' }"/>
+            </ng-template>
+          </nz-modal>
         </nz-form-control>
       </div>
     </nz-form-control>
   </nz-form-item>
 
   <nz-form-item>
-      <div class="table-wrap">
+    <div class="table-wrap">
       <nz-tabset>
         <nz-tab nzTitle="电脑端详情">
-          <ueditor [config]="uEditorConfig" [(ngModel)]="this.editData.detailHtml" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+          <ueditor [config]="uEditorConfig" [(ngModel)]="this.editData.detailHtml" [appSetUeditor]="uEditorUploadConfig"
+                   [loadingTip]="''"></ueditor>
         </nz-tab>
         <nz-tab nzTitle="移动端详情">
-          <ueditor [config]="uEditorConfig" [(ngModel)]="this.editData.detailMobileHtml" [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
+          <ueditor [config]="uEditorConfig" [(ngModel)]="this.editData.detailMobileHtml"
+                   [appSetUeditor]="uEditorUploadConfig" [loadingTip]="''"></ueditor>
         </nz-tab>
-      </nz-tabset>`
-      </div>
+      </nz-tabset>
+      `
+    </div>
   </nz-form-item>
 
   <div class="table-footer-bar">

@@ -66,6 +66,11 @@
     <button nz-button nzType="info" *ngIf="filters&&filters.level==0" (click)="add()">新增</button>
   </ng-template>
 
+  <ng-template #picTpl let-data="_this">
+    <img [src]="fileServiceUrl+data.pic" [ngStyle]="{ 'width': '80px' }"/>
+  </ng-template>
+
+
   <ng-template #operationTpl let-data="_this">
     <app-action-group>
       <app-action (clickAction)="edit(data)">查看</app-action>
