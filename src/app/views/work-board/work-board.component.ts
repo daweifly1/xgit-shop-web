@@ -207,12 +207,12 @@ export class WorkBoardComponent implements OnInit {
       ]
     };
     // this.getDataList();
-    this.userService.getLogin().subscribe((resData) => {
-      if (resData.code !== 0) {
-        return;
-      }
-      this.userInfo = resData.value;
-    }, () => {});
+    // this.userService.getLogin().subscribe((resData) => {
+    //   if (resData.code !== 0) {
+    //     return;
+    //   }
+    //   this.userInfo = resData.value;
+    // }, () => {});
     this.getNewData('5', this.noticeList);
     this.getOptions();
     // this.route.queryParams.subscribe((params) => {

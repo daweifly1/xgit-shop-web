@@ -1,7 +1,7 @@
 {
 
     "/site": {
-      "target": "http://gw.jt.com/",
+      "target": "http://10.100.2.109:9103/",
       "secure": false,
       "changeOrigin": true,
       "pathRewrite": {

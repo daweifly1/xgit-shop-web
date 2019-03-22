@@ -1,14 +1,13 @@
-import { ChangeDetectorRef, Component, enableProdMode, AfterViewInit, OnInit } from '@angular/core';
-import {
-  Router
-} from '@angular/router';
-import { ShowMessageService } from '../../widget/show-message/show-message';
-import { MenuServiceNs, MenuService } from '../../core/common-services/menu.service';
-import { UserServiceNs, UserService } from '../../core/common-services/user.service';
-import { UfastTabsetRouteService } from '../../core/infra/ufast-tabset-route.service';
-import { LodopPrintService } from '../../core/infra/lodop-print.service';
+import {AfterViewInit, ChangeDetectorRef, Component, enableProdMode, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {ShowMessageService} from '../../widget/show-message/show-message';
+import {MenuService, MenuServiceNs} from '../../core/common-services/menu.service';
+import {UserService, UserServiceNs} from '../../core/common-services/user.service';
+import {UfastTabsetRouteService} from '../../core/infra/ufast-tabset-route.service';
+import {LodopPrintService} from '../../core/infra/lodop-print.service';
 import 'rxjs/add/operator/filter';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
+
 enableProdMode();
 
 @Component({
@@ -83,11 +82,14 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
 
     this.userService.getLogin().subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
       if (resData.code === 0) {
-        this.username = resData.value.name;
+        if (null != resData.value) {
+          this.username = resData.value.name;
+        }
       } else {
         this.messageService.showAlertMessage('', resData.message, 'warning');
       }
     }, (error: any) => {
+
       this.messageService.showAlertMessage('', error.message, 'error');
     });
     // this.lodopService.initPrinter().then(() => { }, () => {

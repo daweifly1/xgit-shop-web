@@ -106,6 +106,7 @@ export namespace UserServiceNs {
   export class UserServiceClass {
     private http: HttpUtilService;
     public userInfo: any;
+
     constructor(private injector: Injector) {
       this.http = injector.get(HttpUtilService);
       this.userInfo = {
@@ -159,10 +160,17 @@ export namespace UserServiceNs {
     public getLogin(): Observable<UfastHttpAnyResModel> {
       const config: HttpUtilNs.UfastHttpConfig = {};
       config.gateway = HttpUtilNs.GatewayKey.Ius;
-      return this.http.Get<AuthLoginInfoResModel>('/profile/getLogin', null, config).pipe(map((data: UfastHttpResT<UserInfoModel>) => {
-        this.userInfo.username = data.value.loginName;
-        return data;
-      }));
+      return this.http.Get<AuthLoginInfoResModel>('/profile/getLogin', null, config).pipe(
+        map((data: any) => {
+          if (data && data.value) {
+              if (null != data.value.loginName) {
+                this.userInfo.username = data.value.loginName;
+              }
+            }
+            return data;
+          }
+        )
+      );
     }
 
     public updatePersonInfo(data: AuthUpdateInfoReqModel): Observable<UfastHttpAnyResModel> {
@@ -224,6 +232,7 @@ export namespace UserServiceNs {
     }
   }
 }
+
 @Injectable()
 export class UserService extends UserServiceNs.UserServiceClass {
   constructor(injector: Injector) {
