@@ -7,7 +7,7 @@
  ng build
  ****/
 
-export const webServerUrl = 'http://127.0.0.1:4202/site';
+export const webServerUrl = '/site';
 export const gatewayKey = {
   Ius: 'ius',
   /**

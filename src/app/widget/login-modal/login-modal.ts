@@ -90,6 +90,7 @@ export class LoginModalComponent implements OnInit {
           this.refreshVerify();
           return;
         }
+        this.userService.userInfo.username = this.loginReqData.loginName;
         this.loginModalService.modalSubject.destroy('onOk');
       }, (error: UserServiceNs.HttpError) => {
         this.remark = error.message;

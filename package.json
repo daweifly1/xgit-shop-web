@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json --port 4202 --host 0.0.0.0",
+    "start": "ng serve --proxy-config proxy.conf.json --port 4202 --host 0.0.0.0 --disableHostCheck",
     "build": "node --max_old_space_size=5120 ./node_modules/@angular/cli/bin/ng build --prod",
     "test": "ng test",
     "lint": "ng lint",

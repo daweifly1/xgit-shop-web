@@ -1,11 +1,11 @@
 {
-
-    "/site": {
-      "target": "http://10.100.2.109:9103/",
-      "secure": false,
-      "changeOrigin": true,
-      "pathRewrite": {
-        "^/site": "/"
-      }
+  "/site": {
+    "target": "http://10.100.2.109:9103/",
+    "secure": false,
+    "changeOrigin": true,
+    "disableHostCheck": true,
+    "pathRewrite": {
+      "^/site": "/"
     }
+  }
 }

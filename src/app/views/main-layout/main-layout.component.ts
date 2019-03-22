@@ -81,11 +81,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
     this.userService.getLogin().subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
-      if (resData.code === 0) {
-        if (null != resData.value) {
-          this.username = resData.value.name;
-        }
-      } else {
+      if (resData.code !== 0) {
         this.messageService.showAlertMessage('', resData.message, 'warning');
       }
     }, (error: any) => {
