@@ -1,7 +1,7 @@
 /**
  * 基于nz-table组件封装的组件
  * */
-import { Component, OnInit, OnDestroy, TemplateRef, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
 
 export namespace UfastTableNs {
   export interface TableHeader {
@@ -15,6 +15,7 @@ export namespace UfastTableNs {
     tdClassList?: string[];           // 为td单元格指定类 (父组件中的类必须加上 /deep/ 前缀才能对子组件生效)
     thClassList?: string[];           // 为th单元格指定类  (父组件中的类必须加上 /deep/ 前缀才能对子组件生效)
     show?: boolean;                   // 是否显示列，false:不显示，其他：显示
+    toSort?: boolean;                    // 是否可以排序
   }
   export interface TableConfig {
     showCheckbox: boolean;            // 是否展示选择列
@@ -35,14 +36,17 @@ export namespace UfastTableNs {
     id?: string;                        // 用于持久化配置的id
     trClassListField?: string;        // 每一行css类名数组字段
     headers: TableHeader[];            // 列设置
+    orderBy?: string;                  // 排序信息
   }
   export interface SelectedChange {     // selectedChange事件: 选中行改变事件
     type: number;       // 0:增加，1：移除
     index: number;                 // 变化数据的序号，-1：所有
+    orderBy?: string;
   }
   export enum SelectedChangeType {
     Checked,
-    Unchecked
+    Unchecked,
+    SortChange
   }
 }
 
@@ -98,6 +102,7 @@ export class UfastTableComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * 获取数据函数，注意保存上下文环境*/
   @Input()getListHandle: Function;
+  orderBy: string;
 
   tableWidth: string;
   allChecked: boolean;
@@ -205,5 +210,23 @@ export class UfastTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   ngAfterViewInit() {
+  }
+
+  sortChang(param: any) {
+    const descP = param + ' desc';
+    if (this.orderBy) {
+      if (this.orderBy === param) {
+        this.orderBy = descP;
+      } else if (this.orderBy === descP) {
+        this.orderBy = '';
+      }
+    } else {
+      this.orderBy = param;
+    }
+    this.selectedChange.emit({
+      type: UfastTableNs.SelectedChangeType.SortChange,
+      index: 3,
+      orderBy: this.orderBy
+    });
   }
 }

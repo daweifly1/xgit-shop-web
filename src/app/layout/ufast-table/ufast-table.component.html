@@ -11,7 +11,12 @@
         <ng-container *ngFor="let head of _tableConfig.headers;trackBy:trackByTableHead;let headIndex=index">
           <th *ngIf="head.show !== false" [nzWidth]="head.width + 'px'"
               [nzLeft]="auxHeader[headIndex].nzLeft" [nzRight]="auxHeader[headIndex].nzRight" [ngClass]="head.thClassList">
-            <span *ngIf="head.title">{{head.title}}</span>
+            <span *ngIf="head.title">{{head.title}}
+              <span *ngIf="head.toSort" class="to-sort pull-right m-t m-l-xs" (click)="sortChang(head.field);">
+                 <div  [ngClass]="orderBy===head.field ? 'asc cur':'asc'"   ></div>
+                 <div  [ngClass]="orderBy===(head.field +' desc') ? 'desc cur':'desc'" ></div>
+              </span>
+            </span>
             <ng-container *ngIf="head.thTemplate">
               <ng-template *ngTemplateOutlet="head.thTemplate;context:head"></ng-template>
             </ng-container>

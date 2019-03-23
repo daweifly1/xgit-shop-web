@@ -1,21 +1,24 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserServiceNs, UserService } from '../../../core/common-services/user.service';
-import { ShowMessageService } from '../../../widget/show-message/show-message';
-import { Observable } from 'rxjs/Observable';
-import { UfastValidatorsService } from '../../../core/infra/validators/validators.service';
-import { ScepterServiceNs, ScepterService } from '../../../core/common-services/scepter.service';
-import { ActionCode } from '../../../../environments/actionCode';
-import { UfastTableNs } from '../../../layout/ufast-table/ufast-table.component';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UserService, UserServiceNs} from '../../../core/common-services/user.service';
+import {ShowMessageService} from '../../../widget/show-message/show-message';
+import {Observable} from 'rxjs/Observable';
+import {UfastValidatorsService} from '../../../core/infra/validators/validators.service';
+import {ScepterService, ScepterServiceNs} from '../../../core/common-services/scepter.service';
+import {ActionCode} from '../../../../environments/actionCode';
+import {UfastTableNs} from '../../../layout/ufast-table/ufast-table.component';
+
 enum TabPageType {
   ManagePage = 0,
   AddPage,
   EditPage
 }
+
 enum LockedStatus {
   Unlock,
   Lock
 }
+
 interface ActionStatus {
   edit: boolean;
   resetPassword: boolean;
@@ -23,6 +26,7 @@ interface ActionStatus {
   lock: boolean;
   unlock: boolean;
 }
+
 @Component({
   selector: 'app-user-manage',
   templateUrl: './user-manage.component.html',
@@ -45,6 +49,7 @@ export class UserManageComponent implements OnInit {
   @ViewChild('operationTpl') operationTpl: TemplateRef<any>;
   ActionCode = ActionCode;
   filterData: any;
+  orderBy: string;
   showAdvancedSearch: boolean;
   actionStatus: { [index: string]: ActionStatus };
   /**上级 */
@@ -52,9 +57,10 @@ export class UserManageComponent implements OnInit {
   superiorList: any[];
   @ViewChild('chooseSuperiorTpl') chooseSuperiorTpl: TemplateRef<any>;
   superiorVisible: boolean;
+
   constructor(private userService: UserService, private messageService: ShowMessageService,
-    private formBuilder: FormBuilder, private validator: UfastValidatorsService,
-    private scepterService: ScepterService
+              private formBuilder: FormBuilder, private validator: UfastValidatorsService,
+              private scepterService: ScepterService
   ) {
     this.actionStatus = {};
     this.showAdvancedSearch = false;
@@ -68,11 +74,12 @@ export class UserManageComponent implements OnInit {
     this.superiorList = [];
     this.superiorVisible = false;
   }
+
   public trackByUserId(index: number, item: any) {
     return item.userId;
   }
-  public checkTable(event: UfastTableNs.SelectedChange) {
 
+  public checkTable(event: UfastTableNs.SelectedChange) {
     const checked = event.type === UfastTableNs.SelectedChangeType.Checked ? true : false;
     if (event.index === -1) {
       this.userTableConfig.checkAll = checked;
@@ -89,6 +96,12 @@ export class UserManageComponent implements OnInit {
           break;
         }
       }
+    } else {
+      const sortChange = event.type === UfastTableNs.SelectedChangeType.SortChange ? true : false;
+      if (sortChange) {
+        this.orderBy = event.orderBy;
+        this.getUserList();
+      }
     }
   }
 
@@ -96,7 +109,8 @@ export class UserManageComponent implements OnInit {
     const filter = {
       pageNum: this.userTableConfig.pageNum,
       pageSize: this.userTableConfig.pageSize,
-      filters: this.filterData
+      filters: this.filterData,
+      orderBy: this.orderBy
     };
     this.userTableConfig.loading = true;
     this.userService.getUserList(filter).subscribe((resData: UserServiceNs.UfastHttpAnyResModel) => {
@@ -122,6 +136,7 @@ export class UserManageComponent implements OnInit {
       this.messageService.showAlertMessage('', error.message, 'error');
     });
   }
+
   public batchDelUser() {
     const userIdList = [];
     this.userDataList.forEach((item) => {
@@ -131,6 +146,7 @@ export class UserManageComponent implements OnInit {
     });
     this.deleteUsers(userIdList);
   }
+
   public deleteUsers(userIdList: string[]) {
 
     if (userIdList.length === 0) {
@@ -218,6 +234,7 @@ export class UserManageComponent implements OnInit {
       return;
     }
   }
+
   public toggleManagePage() {
     this.tabPageType = TabPageType.ManagePage;
     this.tabPageIndex = 0;
@@ -348,18 +365,22 @@ export class UserManageComponent implements OnInit {
       this.messageService.showAlertMessage('', error.message, 'error');
     });
   }
+
   public onAdvancedSearch() {
     this.showAdvancedSearch = !this.showAdvancedSearch;
   }
+
   public resetSearch() {
     this.filterData = {};
     this.getUserList();
   }
+
   /**上级 */
   public showSuperiorModal() {
     this.superiorVisible = true;
     this.getSuperiorList();
   }
+
   public getSuperiorList = () => {
     const filter = {
       pageNum: this.superiorListTableConfig.pageNum,
@@ -388,6 +409,7 @@ export class UserManageComponent implements OnInit {
       this.messageService.showAlertMessage('', error.message, 'error');
     });
   }
+
   public selectSuperior(id, name) {
     this.userInfoForm.patchValue({
       superiorName: name,
@@ -395,12 +417,14 @@ export class UserManageComponent implements OnInit {
     });
     this.superiorVisible = false;
   }
+
   public clearInnerOrder() {
     this.userInfoForm.patchValue({
       superiorName: '',
       superiorId: ''
     });
   }
+
   ngOnInit() {
     this.userInfoForm = this.formBuilder.group({
       loginName: [null, [Validators.required, Validators.maxLength(20)]],
@@ -430,19 +454,20 @@ export class UserManageComponent implements OnInit {
       total: 0,
       loading: false,
       splitPage: true,
+      orderBy: '',
       headers: [
-        { title: '操作', tdTemplate: this.operationTpl, width: 180, fixed: true },
-        { title: '用户账号', field: 'loginName', width: 150, fixed: true },
-        { title: '用户名', field: 'name', width: 150 },
-        { title: '昵称', field: 'nickname', width: 150 },
-        { title: '性别', field: 'sex', width: 60, pipe: 'sex' },
-        { title: '状态', field: 'locked', width: 60, pipe: 'lockedStatus' },
-        { title: '联系电话', field: 'telephone', width: 100 },
-        { title: '手机号', field: 'mobile', width: 100 },
-        { title: '所属部门', field: 'deptName', width: 130 },
-        { title: '电子邮箱', field: 'email', width: 120 },
-        { title: '用户类型', field: 'roleNames', width: 120 },
-        { title: '最后登录时间', field: 'lastLoginTime', width: 150, pipe: 'date:yyyy-MM-dd HH:mm:ss' }
+        {title: '操作', tdTemplate: this.operationTpl, width: 180, fixed: true},
+        {title: '用户账号', field: 'loginName', width: 150, fixed: true, toSort: true},
+        {title: '用户名', field: 'name', width: 150, toSort: true},
+        {title: '昵称', field: 'nickname', width: 150, toSort: true},
+        {title: '性别', field: 'sex', width: 60, pipe: 'sex'},
+        {title: '状态', field: 'locked', width: 60, pipe: 'lockedStatus'},
+        {title: '联系电话', field: 'telephone', width: 100},
+        {title: '手机号', field: 'mobile', width: 100},
+        {title: '所属部门', field: 'deptName', width: 130},
+        {title: '电子邮箱', field: 'email', width: 120},
+        {title: '用户类型', field: 'roleNames', width: 120},
+        {title: '最后登录时间', field: 'lastLoginTime', width: 150, pipe: 'date:yyyy-MM-dd HH:mm:ss'}
       ]
     };
     this.superiorListTableConfig = {
@@ -455,9 +480,9 @@ export class UserManageComponent implements OnInit {
       loading: false,
       yScroll: 350,
       headers: [
-        { title: '用户名', field: 'name', width: 100 },
-        { title: '用户ID', field: 'userId', width: 140 },
-        { title: '操作', tdTemplate: this.chooseSuperiorTpl, width: 100 }
+        {title: '用户名', field: 'name', width: 100},
+        {title: '用户ID', field: 'userId', width: 140},
+        {title: '操作', tdTemplate: this.chooseSuperiorTpl, width: 100}
       ]
     };
     this.getUserList();

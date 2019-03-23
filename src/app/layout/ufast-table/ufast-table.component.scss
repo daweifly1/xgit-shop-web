@@ -13,3 +13,54 @@ $pagination-height: 42px;
   }
 }
 
+
+.thead-operate {
+  width: 100%;
+  height: 100%;
+}
+
+.thead-operate .operate {
+  float: right;
+  margin-right: -20px;
+  width: 20px;
+  height: 100%;
+}
+
+.drag-item {
+  width: 0;
+  display: inline-block;
+  height: 100%;
+  float: right;
+  cursor: col-resize;
+  padding-right: 3px;
+}
+
+.drag-item:hover {
+  cursor: col-resize;
+}
+
+.to-sort .asc {
+  width: 0;
+  height: 0;
+  border-width: 0 4px 4px;
+  border-style: solid;
+  border-color: transparent transparent #666;
+  margin-top: 5px!important;
+}
+
+.to-sort .asc.cur {
+  border-bottom-color: #f60;
+}
+
+.to-sort .desc {
+  width: 0;
+  height: 0;
+  border-width: 4px 4px 0;
+  border-style: solid;
+  border-color: #666 transparent transparent;
+  margin-top: 2px;
+}
+
+.to-sort .desc.cur {
+  border-top-color: #f60;
+}
