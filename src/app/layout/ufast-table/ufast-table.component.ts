@@ -219,6 +219,8 @@ export class UfastTableComponent implements OnInit, OnDestroy, AfterViewInit {
         this.orderBy = descP;
       } else if (this.orderBy === descP) {
         this.orderBy = '';
+      } else {
+        this.orderBy = param;
       }
     } else {
       this.orderBy = param;
