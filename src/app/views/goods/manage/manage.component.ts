@@ -36,6 +36,8 @@ export class ManageComponent implements OnInit {
   // 文件服务地址
   fileServiceUrl: string;
 
+  orderBy: string;
+
   @ViewChild('operationTpl') operationTpl: TemplateRef<any>;
   @ViewChild('picTpl') picTpl: TemplateRef<any>;
 
@@ -71,13 +73,15 @@ export class ManageComponent implements OnInit {
           title: '编号',
           field: 'id',
           width: 150,
-          fixed: true
+          fixed: true,
+          toSort: true
         },
         {
           title: '商品名称',
           field: 'name',
           width: 200,
-          fixed: true
+          fixed: true,
+          toSort: true
         }, {
           title: '图片',
           tdTemplate: this.picTpl,
@@ -126,7 +130,8 @@ export class ManageComponent implements OnInit {
     const filter = {
       pageNum: this.tableConfig.pageNum,
       pageSize: this.tableConfig.pageSize,
-      filters: this.filters
+      filters: this.filters,
+      orderBy: this.orderBy
     };
     if (this.tableConfig.loading) {
       return;
@@ -150,6 +155,14 @@ export class ManageComponent implements OnInit {
       this.tableConfig.loading = false;
       this.messageService.showAlertMessage('', error.message, 'error');
     });
+  }
+
+  public checkTable(event: UfastTableNs.SelectedChange) {
+    const sortChange = event.type === UfastTableNs.SelectedChangeType.SortChange ? true : false;
+    if (sortChange) {
+      this.orderBy = event.orderBy;
+      this.getPageList();
+    }
   }
 
   onAdvancedSearch() {

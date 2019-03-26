@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <app-ufast-table [tableConfig]="tableConfig" [dataList]="pageDataList"
+    <app-ufast-table [tableConfig]="tableConfig" [dataList]="pageDataList" (selectedChange)="checkTable($event)"
                      [getListHandle]="getPageList"></app-ufast-table>
 
 
