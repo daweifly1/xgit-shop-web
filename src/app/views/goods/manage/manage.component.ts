@@ -80,8 +80,7 @@ export class ManageComponent implements OnInit {
           title: '商品名称',
           field: 'name',
           width: 200,
-          fixed: true,
-          toSort: true
+          fixed: true
         }, {
           title: '图片',
           tdTemplate: this.picTpl,
