@@ -31,7 +31,7 @@ export namespace UserServiceNs {
 
   export interface AuthLoginReqModel {
     authId: string;
-    code: string;
+    status: string;
     loginName: string;
     password: string;
   }
@@ -129,7 +129,7 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Post<AuthAnyResModel>('/auth/login', loginData, config)
         .pipe(map((resData: AuthAnyResModel) => {
-          if (resData.code === 0) {
+          if (resData.status === 0) {
             this.userInfo.username = loginData.loginName;
           }
           return resData;
@@ -141,7 +141,7 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Post('/auth/logout', null, config)
         .pipe(map((resData: AuthAnyResModel) => {
-          if (resData.code === 0) {
+          if (resData.status === 0) {
             this.userInfo.username = '';
           }
           return resData;
@@ -162,7 +162,7 @@ export namespace UserServiceNs {
       config.gateway = HttpUtilNs.GatewayKey.Ius;
       return this.http.Get<AuthLoginInfoResModel>('/profile/getLogin', null, config).pipe(
         map((data: any) => {
-          if (data && data.value) {
+            if (data && data.value) {
               if (null != data.value.loginName) {
                 this.userInfo.username = data.value.loginName;
               }

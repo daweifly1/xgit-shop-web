@@ -30,7 +30,7 @@ export namespace HttpUtilNs {
     list: T[];
   }
   export interface UfastHttpRes {
-    code: number;
+    status: number;
     message: string;
   }
   export interface UfastFilterBody {
@@ -39,7 +39,7 @@ export namespace HttpUtilNs {
     pageNum: number;
   }
   export interface UfastHttpResT<T> {
-    code: number;
+    status: number;
     message: string;
     value: T;
   }
@@ -141,7 +141,7 @@ export namespace HttpUtilNs {
       }
       return methodHandler().pipe(switchMap((data: UfastHttpResT<any>) => {
         this.closeLoading(config.delayLoading, loaderSub);
-        if (data.code !== 0 && config.isCatchUfastError) {
+        if (data.status !== 0 && config.isCatchUfastError) {
           this.messageService.showToastMessage(data.message, 'error');
           return empty();
         }

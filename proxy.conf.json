@@ -1,6 +1,6 @@
 {
   "/site": {
-    "target": "http://10.100.2.109:9103/",
+    "target": "http://127.0.0.1:9000/",
     "secure": false,
     "changeOrigin": true,
     "disableHostCheck": true,

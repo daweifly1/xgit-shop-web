@@ -24,6 +24,7 @@
               <span><b>{{oneLevel.name}}</b></span>
               <!--<span>类型：{{oneLevel.type| map:'authType'}}</span>-->
               <span *ngIf="oneLevel.url"><b>URL：</b>{{oneLevel.url}}</span>
+              <span *ngIf="oneLevel.url"><b>CODE：</b>{{oneLevel.id}}</span>
             </td>
             <td>
               <span class="operate-text" (click)="addOrEditAuth(2,oneLevel)">编辑</span>
@@ -43,6 +44,7 @@
                   <span><b>{{twoLevel.name}}</b></span>
                   <!--<span>类型：{{twoLevel.type| map:'authType'}}</span>-->
                   <span *ngIf="twoLevel.url"><b>URL：</b>{{twoLevel.url}}</span>
+                  <span *ngIf="twoLevel.url"><b>CODE：</b>{{twoLevel.id}}</span>
                 </td>
                 <td>
                   <span class="operate-text" (click)="addOrEditAuth(2,twoLevel)">编辑</span>
@@ -62,6 +64,7 @@
                       <span><b>{{threeLevel.name}}</b></span>
                       <!--<span>类型：{{threeLevel.type| map:'authType'}}</span>-->
                       <span *ngIf="threeLevel.url"><b>URL：</b>{{threeLevel.url}}</span>
+                      <span *ngIf="threeLevel.url"><b>CODE：</b>{{threeLevel.id}}</span>
                     </td>
                     <td>
                       <span class="operate-text" (click)="addOrEditAuth(2,threeLevel)">编辑</span>
@@ -78,6 +81,7 @@
                           <span><b>{{fourLevel.name}}</b></span>
                           <!--<span>类型：{{fourLevel.type| map:'authType'}}</span>-->
                           <span *ngIf="fourLevel.url"><b>URL：</b>{{fourLevel.url}}</span>
+                          <span *ngIf="fourLevel.url"><b>CODE：</b>{{fourLevel.id}}</span>
                         </td>
                         <td>
                           <span class="operate-text" (click)="addOrEditAuth(2,fourLevel)">编辑</span>
