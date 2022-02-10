@@ -34,7 +34,7 @@
     "ng2-pdf-viewer": "^5.2.0",
     "ngx-echarts": "^2.1.0",
     "ngx-ueditor": "^1.1.0",
-    "node-sass": "^4.9.1",
+    "node-sass": "^7.0.0",
     "rxjs": "^5.5.6",
     "silent-error": "^1.1.0",
     "zone.js": "^0.8.19"
